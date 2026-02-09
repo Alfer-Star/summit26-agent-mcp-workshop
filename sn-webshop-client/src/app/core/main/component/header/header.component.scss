@@ -9,6 +9,12 @@
   padding: map.get(variables.$paddings, 'small');
   align-items: center;
   background-color: var(--mat-sys-primary);
+
+  ::ng-deep * {
+    color: var(--mat-sys-on-primary) !important;
+    border-color: var(--mat-sys-on-primary) !important;
+    caret-color: var(--mat-sys-on-primary) !important;
+  }
 }
 
 sn-dashboard-anchor {
@@ -19,7 +25,6 @@ sn-dashboard-anchor {
 
 sn-search {
   flex: auto;
-  margin: 0 1rem;
 }
 
 sn-user-menu {
