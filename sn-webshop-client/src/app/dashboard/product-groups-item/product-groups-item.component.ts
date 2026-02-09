@@ -3,6 +3,7 @@ import { AbsoluteAppRoutes } from '../../app-routes.enum';
 import { ProductGroup } from '../../model/product/product-group';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
+import { TranslocoDirective } from "@jsverse/transloco";
 
 @Component({
   selector: 'sn-product-groups-item',
@@ -10,7 +11,7 @@ import { MatCardModule } from '@angular/material/card';
   styleUrls: ['./product-groups-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatCardModule, RouterLink],
+  imports: [MatCardModule, RouterLink, TranslocoDirective],
 })
 export class ProductGroupsItemComponent {
   private _productGroupUrl!: string;

@@ -9,9 +9,8 @@ import { CheckoutService } from '../../service/checkout/checkout.service';
   providedIn: 'root',
 })
 export class HasProductsSelectedGuard implements CanActivate {
-  private checkoutService = inject(CheckoutService);
-  private router = inject(Router);
-
+  private readonly checkoutService = inject(CheckoutService);
+  private readonly router = inject(Router);
 
   canActivate(): Observable<boolean> {
     return this.checkoutService.productsInBasket$.pipe(

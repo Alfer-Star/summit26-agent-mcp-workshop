@@ -35,11 +35,7 @@ export class AuthHttpService {
   }
 
   register(registrationData: Partial<RegistrationDto>): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(
-      environment.url + '/auth/signup',
-      registrationData,
-      httpOptions,
-    );
+    return this.http.post<LoginResponseDto>(environment.url + '/auth/signup', registrationData, httpOptions);
   }
 
   refreshToken(token: string): Observable<unknown> {

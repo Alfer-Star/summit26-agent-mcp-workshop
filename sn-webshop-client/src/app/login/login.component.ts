@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
+import { TranslocoDirective } from "@jsverse/transloco";
 
 @Component({
   templateUrl: './login.component.html',
@@ -26,7 +27,8 @@ import { MatCardModule } from '@angular/material/card';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    RouterLink
+    RouterLink,
+    TranslocoDirective
 ],
 })
 export class LoginComponent {

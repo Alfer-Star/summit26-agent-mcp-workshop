@@ -1,5 +1,5 @@
-<ng-container>
-  <h2>articles</h2>
+<ng-container *transloco="let translate; prefix: 'checkout'">
+  <h2>{{ translate('articles') }}</h2>
   <div class="products">
     @for (checkoutProduct of checkoutProducts(); track checkoutProduct) {
       <sn-checkout-product
@@ -10,7 +10,7 @@
     }
     @if (checkoutProducts().length === 0) {
       <p>
-        <b> Ihr Warenkorb ist leer </b>
+        <b> {{ translate('noItems') }} </b>
       </p>
     }
   </div>

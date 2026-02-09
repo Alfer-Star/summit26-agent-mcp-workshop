@@ -1,48 +1,45 @@
-<mat-card appearance="outlined" (keyup.enter)="register()">
-  <mat-card-title> Konto erstellen</mat-card-title>
+<mat-card *transloco="let translate; prefix: 'auth'" appearance="outlined" (keyup.enter)="register()">
+  <mat-card-title>{{ translate('registration.title') }}</mat-card-title>
 
-  <mat-card-content>
+  <mat-card-content *transloco="let translate2">
     <form [formGroup]="registerForm">
       <mat-form-field>
-        <mat-label>Dein Name</mat-label>
+        <mat-label>{{ translate('name') }}</mat-label>
         <input id="name" type="text" matInput formControlName="name" />
         @if (registerForm.get('name')?.hasError('required')) {
-          <mat-error>Pflichtangabe </mat-error>
+          <mat-error>{{ translate2('validation.required') }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>E-Mail Adresse</mat-label>
+        <mat-label>{{ translate('email') }}</mat-label>
         <input id="email" type="email" matInput autocomplete="username" formControlName="email" />
         @if (registerForm.get('email')?.status === 'PENDING') {
-          <mat-spinner matSuffix [diameter]="18"></mat-spinner>
+          <mat-spinner matSuffix [diameter]="18" />
         }
         @if (registerForm.get('email')?.hasError('required')) {
-          <mat-error> Pflichtangabe </mat-error>
+          <mat-error>{{ translate2('validation.required') }}</mat-error>
         }
         @if (registerForm.get('email')?.hasError('email')) {
-          <mat-error> E-Mail Adresse ungültig </mat-error>
+          <mat-error>{{ translate2('validation.email') }}</mat-error>
         }
         @if (registerForm.get('email')?.hasError('emailAlreadyUsed')) {
-          <mat-error>
-            Diese E-Mail wird bereits verwendet
-          </mat-error>
+          <mat-error>{{ translate2('validation.emailAlreadyUsed') }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Passwort</mat-label>
+        <mat-label>{{ translate('password') }}</mat-label>
         <input id="password" type="password" matInput autocomplete="new-password" formControlName="password" />
         @if (registerForm.get('password')?.hasError('passwordStrength')) {
           <mat-error>
-            Passwörter müssen mindestens 8 Zeichen lang sein, Großbuchstaben, Kleinbuchstaben, Sonderzeichen und Zahlen
-            enthalten
+            {{ translate2('validation.passwordStrength') }}
           </mat-error>
         }
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Passwort wiederholen</mat-label>
+        <mat-label>{{ translate('password2') }}</mat-label>
         <input
           id="confirmPassword"
           type="password"
@@ -50,36 +47,34 @@
           autocomplete="new-password"
           formControlName="confirmPassword" />
         @if (registerForm.get('confirmPassword')?.hasError('required')) {
-          <mat-error> Pflichtangabe </mat-error>
+          <mat-error>{{ translate2('validation.required') }} </mat-error>
         }
         @if (registerForm.get('confirmPassword')?.hasError('passwordsMatch')) {
-          <mat-error>
-            Die Passwörter stimmen nicht überein
-          </mat-error>
+          <mat-error>{{ translate2('validation.required') }}</mat-error>
         }
       </mat-form-field>
-      <div class="adress-form">
+      <div class="adress-form" *transloco="let translate; prefix: 'settings'">
         <mat-form-field class="street-nr">
-          <mat-label>"Straße und Hausnummer"</mat-label>
+          <mat-label>{{ translate('streetNr') }}</mat-label>
           <input type="text" matInput formControlName="streetNr" />
           @if (registerForm.get('streetNr')?.hasError('required')) {
-            <mat-error> Pflichtangabe </mat-error>
+            <mat-error> {{ translate2('validation.required') }} </mat-error>
           }
         </mat-form-field>
 
         <mat-form-field class="zip">
-          <mat-label>Postleitzahl</mat-label>
+          <mat-label>{{ translate('zip') }}</mat-label>
           <input type="text" matInput formControlName="zip" />
           @if (registerForm.get('zip')?.hasError('required')) {
-            <mat-error> Pflichtangabe </mat-error>
+            <mat-error> {{ translate2('validation.required') }} </mat-error>
           }
         </mat-form-field>
 
         <mat-form-field class="city">
-          <mat-label>Ort</mat-label>
+          <mat-label>{{ translate('city') }}</mat-label>
           <input type="text" matInput formControlName="city" />
           @if (registerForm.get('city')?.hasError('required')) {
-            <mat-error> Pflichtangabe </mat-error>
+            <mat-error> {{ translate2('validation.required') }} </mat-error>
           }
         </mat-form-field>
       </div>
@@ -88,9 +83,7 @@
     </form>
   </mat-card-content>
   @if (invalidRegistration) {
-    <mat-error>
-      Registrierung konnte nicht durchgeführt werden. Bitte versuchen Sie es später erneut!
-    </mat-error>
+    <mat-error> {{ translate('registration.invalid') }} </mat-error>
   }
   <mat-card-actions>
     <button
@@ -99,7 +92,7 @@
       [disabled]="registerForm.invalid || registerForm.status === 'PENDING'"
       (click)="register()"
       (keyup.enter)="register()">
-      sn-webshop-Konto erstellen
+      {{ translate('createAccount') }}
     </button>
   </mat-card-actions>
 </mat-card>

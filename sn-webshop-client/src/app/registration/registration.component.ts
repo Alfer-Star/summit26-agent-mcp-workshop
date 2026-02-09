@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
+import { TranslocoDirective } from "@jsverse/transloco";
 
 @Component({
   selector: 'app-registration',
@@ -25,7 +26,8 @@ import { MatCardModule } from '@angular/material/card';
     MatInputModule,
     MatProgressSpinnerModule,
     PaymentInformationFormComponent,
-    MatButtonModule
+    MatButtonModule,
+    TranslocoDirective
 ],
 })
 export class RegistrationComponent {

@@ -7,7 +7,7 @@
 <div class="items mat-elevation-z2">
   @for (url of imageUrls(); track url; let i = $index) {
     @if (i === active) {
-      <img class="item" [src]="url" @fade />
+      <img class="item" [src]="url" alt="" />
     }
   }
 </div>

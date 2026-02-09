@@ -2,6 +2,7 @@ import { input, output } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoDirective } from "@jsverse/transloco";
 
 @Component({
   selector: 'sn-confirm-checkout',
@@ -9,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./confirm-checkout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButtonModule, CurrencyPipe],
+  imports: [MatButtonModule, CurrencyPipe, TranslocoDirective],
 })
 export class ConfirmCheckoutComponent {
   readonly total = input.required<number>();

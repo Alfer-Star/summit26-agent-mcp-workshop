@@ -4,6 +4,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { CurrencyPipe } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { TranslocoDirective } from "@jsverse/transloco";
 
 @Component({
   selector: 'sn-checkout-product',
@@ -11,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   styleUrls: ['./checkout-product.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, MatOptionModule, CurrencyPipe],
+  imports: [MatFormFieldModule, MatSelectModule, MatOptionModule, CurrencyPipe, TranslocoDirective],
 })
 export class CheckoutProductComponent {
   private _quantity!: number;

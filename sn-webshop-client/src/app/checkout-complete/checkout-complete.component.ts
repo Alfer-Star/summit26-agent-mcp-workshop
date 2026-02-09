@@ -3,6 +3,7 @@ import { AbsoluteAppRoutes } from '../app-routes.enum';
 import { CheckoutService } from '../service/checkout/checkout.service';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'sn-checkout-complete',
@@ -10,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./checkout-complete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButtonModule, RouterLink],
+  imports: [MatButtonModule, RouterLink, TranslocoDirective],
 })
 export class CheckoutCompleteComponent {
   readonly AbsoluteAppRoutes = AbsoluteAppRoutes;

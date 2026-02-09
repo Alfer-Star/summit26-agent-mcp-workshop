@@ -1,25 +1,22 @@
+<ng-container *transloco="let translate; prefix: 'checkout'">
   <div>
-    <section class="checkout-notes" aria-labelledby="checkout-notes-heading">
-      <h2 id="checkout-notes-heading">Checkout‑Hinweise</h2>
-      <ul>
-        <li>Alle Preise inkl. MwSt., ggf. zzgl. Versandkosten (werden im Warenkorb angezeigt).</li>
-        <li>Versand: Deutschland 2–4 Werktage, EU 3–6 Werktage. Sendungsverfolgung per E‑Mail.</li>
-        <li>Versandkosten (Beispiel): DE 4,90 €; ab 49,00 € Bestellwert versandkostenfrei.</li>
-        <li>Rückgabe &amp; Widerruf: 14 Tage ab Erhalt. Bitte senden Sie die Ware unbenutzt und im Originalzustand zurück. Rücksendelabel erhalten Sie über Ihr Kundenkonto oder unseren Support. Rückversand innerhalb DE kostenfrei.</li>
-        <li>Digitale Produkte: Sofort‑Download nach Zahlung. Bitte bestätigen Sie, dass wir vor Ablauf der Widerrufsfrist mit der Ausführung beginnen dürfen; Ihnen ist bekannt, dass das Widerrufsrecht für diese digitalen Inhalte dann erlischt.</li>
-        <li>Services (z. B. Workshops): Terminabstimmung nach Kauf. Kostenfreie Umbuchung/Stornierung bis 48 Stunden vor Termin.</li>
-        <li>Gewährleistung: 24 Monate gesetzliche Gewährleistung auf physische Produkte für Verbraucher.</li>
-        <li>Zahlungsarten: Kreditkarte, PayPal, SEPA‑Lastschrift, giropay/sofort, Kauf auf Rechnung (B2B nach Prüfung).</li>
-        <li>Rechnung: PDF‑Rechnung per E‑Mail. Bei Angabe einer gültigen USt‑IdNr. (EU/B2B) erfolgt Nettorechnung gemäß Reverse‑Charge, sofern anwendbar.</li>
-        <li>Sicherheit: TLS‑verschlüsselte Übertragung; wir speichern keine vollständigen Kartendaten.</li>
-        <li>Kontakt: <a href="mailto:support@sn-invent.de">support@sn-invent.de</a> | +49 (0)30 1234567 | Mo–Fr 9–17 Uhr.</li>
-      </ul>
-      <p>Mit Klick auf „Jetzt bezahlen“ geben Sie eine zahlungspflichtige Bestellung ab. Es gelten unsere <a href="https://sn-invent.de/agb" target="_blank" rel="noopener">AGB</a>, <a href="https://sn-invent.de/widerruf" target="_blank" rel="noopener">Widerrufsbelehrung</a> und <a href="https://sn-invent.de/datenschutz" target="_blank" rel="noopener">Datenschutzhinweise</a>.</p>
-    </section>
+    <h2>{{ translate('payTitle') }}</h2>
+    <ul>
+      <li>{{ translate('payHint0') }}</li>
+      <li>{{ translate('payHint1') }}</li>
+      <li>{{ translate('payHint2') }}</li>
+      <li>{{ translate('payHint3') }}</li>
+      <li>{{ translate('payHint4') }}</li>
+      <li>{{ translate('payHint5') }}</li>
+    </ul>
     <p>
-      <b> Summe {{ total() | currency }} </b>
+      {{ translate('payHint6') }}
+    </p>
+    <p>
+      <b> {{ translate('total') }} {{ total() | currency }} </b>
     </p>
   </div>
   <button [disabled]="total() === 0" mat-raised-button (click)="buyClick.emit()">
-    Bezahlen
+    {{ translate('pay') }}
   </button>
+</ng-container>

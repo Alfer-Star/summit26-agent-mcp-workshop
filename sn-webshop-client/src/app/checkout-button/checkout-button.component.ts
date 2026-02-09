@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { AbsoluteAppRoutes } from '../app-routes.enum';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoDirective } from "@jsverse/transloco";
 
 @Component({
   selector: 'sn-checkout-button',
@@ -9,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./checkout-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButtonModule, RouterLink],
+  imports: [MatButtonModule, RouterLink, TranslocoDirective],
 })
 export class CheckoutButtonComponent {
   readonly AbsoluteAppRoutes = AbsoluteAppRoutes;

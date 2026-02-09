@@ -1,0 +1,120 @@
+{
+  "core": {
+    "dashboardAnchor": "S&N Webshop",
+    "searchInput": "Enter a search term...",
+    "userMenuTrigger": "Hello {{username}}!",
+    "logout": "Logout",
+    "discover": "Discover",
+    "goToCheckout": "Go to checkout",
+    "login": "Login",
+    "register": "Registration",
+    "settings": "Settings",
+    "adminSpace": "Admin settings",
+    "aboutSnWebshop": "About S&N Webshop",
+    "aboutUs": "About us",
+    "impressum": "Impressum",
+    "contact": "Contact",
+    "de": "DE",
+    "en": "EN",
+    "name": "Name",
+    "email": "{{auth.email}}"
+  },
+  "products": {
+    "noProducts": "No products found"
+  },
+  "product": {
+    "price": "Price",
+    "delivery": "Delivery duration (days)",
+    "availableQuantity": "On stock",
+    "addToCart": "Add to cart"
+  },
+  "checkout": {
+    "deliveryAddress": "Delivery address",
+    "payment": "Payment",
+    "articles": "Articles",
+    "ibanEndsWith": "Your IBAN ends with",
+    "pay": "Pay",
+    "price": "Price per unit:",
+    "total": "Total:",
+    "quantity": "Quantity:",
+    "payTitle": "Checkout",
+    "payHint0": "All prices include VAT; shipping costs may apply (shown in the cart).",
+    "payHint1": "Shipping: Germany 2–4 business days, EU 3–6 business days. Shipment tracking via email.",
+    "payHint2": "Returns &amp; Right of Withdrawal: 14 days from receipt. Please return items unused and in their original condition. You can obtain a return label via your account or our support. Returns within Germany are free of charge.",
+    "payHint3": "Warranty: 24 months statutory warranty on physical products for consumers.",
+    "payHint4": "Payment methods: Credit card, PayPal, SEPA direct debit, giropay/Sofort, purchase on account (B2B subject to approval).",
+    "payHint5": "Invoice: PDF invoice by email. If a valid VAT ID is provided (EU/B2B), a net invoice will be issued under the reverse-charge mechanism where applicable.",
+    "payHint6": "By clicking \"Pay\", you place a binding order with an obligation to pay.",
+    "noItems": "Your basket is empty",
+    "thanks": "Thank you for your purchase!",
+    "goToDashboard": "Back to dashboard"
+  },
+  "auth": {
+    "name": "Your name",
+    "email": "E-Mail",
+    "password": "Password",
+    "password2": "Confirm password",
+    "registration": {
+      "title": "Create accoubt",
+      "invalid": "Registration could not be completed. Please try again later!"
+    },
+    "createAccount": "Create S&N Webshop-Account",
+    "login": {
+      "title": "Login",
+      "button": "Login",
+      "invalid": "Wrong E-Mail and/or Password! Please try again."
+    }
+  },
+  "validation": {
+    "required": "Required!",
+    "passwordStrength": "Passwords should be atleast 8 characters long and contain uppercase letters, lowercase letters, special characters and numbers.",
+    "passwordsMatch": "Passwords don't match",
+    "emailAlreadyUsed": "E-Mail is already in use",
+    "email": "E-Mail is invalid",
+    "iban": "The entered IBAN is invalid",
+    "unknown": "Please enter a correct value!"
+  },
+  "settings": {
+    "name": "Name",
+    "addresses": "Addresses",
+    "streetNr": "Street and street number",
+    "zip": "ZIP",
+    "city": "City",
+    "iban": "IBAN",
+    "ibanHint": "Example IBAN: AB12 1234 1234 1234 1234 12",
+    "save": "Save Changes"
+  },
+  "productGroupName": {
+    "notebook": "Notebooks",
+    "fruit": "Fruits",
+    "shoe": "Shoes",
+    "flower": "Flowers",
+    "coffee": "Coffees",
+    "car": "Cars",
+    "vacation": "Vacations",
+    "phone": "Phones",
+    "clock": "Clocks",
+    "office": "Office",
+    "bike": "Bikes",
+    "kitchenware": "Kitchenware"
+  },
+  "productName": {
+    "notebook": "Notebook",
+    "fruit": "Fruit",
+    "shoe": "Shoe",
+    "flower": "Flower",
+    "coffee": "Coffee",
+    "car": "Car",
+    "vacation": "Vacation",
+    "phone": "Phone",
+    "clock": "Clock",
+    "office": "Office",
+    "bike": "Bike",
+    "kitchenware": "Kitchenware"
+  },
+  "notFound": {
+    "title": "Ups... 404",
+    "description": "We could not find the page you were looking for :(",
+    "backToDashboard": "Back to Dashboard"
+  }
+}

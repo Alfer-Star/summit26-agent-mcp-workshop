@@ -6,13 +6,14 @@ import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoDirective } from "@jsverse/transloco";
 
 @Component({
   selector: 'sn-user-menu',
   templateUrl: './user-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButtonModule, MatMenuModule, MatIconModule, RouterLink],
+  imports: [MatButtonModule, MatMenuModule, MatIconModule, RouterLink, TranslocoDirective],
 })
 export class UserMenuComponent {
   private readonly userService = inject(UserService);

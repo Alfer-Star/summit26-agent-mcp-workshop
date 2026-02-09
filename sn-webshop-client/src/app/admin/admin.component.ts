@@ -3,6 +3,7 @@ import { AuthHttpService } from '../service/auth/auth-http.service';
 import { User } from '../model/user/user';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'sn-admin',
@@ -10,7 +11,7 @@ import { MatCardModule } from '@angular/material/card';
   styleUrls: ['./admin.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatCardModule, MatTableModule],
+  imports: [MatCardModule, MatTableModule, TranslocoDirective],
 })
 export class AdminComponent {
   private readonly authService = inject(AuthHttpService);

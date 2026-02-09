@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/cor
 import { ControlContainer, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { TranslocoDirective } from "@jsverse/transloco";
 
 
 @Component({
@@ -10,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   styleUrls: ['./payment-information-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, TranslocoDirective],
 })
 export class PaymentInformationFormComponent implements OnInit {
   private readonly controlContainer = inject(ControlContainer);

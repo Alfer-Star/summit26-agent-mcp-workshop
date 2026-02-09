@@ -1,14 +1,12 @@
-<mat-card appearance="outlined">
+<mat-card *transloco="let translate">
   <table mat-table [dataSource]="userList" class="mat-elevation-z8">
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.name }}
-      </td>
+      <th mat-header-cell *matHeaderCellDef>{{ translate('core.name') }}</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }} {{ element.name }}</td>
     </ng-container>
 
     <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>E-Mail Adresse</th>
+      <th mat-header-cell *matHeaderCellDef>{{ translate('core.email') }}</th>
       <td mat-cell *matCellDef="let element">
         {{ element.email }}
       </td>

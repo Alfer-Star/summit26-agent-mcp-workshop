@@ -1,10 +1,10 @@
-<ng-container>
-  <h2>Vielen Dank für Ihren Einkauf!</h2>
+<ng-container *transloco="let translate; prefix: 'checkout'">
+  <h2>{{ translate('thanks') }}</h2>
   <button
     mat-raised-button
     color="primary"
     [routerLink]="'/' + AbsoluteAppRoutes.dashboard"
   >
-    Vielen Dank für Ihren Einkauf!
+    {{ translate('goToDashboard') }}
   </button>
 </ng-container>

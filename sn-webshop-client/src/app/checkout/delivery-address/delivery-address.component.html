@@ -1,5 +1,6 @@
-<ng-container>
-  <h2>Versandadresse</h2>
+<ng-container *transloco="let translate; prefix: 'checkout'">
+  <h2>{{ translate('deliveryAddress') }}</h2>
+
   <div class="user">
     <p dataTestId="user-name">{{ user().name }}</p>
     <p dataTestId="user-address">

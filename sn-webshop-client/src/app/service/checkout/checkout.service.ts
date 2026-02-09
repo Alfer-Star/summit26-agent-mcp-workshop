@@ -12,9 +12,9 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class CheckoutService {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-  private _basket$ = new BehaviorSubject<Map<string, CheckoutProduct>>(new Map());
+  private readonly _basket$ = new BehaviorSubject<Map<string, CheckoutProduct>>(new Map());
 
   readonly basket$ = this._basket$.asObservable();
   readonly productsInBasket$ = this.basket$.pipe(map((basket) => [...basket.values()]));

@@ -1,4 +1,4 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, isDevMode } from '@angular/core';
 
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
@@ -8,6 +8,8 @@ import { appRoutes } from './app/app.routes';
 
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { TranslocoHttpLoader } from './transloco-loader';
+import { provideTransloco } from '@jsverse/transloco';
 
 if (environment.production) {
   enableProdMode();
@@ -16,7 +18,16 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(appRoutes),
-    provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
+    provideTransloco({
+      config: {
+        availableLangs: ['de', 'en'],
+        defaultLang: 'de',
+        // Remove this option if your application doesn't support changing language in runtime.
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader,
+    }),
   ],
 }).catch((err) => console.error(err));
