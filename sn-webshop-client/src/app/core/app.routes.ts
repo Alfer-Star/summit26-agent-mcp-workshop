@@ -2,10 +2,12 @@ import { Routes } from '@angular/router';
 
 import { MainComponent } from './main/page/main/main.component';
 import { NotFoundComponent } from './not-found/page/not-found/not-found.component';
-import { RelativeAppRoutes } from './app.routes.enum';
+import { AbsoluteAppRoutes, RelativeAppRoutes } from './app.routes.enum';
 import { adminGuard } from '@shared/guard/admin.guard';
 import { authGuard } from '@shared/guard/auth.guard';
 import { userGuard } from '@shared/guard/user.guard';
+import { LoginComponent } from './login/page/login/login.component';
+import { RegistrationComponent } from './registration/page/registration/registration.component';
 
 export const appRoutes: Routes = [
   {
@@ -50,6 +52,18 @@ export const appRoutes: Routes = [
         loadChildren: () => import('../feature/products/products.routes').then((m) => m.ProductsRoutes),
       },
     ],
+  },
+  {
+    path: RelativeAppRoutes.login,
+    component: LoginComponent,
+  },
+  {
+    path: RelativeAppRoutes.login + '/:redirectPath',
+    component: LoginComponent,
+  },
+  {
+    path: AbsoluteAppRoutes.registration,
+    component: RegistrationComponent,
   },
   {
     path: RelativeAppRoutes.notFound,
