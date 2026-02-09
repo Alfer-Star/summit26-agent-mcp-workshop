@@ -1,16 +1,5 @@
 @use 'variables';
 
-sn-header {
-  position: sticky;
-  top: 0;
-  display: flex;
-  z-index: 3;
-}
-
-sn-footer {
-  z-index: 2;
-}
-
 sn-checkout-button {
   display: flex;
   justify-content: flex-end;

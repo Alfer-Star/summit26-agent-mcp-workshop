@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'sn-footer',
@@ -7,8 +7,6 @@ import { MatIcon } from '@angular/material/icon';
   styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    MatIcon
-  ]
+  imports: [RouterLink],
 })
 export class FooterComponent {}
