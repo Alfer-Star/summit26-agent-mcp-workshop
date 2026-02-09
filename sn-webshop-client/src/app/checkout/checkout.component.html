@@ -1,0 +1,16 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <div class="checkout-information">
+      @if (user) {
+        <sn-delivery-address [user]="user"></sn-delivery-address>
+      }
+      @if (paymentInformation) {
+        <sn-payment-type [paymentInformation]="paymentInformation"></sn-payment-type>
+      }
+      <sn-checkout-products
+        [checkoutProducts]="(productsInBasket$ | async) ?? []"
+      (quantityChangeForProduct)="removeFromBasket($event.productId, $event.amount)"></sn-checkout-products>
+    </div>
+    <sn-confirm-checkout [total]="(total$ | async) ?? 0" (buyClick)="checkout()"></sn-confirm-checkout>
+  </mat-card-content>
+</mat-card>

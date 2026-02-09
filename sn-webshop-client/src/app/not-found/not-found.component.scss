@@ -1,0 +1,13 @@
+@use 'variables';
+
+:host {
+  max-width: variables.$app-max-width;
+  margin: 0 auto;
+  display: block;
+}
+
+mat-card-actions {
+  display: flex;
+
+  justify-content: center;
+}

@@ -1,0 +1,27 @@
+@use 'variables';
+
+mat-card {
+  cursor: pointer;
+}
+
+mat-card-title {
+  text-align: center;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.product {
+  &-image {
+    display: flex;
+    justify-content: center;
+    margin-bottom: map-get(variables.$margins, 'default');
+  }
+
+  &-description {
+    text-align: center;
+  }
+}

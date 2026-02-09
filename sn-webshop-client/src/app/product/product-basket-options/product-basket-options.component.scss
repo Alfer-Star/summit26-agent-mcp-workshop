@@ -1,0 +1,10 @@
+@use 'variables';
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  margin-top: map-get(variables.$margins, 'large');
+}

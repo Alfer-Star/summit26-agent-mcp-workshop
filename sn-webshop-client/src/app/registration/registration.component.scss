@@ -1,0 +1,32 @@
+@use 'variables';
+
+:host {
+  max-width: variables.$app-max-width;
+  margin: 0 auto;
+  display: block;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-actions {
+  display: flex;
+
+  justify-content: center;
+}
+
+.adress-form {
+  display: flex;
+
+  .street-nr,
+  .city {
+    flex: auto;
+  }
+
+  .zip {
+    flex: 0 0 auto;
+    margin: 0 map-get(variables.$margins, 'default');
+  }
+}

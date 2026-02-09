@@ -1,0 +1,14 @@
+mat-card {
+  cursor: pointer;
+}
+
+mat-card-title,
+mat-card-content,
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
+img {
+  width: 20rem;
+}

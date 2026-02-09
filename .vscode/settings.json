@@ -1,0 +1,11 @@
+{
+  "prettier.configPath": "sn-webshop-client\\.prettierrc.json",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "json.format.enable": false,
+  "typescript.format.enable": false,
+  "javascript.format.enable": false,
+  "html.format.enable": false,
+  "editor.formatOnSave": true,
+  "eslint.alwaysShowStatus": true,
+  "prettier.tabWidth": 4
+}

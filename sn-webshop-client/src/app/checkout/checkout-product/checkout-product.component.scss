@@ -1,0 +1,14 @@
+@use 'variables';
+
+:host {
+  display: flex;
+}
+
+.image {
+  flex: 0 0 auto;
+  margin-right: map-get(variables.$margins, 'large');
+}
+
+.product {
+  flex: auto;
+}

@@ -1,0 +1,29 @@
+:host {
+  height: 25rem;
+  display: flex;
+}
+
+.items {
+  position: relative;
+  justify-content: center;
+  flex: auto;
+}
+
+.item {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.previous,
+.next {
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background-color: var(--white);
+
+  button {
+    height: 100%;
+  }
+}

@@ -1,0 +1,6 @@
+@for (product of products$ | async; track product) {
+  <sn-products-item [product]="product"></sn-products-item>
+}
+@if ((products$ | async)?.length === 0) {
+  <div>Es wurden keine Produkte gefunden</div>
+}

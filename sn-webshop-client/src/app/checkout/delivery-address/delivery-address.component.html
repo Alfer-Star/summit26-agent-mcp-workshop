@@ -1,0 +1,9 @@
+<ng-container>
+  <h2>Versandadresse</h2>
+  <div class="user">
+    <p dataTestId="user-name">{{ user().name }}</p>
+    <p dataTestId="user-address">
+      {{ user().addresses[0].streetNr }}, {{ user().addresses[0].city }}
+    </p>
+  </div>
+</ng-container>

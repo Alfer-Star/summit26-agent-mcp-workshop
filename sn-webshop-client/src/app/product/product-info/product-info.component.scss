@@ -1,0 +1,18 @@
+@use 'variables';
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.name-and-rating {
+  display: flex;
+
+  h1 {
+    margin-right: map-get(variables.$margins, 'default');
+  }
+}
+
+.detailed-description {
+  font-size: 75%;
+}

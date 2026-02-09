@@ -1,0 +1,14 @@
+@use 'variables';
+
+:host {
+  display: flex;
+}
+
+h2 {
+  flex: 0 0 25%;
+  margin-right: map-get(variables.$margins, 'large');
+}
+
+.payment {
+  flex: auto;
+}

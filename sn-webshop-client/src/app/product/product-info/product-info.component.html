@@ -1,0 +1,14 @@
+<div>
+  <img [src]="product().imageUrl" width="150" />
+</div>
+<div class="name-and-rating">
+  <h1>{{ product().name }}</h1>
+  <sn-rating [rating]="product().rating"></sn-rating>
+</div>
+<h3>
+  {{ product().description }}
+</h3>
+
+<div class="detailed-description">
+  {{ product().detailedDescription }}
+</div>

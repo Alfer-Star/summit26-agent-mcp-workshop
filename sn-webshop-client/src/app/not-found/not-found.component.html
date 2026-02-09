@@ -1,0 +1,15 @@
+<mat-card appearance="outlined">
+  <mat-card-title> Ups... 404</mat-card-title>
+  <mat-card-content>
+    <span>Wir konnten die von Dir aufgerufene Seite leider nicht finden :(</span>
+  </mat-card-content>
+  <mat-card-actions>
+    <a
+      mat-raised-button
+      color="primary"
+      [routerLink]="['/' + absoluteAppRoutes.dashboard]"
+    >
+      Zurück zum Dashboard
+    </a>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,60 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "paths": {
+      "@core/*": [
+        "./src/app/core/*"
+      ],
+      "@checkout/*": [
+        "./src/app/feature/checkout/*"
+      ],
+      "@dashboard/*": [
+        "./src/app/feature/dashboard/*"
+      ],
+      "@product/*": [
+        "./src/app/feature/product/*"
+      ],
+      "@products/*": [
+        "./src/app/feature/products/*"
+      ],
+      "@settings/*": [
+        "./src/app/feature/settings/*"
+      ],
+      "@shared/*": [
+        "./src/app/shared/*"
+      ],
+      "@transloco/*": [
+        "./src/app/transloco/*"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

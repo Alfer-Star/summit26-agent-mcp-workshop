@@ -1,0 +1,15 @@
+@use 'variables';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border: 0.1rem solid var(--border-color);
+  padding: map-get(variables.$paddings, 'default');
+}
+
+button {
+  width: 100%;
+  margin-bottom: map-get(variables.$margins, 'default');
+}

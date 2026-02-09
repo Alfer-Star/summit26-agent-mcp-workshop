@@ -1,0 +1,5 @@
+@for (productGroup of productGroups$ | async; track productGroup) {
+  <sn-product-groups-item
+    [productGroup]="productGroup"
+  ></sn-product-groups-item>
+}

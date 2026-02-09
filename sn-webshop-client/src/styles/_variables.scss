@@ -1,0 +1,25 @@
+:root {
+  --white: #fff;
+  --black: #000;
+  --border-color: rgba(124, 124, 124, 0.4);
+  --background-color: rgba(0, 0, 0, 0.05);
+  --background-color-dark: rgba(0, 0, 0, 0.75);
+}
+
+$app-max-width: 90rem;
+
+$margin-step: 1rem;
+$margins: (
+  'none': 0,
+  'small': $margin-step * 0.5,
+  'default': $margin-step,
+  'large': $margin-step * 2,
+);
+
+$padding-step: 1rem;
+$paddings: (
+  'none': 0,
+  'small': $padding-step * 0.5,
+  'default': $padding-step,
+  'large': $padding-step * 2,
+);

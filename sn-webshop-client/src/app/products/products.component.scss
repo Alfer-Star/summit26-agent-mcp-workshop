@@ -1,0 +1,14 @@
+@use 'variables';
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+sn-products-item {
+  flex: 0 0 30%;
+  margin-right: map-get(variables.$margins, 'default');
+  margin-bottom: map-get(variables.$margins, 'default');
+  margin-left: map-get(variables.$margins, 'default');
+}

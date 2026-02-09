@@ -1,0 +1,32 @@
+export enum RelativeAppRoutes {
+  main = 'main',
+  admin = 'admin',
+  login = 'login',
+  notFound = '404',
+  dashboard = 'dashboard',
+  checkout = 'checkout',
+  checkoutComplete = 'complete',
+  product = 'product',
+  productId = 'product-id/:id',
+  products = 'products',
+  productsSearch = 'search',
+  productsId = 'products-id/:id',
+  settings = 'settings',
+}
+
+export enum AbsoluteAppRoutes {
+  main = 'main',
+  login = 'login',
+  registration = 'registration',
+  notFound = '404',
+  admin = 'main/admin',
+  dashboard = 'main/dashboard',
+  checkout = 'main/checkout',
+  checkoutComplete = 'main/checkout/complete',
+  product = 'main/product',
+  productId = 'main/product/product-id',
+  products = 'main/products',
+  productsSearch = 'main/products/search',
+  productsId = 'main/products/products-id',
+  settings = 'main/settings',
+}

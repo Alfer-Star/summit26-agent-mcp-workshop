@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  column-gap: 0.5rem;
+}
+
+.language {
+  text-decoration: none;
+
+  &.active {
+    text-decoration: underline;
+  }
+}

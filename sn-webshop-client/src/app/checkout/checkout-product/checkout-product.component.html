@@ -1,0 +1,26 @@
+<ng-container>
+  <div class="image">
+    <img [src]="product().imageUrl" width="150" />
+  </div>
+  <div class="product">
+    <p>{{ product().name }}</p>
+    <p>{{ product().description }}</p>
+    <p>Preis {{ product().price | currency }}</p>
+    <p>
+      <b>
+        Summe:
+        {{ product().price * quantity | currency }}
+      </b>
+    </p>
+    <mat-form-field>
+      <mat-label>Menge:</mat-label>
+      <mat-select [value]="quantity" (valueChange)="onQuantitySelect($event)">
+        @for (option of quantityOptions; track option) {
+          <mat-option [value]="option">{{
+            option
+          }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</ng-container>

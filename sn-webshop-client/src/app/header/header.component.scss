@@ -1,0 +1,28 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: map.get(variables.$margins, 'default');
+  column-gap: map.get(variables.$margins, 'default');
+  align-items: center;
+  background-color: var(--mat-sys-primary);
+}
+
+sn-dashboard-anchor {
+  flex: 0 0 auto;
+  align-items: center;
+  display: flex;
+}
+
+sn-search {
+  flex: auto;
+}
+
+sn-user-menu {
+  flex: 0 0 auto;
+  align-items: center;
+  display: flex;
+}

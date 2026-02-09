@@ -1,0 +1,5 @@
+@use 'variables';
+
+a {
+  margin-left: map-get(variables.$margins, 'default');
+}
