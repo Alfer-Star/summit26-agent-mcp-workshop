@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslocoDirective } from "@jsverse/transloco";
-import { AbsoluteAppRoutes } from '../../../../app-routes.enum';
+import { AbsoluteAppRoutes } from '../../../app.routes.enum';
 
 @Component({
   selector: 'sn-checkout-button',

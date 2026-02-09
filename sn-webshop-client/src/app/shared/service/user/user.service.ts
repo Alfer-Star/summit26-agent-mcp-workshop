@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Role, User } from '@shared/model/user/user';
-import { AbsoluteAppRoutes } from '../../../app-routes.enum';
+import { AbsoluteAppRoutes } from '@core/app.routes.enum';
 
 @Injectable({
   providedIn: 'root',

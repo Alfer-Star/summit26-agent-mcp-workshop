@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from "@jsverse/transloco";
-import { RelativeAppRoutes } from '../../../../../app-routes.enum';
+import { RelativeAppRoutes } from '../../../../app.routes.enum';
 
 @Component({
   selector: 'sn-dashboard-anchor',

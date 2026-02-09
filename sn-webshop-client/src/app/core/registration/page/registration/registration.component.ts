@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { AbsoluteAppRoutes } from '../../../../app-routes.enum';
+import { AbsoluteAppRoutes } from '../../../app.routes.enum';
 import { Component } from '@angular/core';
 import { NonNullableFormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';

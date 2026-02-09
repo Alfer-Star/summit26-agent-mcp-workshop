@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { TranslocoDirective } from "@jsverse/transloco";
-import { AbsoluteAppRoutes } from '../../../../app-routes.enum';
+import { AbsoluteAppRoutes } from '../../../app.routes.enum';
 import { AuthHttpService } from '@shared/service/auth/auth-http.service';
 import { UserService } from '@shared/service/user/user.service';
 

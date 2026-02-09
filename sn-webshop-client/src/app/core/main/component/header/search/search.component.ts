@@ -1,4 +1,4 @@
-import { AbsoluteAppRoutes } from '../../../../../app-routes.enum';
+import { AbsoluteAppRoutes } from '../../../../app.routes.enum';
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';

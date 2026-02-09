@@ -11,7 +11,7 @@ import { ConfirmCheckoutComponent } from '@checkout/component/confirm-checkout/c
 import { CheckoutService } from '@shared/service/checkout/checkout.service';
 import { ProductService } from '@shared/service/product/product.service';
 import { UserService } from '@shared/service/user/user.service';
-import { AbsoluteAppRoutes } from '../../../../app-routes.enum';
+import { AbsoluteAppRoutes } from '@core/app.routes.enum';
 
 @Component({
   templateUrl: './checkout.component.html',

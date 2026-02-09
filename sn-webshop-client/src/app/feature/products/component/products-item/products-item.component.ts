@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { Product } from '@shared/model/product/product';
-import { AbsoluteAppRoutes } from '../../../../app-routes.enum';
+import { AbsoluteAppRoutes } from '@core/app.routes.enum';
 import { MatButton } from '@angular/material/button';
 import { TranslocoDirective } from '@jsverse/transloco';
 

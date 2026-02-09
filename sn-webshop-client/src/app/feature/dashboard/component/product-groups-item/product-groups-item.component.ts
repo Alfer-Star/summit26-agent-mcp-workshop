@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { TranslocoDirective } from "@jsverse/transloco";
 import { ProductGroup } from '@shared/model/product/product-group';
-import { AbsoluteAppRoutes } from '../../../../app-routes.enum';
+import { AbsoluteAppRoutes } from '@core/app.routes.enum';
 import { MatButton } from '@angular/material/button';
 
 @Component({
