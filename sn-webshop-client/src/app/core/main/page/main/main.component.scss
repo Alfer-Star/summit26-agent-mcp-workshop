@@ -1,0 +1,15 @@
+@use 'variables';
+@use 'sass:map';
+
+.main {
+}
+
+sn-checkout-button {
+  display: flex;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: map.get(variables.$margins, 'large');
+  margin-top: map.get(variables.$margins, 'large');
+  margin-right: map.get(variables.$margins, 'large');
+  margin-bottom: map.get(variables.$margins, 'large');
+}

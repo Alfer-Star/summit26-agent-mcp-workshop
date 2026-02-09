@@ -1,0 +1,13 @@
+<ng-container *transloco="let translate; prefix: 'core'">
+  <img src="assets/images/logo.svg" [alt]="translate('dashboardAnchor')" width="100" />
+  <div class="information-block">
+    <h2>{{ translate('contact') }}</h2>
+    <a routerLink="404">+49 5251 1581 0</a>
+    <a routerLink="404">info@sn-invent.de</a>
+  </div>
+  <div class="information-block">
+    <h2>{{ translate('aboutSnWebshop') }}</h2>
+    <a routerLink="404">{{ translate('aboutUs') }}</a>
+    <a routerLink="404">{{ translate('impressum') }}</a>
+  </div>
+</ng-container>

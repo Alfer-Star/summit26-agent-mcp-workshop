@@ -1,5 +1,0 @@
-@use 'variables';
-
-sn-product-groups {
-  margin-top: map-get(variables.$margins, 'default');
-}

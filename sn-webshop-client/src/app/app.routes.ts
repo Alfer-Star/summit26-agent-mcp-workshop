@@ -1,15 +1,16 @@
-import { SettingsComponent } from './settings/settings.component';
 import { Routes } from '@angular/router';
 import { AbsoluteAppRoutes, RelativeAppRoutes } from './app-routes.enum';
-import { AdminComponent } from './admin/admin.component';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { CheckoutComponent } from './checkout/checkout.component';
-import { CheckoutCompleteComponent } from './checkout-complete/checkout-complete.component';
-import { ProductComponent } from './product/product.component';
-import { ProductsComponent } from './products/products.component';
+import { MainComponent } from '@core/main/page/main/main.component';
+import { AdminComponent } from '@core/admin/page/admin/admin.component';
+import { CheckoutComponent } from '@checkout/page/checkout/checkout.component';
+import { CheckoutCompleteComponent } from '@checkout/page/checkout-complete/checkout-complete.component';
+import { LoginComponent } from '@core/login/page/login/login.component';
+import { RegistrationComponent } from '@core/registration/page/registration/registration.component';
+import { NotFoundComponent } from '@core/not-found/page/not-found/not-found.component';
+import { DashboardComponent } from '@dashboard/page/dashboard/dashboard.component';
+import { SettingsComponent } from '@settings/page/settings/settings.component';
+import { ProductComponent } from '@product/page/product/product.component';
+import { ProductsComponent } from '@products/page/products/products.component';
 
 export const appRoutes: Routes = [
   {
@@ -19,6 +20,7 @@ export const appRoutes: Routes = [
   },
   {
     path: RelativeAppRoutes.main,
+    component: MainComponent,
     children: [
       {
         path: '',

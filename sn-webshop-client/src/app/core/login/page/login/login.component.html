@@ -1,0 +1,45 @@
+<ng-content *transloco="let translate; prefix: 'auth'">
+  <mat-card *transloco="let translate2" (keyup.enter)="login()">
+    <mat-card-title> {{ translate('login.title') }} </mat-card-title>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm">
+        <mat-form-field dataTestId="email" appearance="outline">
+          <mat-label>{{ translate('email') }}</mat-label>
+          <input id="email" type="text" matInput formControlName="email" />
+          @if (loginForm.get('email')?.hasError('required')) {
+            <mat-error>{{ translate2('validation.required') }}</mat-error>
+          }
+          @if (loginForm.get('email')?.hasError('email')) {
+            <mat-error>{{ translate2('validation.email') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field dataTestId="password" appearance="outline">
+          <mat-label>{{ translate('password') }}</mat-label>
+          <input id="password" type="password" matInput formControlName="password" />
+          @if (loginForm.get('password')?.hasError('required')) {
+            <mat-error>{{ translate2('validation.required') }}</mat-error>
+          }
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    @if (invalidLogin) {
+      <mat-error>{{ translate2('login.invalid') }}</mat-error>
+    }
+    <mat-card-actions>
+      <button dataTestId="login-button" mat-raised-button (click)="login()">
+        {{ translate('login.button') }}
+      </button>
+
+      <a
+        dataTestId="register-anchor"
+        mat-raised-button
+        color="primary"
+        *transloco="let translate; prefix: 'core'"
+        [routerLink]="['/' + absoluteAppRoutes.registration]">
+        {{ translate('register') }}
+      </a>
+    </mat-card-actions>
+  </mat-card>
+</ng-content>

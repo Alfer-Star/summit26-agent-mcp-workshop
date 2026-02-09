@@ -1,0 +1,10 @@
+<ng-container *transloco="let translate; prefix: 'checkout'">
+  <mat-card appearance="outlined">
+    <mat-card-title>{{ translate('thanks') }}</mat-card-title>
+    <mat-card-actions>
+      <button mat-raised-button [routerLink]="'/' + AbsoluteAppRoutes.dashboard">
+        {{ translate('goToDashboard') }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>

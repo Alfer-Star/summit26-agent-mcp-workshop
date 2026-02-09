@@ -1,0 +1,6 @@
+<div *transloco="let translate; prefix: 'core'">
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>{{ translate('searchInput') }}</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+</div>

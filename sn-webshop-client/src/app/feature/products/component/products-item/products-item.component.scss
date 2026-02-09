@@ -1,0 +1,35 @@
+@use 'variables';
+@use 'sass:map';
+
+mat-card {
+  height: 100%;
+}
+
+mat-card-title {
+  padding: map.get(variables.$paddings, 'default');
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 90%;
+  min-height: 2rem;
+}
+
+img {
+  cursor: pointer;
+  width: 50%;
+  align-self: center;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+mat-card-content {
+  height: 100%;
+  padding-top: map.get(variables.$paddings, 'default');
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+}

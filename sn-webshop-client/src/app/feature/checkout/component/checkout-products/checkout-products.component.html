@@ -1,0 +1,18 @@
+<ng-container *transloco="let translate; prefix: 'checkout'">
+  <h2>{{ translate('articles') }}</h2>
+  <div class="products">
+    @for (checkoutProduct of checkoutProducts(); track checkoutProduct.product.id) {
+      <sn-checkout-product
+        [product]="checkoutProduct.product"
+        [quantity]="checkoutProduct.quantity"
+        (quantityChange)="onQuantityReduce($event, checkoutProduct.product.id)" />
+    }
+    @if (checkoutProducts().length === 0) {
+      <p>
+        <b>
+          {{ translate('noItems') }}
+        </b>
+      </p>
+    }
+  </div>
+</ng-container>

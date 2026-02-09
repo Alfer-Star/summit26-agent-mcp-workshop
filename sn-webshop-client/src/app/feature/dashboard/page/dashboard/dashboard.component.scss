@@ -1,0 +1,6 @@
+@use 'variables';
+@use 'sass:map';
+
+sn-product-groups {
+  margin-top: map.get(variables.$margins, 'default');
+}

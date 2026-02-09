@@ -1,0 +1,11 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  margin-top: map.get(variables.$margins, 'large');
+}
