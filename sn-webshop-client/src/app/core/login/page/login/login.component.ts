@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import {
   NonNullableFormBuilder,
-  FormGroup,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -42,7 +41,7 @@ export class LoginComponent {
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
-  loginForm: FormGroup = this.fb.group({
+  loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
@@ -52,8 +51,8 @@ export class LoginComponent {
   }
 
   login(): void {
-    if (this.loginForm.valid) {
-      const value = this.loginForm.value;
+    const value = this.loginForm.value;
+    if (this.loginForm.valid && value.email && value.password) {
       this.authService.login(value.email, value.password).subscribe(
         (data) => {
           this.userService.user = data.user;

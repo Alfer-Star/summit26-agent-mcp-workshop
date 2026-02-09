@@ -50,7 +50,7 @@
           <mat-error>{{ translate2('validation.required') }} </mat-error>
         }
         @if (registerForm.get('confirmPassword')?.hasError('passwordsMatch')) {
-          <mat-error>{{ translate2('validation.required') }}</mat-error>
+          <mat-error>{{ translate2('validation.passwordsMatch') }}</mat-error>
         }
       </mat-form-field>
       <div class="adress-form" *transloco="let translate; prefix: 'settings'">
