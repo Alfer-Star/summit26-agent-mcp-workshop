@@ -1,33 +1,33 @@
 <div *transloco="let translate; prefix: 'core'">
-  <button dataTestId="menu-trigger-button" mat-button [matMenuTriggerFor]="menu">
+  <button snTestId="menu-trigger-button" mat-button [matMenuTriggerFor]="menu">
     <mat-icon>expand_more</mat-icon>
     {{ translate('userMenuTrigger', { username: username ? username : 'there' }) }}
   </button>
   <mat-menu #menu="matMenu">
     @if (isUser) {
-      <button dataTestId="settings-button" mat-menu-item [routerLink]="['settings']">
+      <button snTestId="settings-button" mat-menu-item [routerLink]="['settings']">
         <mat-icon>settings</mat-icon>
         <span>{{ translate('settings') }}</span>
       </button>
     }
     @if (isAdmin) {
-      <button dataTestId="admin-button" mat-menu-item [routerLink]="['admin']">
+      <button snTestId="admin-button" mat-menu-item [routerLink]="['admin']">
         <mat-icon>admin_panel_settings</mat-icon>
         <span>{{ translate('adminSpace') }}</span>
       </button>
     }
     @if (!isLoggedIn) {
-      <button dataTestId="login-button" mat-menu-item [routerLink]="['/login']">
+      <button snTestId="login-button" mat-menu-item [routerLink]="['/login']">
         <mat-icon>login</mat-icon>
         <span>{{ translate('login') }}</span>
       </button>
-      <button dataTestId="register-button" mat-menu-item [routerLink]="['/registration']">
+      <button snTestId="register-button" mat-menu-item [routerLink]="['/registration']">
         <mat-icon>person_add</mat-icon>
         <span>{{ translate('register') }}</span>
       </button>
     }
     @if (isLoggedIn) {
-      <button dataTestId="logout-button" mat-menu-item (click)="logout()">
+      <button snTestId="logout-button" mat-menu-item (click)="logout()">
         <mat-icon>logout</mat-icon>
         <span>{{ translate('logout') }}</span>
       </button>

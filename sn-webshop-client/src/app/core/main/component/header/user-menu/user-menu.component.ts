@@ -7,13 +7,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UserService } from '@shared/service/user/user.service';
 import { Role } from '@shared/model/user/user';
+import { TestIdDirective } from '@shared/directive/test-id.directive';
 
 @Component({
   selector: 'sn-user-menu',
   templateUrl: './user-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButtonModule, MatMenuModule, MatIconModule, RouterLink, TranslocoDirective],
+  imports: [MatButtonModule, MatMenuModule, MatIconModule, RouterLink, TranslocoDirective, TestIdDirective,
 })
 export class UserMenuComponent {
   private readonly userService = inject(UserService);

@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { AuthHttpService } from '@shared/service/auth/auth-http.service';
 import { User } from '@shared/model/user/user';
+import { TestIdDirective } from '@shared/directive/test-id.directive';
 
 @Component({
   selector: 'sn-admin',
@@ -11,7 +12,7 @@ import { User } from '@shared/model/user/user';
   styleUrls: ['./admin.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatCardModule, MatTableModule, TranslocoDirective],
+  imports: [MatCardModule, MatTableModule, TranslocoDirective, TestIdDirective],
 })
 export class AdminComponent {
   private readonly authService = inject(AuthHttpService);

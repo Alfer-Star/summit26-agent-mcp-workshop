@@ -15,6 +15,7 @@ import { AbsoluteAppRoutes } from '../../../app.routes.enum';
 import { AuthHttpService } from '@shared/service/auth/auth-http.service';
 import { UserService } from '@shared/service/user/user.service';
 import { StorageService } from '@shared/service/storage/storage.service';
+import { TestIdDirective } from "@shared/directive/test-id.directive";
 
 @Component({
   templateUrl: './login.component.html',
@@ -28,7 +29,8 @@ import { StorageService } from '@shared/service/storage/storage.service';
     MatInputModule,
     MatButtonModule,
     RouterLink,
-    TranslocoDirective
+    TranslocoDirective,
+    TestIdDirective
 ],
 })
 export class LoginComponent {
