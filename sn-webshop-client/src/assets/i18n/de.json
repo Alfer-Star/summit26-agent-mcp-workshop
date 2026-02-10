@@ -2,7 +2,7 @@
   "core": {
     "dashboardAnchor": "S&N Webshop",
     "searchInput": "Geben Sie einen Suchbegriff ein...",
-    "userMenuTrigger": "Hello {{username}}!",
+    "userMenuTrigger": "Hallo {{username}}!",
     "logout": "Abmelden",
     "discover": "Entdecken",
     "goToCheckout": "Zur Kasse",
