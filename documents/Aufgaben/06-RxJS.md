@@ -10,8 +10,8 @@
 
 ## 0. Warm-Up
 
-Unter der AppComponent befindet sich eine _WarmUpComponent_, die ein Observable mit einer Liste von Städten enthält.<br>
-Optional kann aus der AppComponent für die Dauer der Übung das _router-outlet_ entfernt werden.
+Unter der AppComponent befindet sich eine _WarmUpRxJsComponent_, die ein Observable mit einer Liste von Städten enthält (`citiesList$`) und einem Observable, welches die Städte nacheinander durchreicht (`citiesStream$`).<br>
+Für die Dauer der Übung könnt ihr diese Component einfach in die _AppComponent_ einbinden, den Rest erstmal entfernen.
 
 ### 0.1 Städte anzeigen
 
@@ -21,10 +21,16 @@ Gib die Städte mithilfe der async-Pipe im Template der _WarmUpComponent_ aus.
 <summary>Lösung anzeigen</summary>
 <p>
 
-```typescript
+```html
 
 ...
-template: '@for(city of cities$ | async; track city) { <span>{{city}}</span> }'
+
+template 
+        
+@for(city of citiesList$ | async; track city) { 
+  <span>{{city}}</span> 
+}
+
 ...
 
 ```
@@ -34,7 +40,7 @@ template: '@for(city of cities$ | async; track city) { <span>{{city}}</span> }'
 
 ### 0.2 Städte filtern
 
-Filter nun die Städte Berlin und Hamburg mithilfe eines Operators aus dieser Liste.
+Filter nun die Städte Berlin und Hamburg mithilfe eines Operators aus `citiesStream$` und zeig diese im Template an.
 
 <details>
 <summary>Lösung anzeigen</summary>
@@ -42,7 +48,7 @@ Filter nun die Städte Berlin und Hamburg mithilfe eines Operators aus dieser Li
 
 ```typescript
 
-readonly cities$ = of('Hamburg', 'Berlin', 'Paderborn', 'München').pipe(filter((city) => city !== 'Hamburg' && city !== 'Berlin' ));
+readonly citiesStream$ = of('Hamburg', 'Berlin', 'Paderborn', 'München').pipe(filter((city) => city !== 'Hamburg' && city !== 'Berlin' ));
 
 ```
 
@@ -51,14 +57,14 @@ readonly cities$ = of('Hamburg', 'Berlin', 'Paderborn', 'München').pipe(filter(
 
 ### 0.3 Umlaute entfernen
 
-Die deutschen Umlaute aus allen Städte-Namen wie z.B. ä sollen durch einfache Buchstaben wie z.B. ae ersetzt werden.
+Die deutschen Umlaute aus allen Städte-Namen wie z.B. "ä" sollen durch einfache Buchstaben wie z.B. ae ersetzt werden.
 
 <details>
 <summary>Lösung anzeigen</summary>
 <p>
 
 ```typescript
-readonly cities$ = of('Hamburg', 'Berlin', 'Paderborn', 'München').pipe(map((city) => city.replace('ä', 'ae').replace('ü', 'ue').replace('ö', 'oe') ));
+readonly citiesStream$ = of('Hamburg', 'Berlin', 'Paderborn', 'München').pipe(map((city) => city.replace('ä', 'ae').replace('ü', 'ue').replace('ö', 'oe') ));
 
 ```
 
@@ -68,14 +74,17 @@ readonly cities$ = of('Hamburg', 'Berlin', 'Paderborn', 'München').pipe(map((ci
 ### 0.4 Städte durch coolere Städte ersetzen
 
 Die Städte sollen durch die cooleren Städte ersetzt werden.<br>
-Füge dafür einen Operator ein, der an 'cities$' gepiped wird und 'coolerCities$' zurückgibt.
+Füge dafür einen Operator ein, der an 'citiesList$' gepiped wird und 'coolerCities$' zurückgibt.
 
 <details>
 <summary>Lösung anzeigen</summary>
 <p>
 
 ```typescript
-readonly cities$ = of(['Hamburg', 'Berlin', 'Paderborn', 'München']).pipe(switchMap(() => this.coolerCities$);
+
+readonly coolerCities$ = of(['New York', 'Tokio', 'Johannesburg']);
+
+readonly citiesList$ = of(['Hamburg', 'Berlin', 'Paderborn', 'München']).pipe(switchMap(() => this.coolerCities$);
 
 ```
 
@@ -483,11 +492,13 @@ Passe die Component so an, dass sie über ein Input das "detailedProduct" aus de
 
 Hint: Dafür muss "withComponentInputBinding" beim "provideRouter"-Aufruf in der _main.ts_ ergänzt werden.
 
+<details>
+<summary>Lösung anzeigen</summary>
+<p>
 ```bash
 
 ProductComponent
 
-...
 export class ProductComponent {
   private checkoutService = inject(CheckoutService);
 
