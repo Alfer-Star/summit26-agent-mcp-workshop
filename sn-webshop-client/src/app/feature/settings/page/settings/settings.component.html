@@ -1,7 +1,38 @@
 <ng-container *transloco="let translate; prefix: 'settings'">
   <mat-card>
     <mat-card-title>{{ translate('addresses') }}</mat-card-title>
-    <mat-card-content> </mat-card-content>
+    <mat-card-content *transloco="let translate" [formGroup]="settingsForm">
+      <mat-form-field>
+        <mat-label>{{ translate('settings.name') }}</mat-label>
+        <input id="name" type="text" matInput formControlName="name" />
+        @if (settingsForm.get('name')?.hasError('required')) {
+          <mat-error>{{ translate('validation.required') }}</mat-error>
+        }
+      </mat-form-field>
+      <div class="addresses">
+        @for (
+          address of addressFormArray?.controls;
+          track address;
+          let i = $index;
+          let last = $last;
+          let count = $count
+        ) {
+          <div class="address" formArrayName="addresses" *transloco="let translate2">
+            <sn-address-form [formGroupName]="i"></sn-address-form>
+            @if (count > 1) {
+              <button mat-icon-button (click)="delete(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+            @if (last) {
+              <button mat-icon-button (click)="addAddress()">
+                <mat-icon>add</mat-icon>
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" (click)="saveSettings()" (keyup.enter)="saveSettings()">
         {{ translate('save') }}

@@ -9,10 +9,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { TranslocoDirective } from "@jsverse/transloco";
+import { TranslocoDirective } from '@jsverse/transloco';
 import { PaymentInformationFormComponent } from '@shared/component/payment-information-form/payment-information-form.component';
 import { AuthHttpService } from '@shared/service/auth/auth-http.service';
 import { CustomValidators } from '@shared/validator/custom-validator';
+import { EmailAlreadyUsedValidator } from '@shared/validator/email-already-used-validator';
+import { AddressFormComponent } from "@shared/component/address-form/address-form.component";
 
 @Component({
   selector: 'sn-registration',
@@ -27,7 +29,8 @@ import { CustomValidators } from '@shared/validator/custom-validator';
     MatProgressSpinnerModule,
     PaymentInformationFormComponent,
     MatButtonModule,
-    TranslocoDirective
+    TranslocoDirective,
+    AddressFormComponent
 ],
 })
 export class RegistrationComponent {
@@ -38,16 +41,20 @@ export class RegistrationComponent {
   private readonly authService = inject(AuthHttpService);
   private readonly router = inject(Router);
 
-  registerForm = this.fb.group({
-    name: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
-    confirmPassword: ['', [Validators.required]],
-    streetNr: ['', Validators.required],
-    zip: ['', Validators.required],
-    city: ['', Validators.required],
-    iban: ['', [Validators.required, CustomValidators.iban]],
-  });
+  registerForm = this.fb.group(
+    {
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email], [EmailAlreadyUsedValidator.createValidator(this.authService)]],
+      password: ['', [Validators.required, CustomValidators.passwordStrength]],
+      confirmPassword: ['', [Validators.required]],
+      streetNr: ['', Validators.required],
+      zip: ['', Validators.required],
+      city: ['', Validators.required],
+      iban: ['', [Validators.required, CustomValidators.iban]],
+    },
+    { validators: [CustomValidators.passwordsMatchValidator] },
+  );
+
   register(): void {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({

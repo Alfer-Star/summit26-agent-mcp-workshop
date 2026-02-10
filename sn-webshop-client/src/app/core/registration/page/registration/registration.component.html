@@ -53,31 +53,7 @@
           <mat-error>{{ translate2('validation.passwordsMatch') }}</mat-error>
         }
       </mat-form-field>
-      <div class="adress-form" *transloco="let translate; prefix: 'settings'">
-        <mat-form-field class="street-nr" appearance="outline">
-          <mat-label>{{ translate('streetNr') }}</mat-label>
-          <input type="text" matInput formControlName="streetNr" />
-          @if (registerForm.get('streetNr')?.hasError('required')) {
-            <mat-error> {{ translate2('validation.required') }} </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field class="zip" appearance="outline">
-          <mat-label>{{ translate('zip') }}</mat-label>
-          <input type="text" matInput formControlName="zip" />
-          @if (registerForm.get('zip')?.hasError('required')) {
-            <mat-error> {{ translate2('validation.required') }} </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field class="city" appearance="outline">
-          <mat-label>{{ translate('city') }}</mat-label>
-          <input type="text" matInput formControlName="city" />
-          @if (registerForm.get('city')?.hasError('required')) {
-            <mat-error> {{ translate2('validation.required') }} </mat-error>
-          }
-        </mat-form-field>
-      </div>
+      <sn-address-form></sn-address-form>
 
       <sn-payment-information-form></sn-payment-information-form>
     </form>

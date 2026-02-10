@@ -48,7 +48,7 @@ export class AuthHttpService {
     );
   }
 
-  patch(user: User): Observable<User> {
+  patch(user: Partial<User>): Observable<User> {
     const patchOptions = {
       headers: httpOptions.headers.set('x-access-token', this.token),
     };
