@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 
-import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { DeliveryAddressComponent } from '@checkout/component/delivery-address/delivery-address.component';
 import { PaymentTypeComponent } from '@checkout/component/payment-type/payment-type.component';
@@ -24,23 +22,19 @@ import { AbsoluteAppRoutes } from '@core/app.routes.enum';
     PaymentTypeComponent,
     CheckoutProductsComponent,
     ConfirmCheckoutComponent,
-    AsyncPipe,
   ],
 })
 export class CheckoutComponent {
   private readonly checkoutService = inject(CheckoutService);
-  private readonly productService = inject(ProductService);
   private readonly userService = inject(UserService);
   private readonly router = inject(Router);
 
   readonly paymentInformation = this.userService.user?.paymentInformation;
-  readonly productsInBasket$ = this.checkoutService.productsInBasket$;
-  readonly total$ = this.productsInBasket$.pipe(
-    map((productsInBasket) => {
-      return productsInBasket.reduce((previous, current) => previous + current.quantity * current.product.price, 0);
-    }),
-  );
-  readonly product$ = this.productService.product$;
+  readonly productsInBasket = this.checkoutService.productsInBasket;
+  readonly total = computed(() => {
+    const productsInBasket = this.productsInBasket();
+    return productsInBasket.reduce((previous, current) => previous + current.quantity * current.product.price, 0);
+  });
   readonly user = this.userService.user;
 
   checkout(): void {

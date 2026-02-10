@@ -1,2 +1,12 @@
 <input type="text" [(ngModel)]="city" /><br>
 <button (click)="hinzufuegen()">Hinzufügen</button>
+<ul>
+  @for(city of cities(); track city) {
+    <li>{{city}}</li>
+  }
+</ul>
+<ul>
+  @for(city of filteredCities(); track city) {
+    <li>{{city}}</li>
+  }
+</ul>

@@ -8,9 +8,9 @@
         <sn-payment-type [paymentInformation]="paymentInformation"></sn-payment-type>
       }
       <sn-checkout-products
-        [checkoutProducts]="(productsInBasket$ | async) ?? []"
+        [checkoutProducts]="productsInBasket()"
       (quantityChangeForProduct)="removeFromBasket($event.productId, $event.amount)"></sn-checkout-products>
     </div>
-    <sn-confirm-checkout [total]="(total$ | async) ?? 0" (buyClick)="checkout()"></sn-confirm-checkout>
+    <sn-confirm-checkout [total]="total()" (buyClick)="checkout()"></sn-confirm-checkout>
   </mat-card-content>
 </mat-card>

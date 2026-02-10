@@ -1,6 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 import { CheckoutHttpService } from './checkout-http.service';
 import { CheckoutProduct } from '@shared/model/checkout/checkout-product';
 import { DetailedProduct } from '@shared/model/product/detailed-product';
@@ -12,13 +11,14 @@ import { isProduct } from '@shared/model/product/product-type-guard';
 export class CheckoutService {
   private readonly checkoutHttp = inject(CheckoutHttpService);
 
-  private readonly _basket$ = new BehaviorSubject<Map<string, CheckoutProduct>>(new Map());
-
-  readonly basket$ = this._basket$.asObservable();
-  readonly productsInBasket$ = this.basket$.pipe(map((basket) => [...basket.values()]));
+  private readonly _basket = signal<Map<string, CheckoutProduct>>(new Map());
+  readonly basket = this._basket.asReadonly();
+  readonly productsInBasket = computed(() => {
+    return [...this.basket().values()];
+  });
 
   addToBasket(product: DetailedProduct, quantity: number): void {
-    this.basket$.pipe(first()).subscribe((basket) => {
+    this._basket.update((basket) => {
       const checkoutProduct = basket.get(product.id);
 
       if (checkoutProduct) {
@@ -29,8 +29,7 @@ export class CheckoutService {
       } else {
         basket.set(product.id, { product, quantity });
       }
-
-      this._basket$.next(basket);
+      return new Map(basket);
     });
   }
 
@@ -38,7 +37,7 @@ export class CheckoutService {
   removeFromBasket(id: string, quantity: number): void;
 
   removeFromBasket(productOrId: DetailedProduct | string, quantity: number): void {
-    this.basket$.pipe(first()).subscribe((basket) => {
+    this._basket.update((basket) => {
       let id: string;
 
       if (isProduct(productOrId)) {
@@ -58,22 +57,27 @@ export class CheckoutService {
         }
       }
 
-      this._basket$.next(basket);
+      return basket;
     });
   }
 
   checkout(): Observable<unknown> {
-    return this.productsInBasket$.pipe(
-      first(),
-      switchMap((productsInBasket) => this.checkoutHttp.checkout(productsInBasket)),
-    );
+    const productsInBasket = this.productsInBasket();
+    return this.checkoutHttp.checkout(productsInBasket);
   }
 
   clearBasket(): void {
-    this._basket$.next(new Map());
+    this._basket.set(new Map());
   }
 
-  getQuantity(id: string): Observable<number | undefined> {
-    return this.basket$.pipe(map((basket) => basket.get(id)?.quantity));
+  getQuantity(id?: string): Signal<number | undefined> {
+    return computed(() => {
+      const basket = this.basket();
+      if (id) {
+        return basket.get(id)?.quantity;
+      } else {
+        return undefined;
+      }
+    });
   }
 }

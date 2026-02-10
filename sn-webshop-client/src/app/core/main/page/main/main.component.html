@@ -2,7 +2,7 @@
   <sn-header></sn-header>
   <div class="main-content">
     <router-outlet></router-outlet>
-    @if (showCheckoutButton$ | async) {
+    @if (isCheckoutButtonVisible()) {
       <sn-checkout-button />
     }
   </div>

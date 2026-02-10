@@ -3,7 +3,7 @@
     <sn-product-info [product]="detailedProduct()" />
     <sn-product-basket-options
       [product]="detailedProduct()"
-      [productQuantity]="(quantity$ | async) ?? 0"
+      [productQuantity]="productQuantity()"
       (addClick)="addToBasket()" />
   </mat-card-content>
 </mat-card>

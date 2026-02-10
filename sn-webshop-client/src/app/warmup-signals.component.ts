@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -10,6 +10,21 @@ import { FormsModule } from '@angular/forms';
 export class WarmupSignalsComponent {
   readonly cities = signal(['Hamburg', 'Berlin', 'Paderborn', 'München']);
   readonly city = signal('');
+  readonly filteredCities = computed(() => {
+    const cities = this.cities();
+    return cities.filter((city) => city !== 'Hamburg');
+  });
 
-  hinzufuegen() {}
+  constructor() {
+    effect(() => {
+      console.log(this.cities());
+    });
+  }
+
+  hinzufuegen() {
+    this.cities.update((cities) => {
+      return [...cities, this.city()];
+    });
+    this.city.set('');
+  }
 }
