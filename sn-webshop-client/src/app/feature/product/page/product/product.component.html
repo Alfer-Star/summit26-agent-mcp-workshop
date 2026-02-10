@@ -3,8 +3,7 @@
     <sn-product-info [product]="detailedProduct()" />
     <sn-product-basket-options
       [product]="detailedProduct()"
-      [productQuantity]="detailedProduct().availableQuantity"
+      [productQuantity]="(quantity$ | async) ?? 0"
       (addClick)="addToBasket()" />
   </mat-card-content>
 </mat-card>
-{{ detailedProduct() | json }}
