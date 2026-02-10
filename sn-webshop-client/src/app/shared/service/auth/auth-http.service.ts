@@ -15,8 +15,6 @@ const httpOptions = {
 export class AuthHttpService {
   private readonly http = inject(HttpClient);
 
-  token = '';
-
   isEmailAlreadyRegistered(email: string): Observable<boolean> {
     return this.http.get<boolean>(environment.url + '/auth/checkEmail', {
       params: new HttpParams().append('email', email),
@@ -48,17 +46,11 @@ export class AuthHttpService {
     );
   }
 
-  patch(user: Partial<User>): Observable<User> {
-    const patchOptions = {
-      headers: httpOptions.headers.set('x-access-token', this.token),
-    };
-
-    return this.http.patch<User>(environment.url + '/user', user, patchOptions);
+  patch(user: User): Observable<User> {
+    return this.http.patch<User>(environment.url + '/user', user, httpOptions);
   }
 
   getRegisteredUsers(): Observable<User[]> {
-    return this.http.get<User[]>(environment.url + '/api/test/admin', {
-      headers: new HttpHeaders({ 'x-access-token': this.token }),
-    });
+    return this.http.get<User[]>(environment.url + '/api/test/admin');
   }
 }

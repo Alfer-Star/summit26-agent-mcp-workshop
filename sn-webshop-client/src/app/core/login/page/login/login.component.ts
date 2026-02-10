@@ -14,6 +14,7 @@ import { TranslocoDirective } from "@jsverse/transloco";
 import { AbsoluteAppRoutes } from '../../../app.routes.enum';
 import { AuthHttpService } from '@shared/service/auth/auth-http.service';
 import { UserService } from '@shared/service/user/user.service';
+import { StorageService } from '@shared/service/storage/storage.service';
 
 @Component({
   templateUrl: './login.component.html',
@@ -40,6 +41,7 @@ export class LoginComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
+  private readonly tokenStorage = inject(StorageService);
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -55,18 +57,16 @@ export class LoginComponent {
     if (this.loginForm.valid && value.email && value.password) {
       this.authService.login(value.email, value.password).subscribe(
         (data) => {
-          this.userService.user = data.user;
-          this.authService.token = data.accessToken;
+          this.tokenStorage.saveTokenAndUser(data);
           if (this.redirectPath) {
             this.router.navigate([`/${this.redirectPath}`]);
           } else {
             this.router.navigate([`/${AbsoluteAppRoutes.dashboard}`]);
           }
         },
-        (err) => {
-          console.log(err);
+        () => {
           this.invalidLogin = true;
-        },
+        }
       );
     } else {
       this.loginForm.markAllAsTouched();
