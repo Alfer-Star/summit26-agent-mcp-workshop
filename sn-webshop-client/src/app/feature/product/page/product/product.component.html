@@ -1,11 +1,10 @@
 <mat-card appearance="outlined">
   <mat-card-content>
-    @if (product$ | async; as product) {
-      <sn-product-info [product]="product"></sn-product-info>
-      <sn-product-basket-options
-        [product]="product"
-        [productQuantity]="(productQuantity$ | async) ?? 0"
-      (addClick)="addToBasket()"></sn-product-basket-options>
-    }
+    <sn-product-info [product]="detailedProduct()" />
+    <sn-product-basket-options
+      [product]="detailedProduct()"
+      [productQuantity]="detailedProduct().availableQuantity"
+      (addClick)="addToBasket()" />
   </mat-card-content>
 </mat-card>
+{{ detailedProduct() | json }}
