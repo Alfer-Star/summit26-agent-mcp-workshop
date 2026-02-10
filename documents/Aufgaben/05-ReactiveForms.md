@@ -68,18 +68,15 @@ _custom-validator.ts_
 
 ```typescript
 export class CustomValidators {
-  static passwordsMatchValidator(control: AbstractControl): void {
+  static passwordsMatchValidator(control: AbstractControl): null {
     const passwordCtrl = control.get('password') as FormControl<string>;
     const confirmPasswordCtrl = control.get('confirmPassword') as FormControl<string>;
-    if (
-      passwordCtrl &&
-      confirmPasswordCtrl &&
-      passwordCtrl.value !== confirmPasswordCtrl.value
-    ) {
+    if (passwordCtrl && confirmPasswordCtrl && passwordCtrl.value !== confirmPasswordCtrl.value) {
       confirmPasswordCtrl.setErrors({ passwordsMatch: true });
     } else if (confirmPasswordCtrl?.hasError('passwordsMatch')) {
       confirmPasswordCtrl.updateValueAndValidity();
     }
+    return null;
   }
   ...
 }
