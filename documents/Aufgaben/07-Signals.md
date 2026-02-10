@@ -22,9 +22,9 @@ Gib die Städte im Template der _WarmUpComponent_ aus.
 
 ...
 <ul>
-  @for(city of cities(); track city) {
-    <li>{{city}}</li>
-  }
+@for(city of cities(); track city) {
+  <li>{{city}}</li>
+}
 </ul>
 ...
 
@@ -51,9 +51,9 @@ readonly filteredCities$ = computed(() => {
 
 ...
 <ul>
-  @for(city of filteredCities(); track city) {
-    <li>{{city}}</li>
-  }
+@for(city of filteredCities(); track city) {
+  <li>{{city}}</li>
+}
 </ul>
 ...
 
@@ -91,7 +91,7 @@ hinzufuegen() {
 
 </p>
 </details>
- 
+
 
 ## 1. Checkout-Service umbauen
 
@@ -171,34 +171,21 @@ export class CheckoutService {
   clearBasket(): void {
     this._basket.set(new Map());
   }
-
-  getQuantity(id?: string): Signal<number | undefined> {
-    return computed(() => {
-      const basket = this.basket();
-      if (id) {
-        return basket.get(id)?.quantity;
-      } else {
-        return undefined;
-      }
-    });
-  }
 }
 
 product.component.ts
 
 export class ProductComponent {
-  private productService = inject(ProductService);
-  private checkoutService = inject(CheckoutService);
-
-  readonly product$ = this.productService.product$;
-  readonly product = toSignal(this.productService.product$);
-  readonly productQuantity = this.checkoutService.getQuantity(this.product()?.id);
+  readonly detailedProduct = input.required<DetailedProduct>();
+  readonly productQuantity = computed(() => {
+    const product = this.detailedProduct();
+    const basket = this.checkoutService.basket();
+    return basket.get(product.id)?.quantity ?? 0;
+  });
 
   addToBasket(): void {
-    const detailedProduct = this.product();
-    if (detailedProduct) {
-      this.checkoutService.addToBasket(detailedProduct, 1);
-    }
+    const detailedProduct = this.detailedProduct();
+    this.checkoutService.addToBasket(detailedProduct, 1);
   }
 }
 
