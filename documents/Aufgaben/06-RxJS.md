@@ -495,6 +495,7 @@ Hint: Dafür muss "withComponentInputBinding" beim "provideRouter"-Aufruf in der
 <details>
 <summary>Lösung anzeigen</summary>
 <p>
+
 ```bash
 
 ProductComponent
