@@ -44,7 +44,7 @@ Erzeuge dir ein neues Signal, welches alle Städte bis auf "Hamburg" beinhaltet.
 
 ```typescript
 
-readonly filteredCities$ = computed(() => {
+readonly filteredCities = computed(() => {
   const cities = this.cities();
   return cities.filter(city => city !== 'Hamburg')
 })
@@ -100,7 +100,7 @@ Bau den Service so, um dass stattdessen ein Signal verwendet wird.<br>
 Die öffentlichen Properties (`basket$` und `productsInBasket$`) sollen dementsprechend auch Signals sein (readonly).
 
 <details>
-<summary>Lösung anzeigen (CheckoutService und ProductComponent)</summary>
+<summary>Lösung anzeigen</summary>
 <p>
 
 ```typescript
@@ -176,6 +176,7 @@ export class CheckoutService {
 product.component.ts
 
 export class ProductComponent {
+  private checkoutService = inject(CheckoutService);
   readonly detailedProduct = input.required<DetailedProduct>();
   readonly productQuantity = computed(() => {
     const product = this.detailedProduct();
@@ -189,6 +190,106 @@ export class ProductComponent {
   }
 }
 
+```
+
+main.component.ts
+```TypeScript
+export class MainComponent {
+  private readonly checkoutService = inject(CheckoutService);
+  private readonly router = inject(Router);
+
+  private readonly productsInBasket = this.checkoutService.productsInBasket;
+  private readonly isOnCheckoutRoute = signal(false);
+
+  protected readonly isCheckoutButtonVisible = computed(() => {
+    const hasProductsInBasket = this.productsInBasket().length > 0;
+    const isOnCheckoutRoute = this.isOnCheckoutRoute();
+    return hasProductsInBasket && !isOnCheckoutRoute;
+  });
+
+  constructor() {
+    this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isOnCheckoutRoute.set(event.urlAfterRedirects.endsWith(AbsoluteAppRoutes.checkout));
+      }
+    });
+  }
+}
+```
+
+
+main.component.html
+```html
+@if (isCheckoutButtonVisible()) {
+  <sn-checkout-button />
+}
+```
+
+checkout.component.ts
+```TypeScript
+export class CheckoutComponent {
+  private readonly checkoutService = inject(CheckoutService);
+  private readonly userService = inject(UserService);
+  private readonly router = inject(Router);
+
+  readonly paymentInformation = this.userService.user?.paymentInformation;
+  readonly productsInBasket = this.checkoutService.productsInBasket;
+  readonly total = computed(() => {
+    const productsInBasket = this.productsInBasket();
+    return productsInBasket.reduce((previous, current) => previous + current.quantity * current.product.price, 0);
+  });
+  readonly user = this.userService.user;
+
+  checkout(): void {
+    this.checkoutService.checkout().subscribe(() => {
+      this.router.navigate([AbsoluteAppRoutes.checkoutComplete]);
+    });
+  }
+
+  removeFromBasket(productId: string, amount: number): void {
+    this.checkoutService.removeFromBasket(productId, amount);
+  }
+
+  clearBasket(): void {
+    this.checkoutService.clearBasket();
+  }
+}
+```
+
+
+checkout.component.html
+```html
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <div class="checkout-information">
+      @if (user) {
+        <sn-delivery-address [user]="user"></sn-delivery-address>
+      }
+      @if (paymentInformation) {
+        <sn-payment-type [paymentInformation]="paymentInformation"></sn-payment-type>
+      }
+      <sn-checkout-products
+        [checkoutProducts]="productsInBasket()"
+      (quantityChangeForProduct)="removeFromBasket($event.productId, $event.amount)"></sn-checkout-products>
+    </div>
+    <sn-confirm-checkout [total]="total()" (buyClick)="checkout()"></sn-confirm-checkout>
+  </mat-card-content>
+</mat-card>
+```
+
+has-product-selected.guard.ts
+```TypeScript
+export const hasProductsSelectedGuard: CanActivateFn = () => {
+  const checkoutService = inject(CheckoutService);
+  const router = inject(Router);
+  const productsInBasket = checkoutService.productsInBasket();
+  if (productsInBasket.length > 0) {
+    return true;
+  } else {
+    router.navigate([AbsoluteAppRoutes.dashboard]);
+    return false;
+  }
+};
 ```
 
 </p>
