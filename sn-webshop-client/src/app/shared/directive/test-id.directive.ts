@@ -11,7 +11,7 @@ export class TestIdDirective {
 
   constructor() {
     effect(() => {
-      this.renderer.setAttribute(this.host.nativeElement, dataTestid, this.dataTestId());
+      this.renderer.setAttribute(this.host.nativeElement, dataTestid, this.snTestId());
     });
   }
 }

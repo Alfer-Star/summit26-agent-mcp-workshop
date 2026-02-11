@@ -14,7 +14,7 @@ import { TestIdDirective } from '@shared/directive/test-id.directive';
   templateUrl: './user-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButtonModule, MatMenuModule, MatIconModule, RouterLink, TranslocoDirective, TestIdDirective,
+  imports: [MatButtonModule, MatMenuModule, MatIconModule, RouterLink, TranslocoDirective, TestIdDirective]
 })
 export class UserMenuComponent {
   private readonly userService = inject(UserService);
