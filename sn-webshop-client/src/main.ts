@@ -9,6 +9,7 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideI18N } from '@transloco/provide-i18n';
 import { appRoutes } from '@core/app.routes';
 import { langInterceptorProviders } from '@shared/interceptor/language.interceptor';
+import { authInterceptorProviders } from '@shared/interceptor/auth.interceptor';
 
 if (environment.production) {
   enableProdMode();
@@ -16,6 +17,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    authInterceptorProviders,
     langInterceptorProviders,
     provideRouter(appRoutes, withComponentInputBinding()),
     provideHttpClient(withInterceptorsFromDi()),
