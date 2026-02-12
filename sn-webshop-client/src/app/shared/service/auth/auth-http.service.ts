@@ -46,7 +46,7 @@ export class AuthHttpService {
     );
   }
 
-  patch(user: User): Observable<User> {
+  patch(user: Partial<User>): Observable<User> {
     return this.http.patch<User>(environment.url + '/user', user, httpOptions);
   }
 
