@@ -1,4 +1,4 @@
 import { Routes } from '@angular/router';
-import { SettingsComponent } from './page/settings/settings.component';
+import { SettingsSignalFormComponent } from './page/settings/settings-signal-form.component';
 
-export const SettingsRoutes: Routes = [{ path: '', component: SettingsComponent }];
+export const SettingsRoutes: Routes = [{ path: '', component: SettingsSignalFormComponent }];

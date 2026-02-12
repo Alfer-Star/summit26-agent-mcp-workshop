@@ -6,8 +6,8 @@ import { AbsoluteAppRoutes, RelativeAppRoutes } from './app.routes.enum';
 import { adminGuard } from '@shared/guard/admin.guard';
 import { authGuard } from '@shared/guard/auth.guard';
 import { userGuard } from '@shared/guard/user.guard';
-import { LoginComponent } from './login/page/login/login.component';
-import { RegistrationComponent } from './registration/page/registration/registration.component';
+import { LoginSignalFormComponent } from './login/page/login/login-signal-form.component';
+import { RegistrationSignalFormsComponent } from './registration/page/registration/registration-signal-form.component';
 
 export const appRoutes: Routes = [
   {
@@ -55,15 +55,15 @@ export const appRoutes: Routes = [
   },
   {
     path: RelativeAppRoutes.login,
-    component: LoginComponent,
+    component: LoginSignalFormComponent,
   },
   {
     path: RelativeAppRoutes.login + '/:redirectPath',
-    component: LoginComponent,
+    component: LoginSignalFormComponent,
   },
   {
     path: AbsoluteAppRoutes.registration,
-    component: RegistrationComponent,
+    component: RegistrationSignalFormsComponent,
   },
   {
     path: RelativeAppRoutes.notFound,

@@ -1,71 +1,61 @@
-<mat-card *transloco="let translate; prefix: 'auth'" appearance="outlined" (keyup.enter)="register()">
-  <mat-card-title>{{ translate('registration.title') }}</mat-card-title>
+<mat-card appearance="outlined" *transloco="let translate; prefix: 'auth'" (keyup.enter)="register()">
+  <mat-card-title>
+    {{ translate('registration.title') }}
+  </mat-card-title>
 
-  <mat-card-content *transloco="let translate2">
-    <form [formGroup]="registerForm">
-      <mat-form-field appearance="outline">
+  <mat-card-content>
+    <form *transloco="let translateValidation">
+
+      <mat-form-field>
         <mat-label>{{ translate('name') }}</mat-label>
-        <input id="name" type="text" matInput formControlName="name" />
-        @if (registerForm.get('name')?.hasError('required')) {
-          <mat-error>{{ translate2('validation.required') }}</mat-error>
+        <input id="name" type="text" matInput [formField]="registerForm.name" />
+        @for (error of registerForm.name().errors(); track error) {
+          <mat-error>{{ translateValidation(error | errorMessage) }}</mat-error>
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>{{ translate('email') }}</mat-label>
-        <input id="email" type="email" matInput autocomplete="username" formControlName="email" />
-        @if (registerForm.get('email')?.status === 'PENDING') {
-          <mat-spinner matSuffix [diameter]="18" />
+        <input id="email" type="email" matInput autocomplete="username" [formField]="registerForm.email" />
+        @for (error of registerForm.email().errors(); track error) {
+          <mat-error>{{ translateValidation(error | errorMessage) }}</mat-error>
         }
-        @if (registerForm.get('email')?.hasError('required')) {
-          <mat-error>{{ translate2('validation.required') }}</mat-error>
-        }
-        @if (registerForm.get('email')?.hasError('email')) {
-          <mat-error>{{ translate2('validation.email') }}</mat-error>
-        }
-        @if (registerForm.get('email')?.hasError('emailAlreadyUsed')) {
-          <mat-error>{{ translate2('validation.emailAlreadyUsed') }}</mat-error>
+        @if (registerForm.email().pending()) {
+          <mat-spinner matSuffix [diameter]="18"></mat-spinner>
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>{{ translate('password') }}</mat-label>
-        <input id="password" type="password" matInput autocomplete="new-password" formControlName="password" />
-        @if (registerForm.get('password')?.hasError('passwordStrength')) {
-          <mat-error>
-            {{ translate2('validation.passwordStrength') }}
-          </mat-error>
+        <input id="password" type="password" matInput autocomplete="new-password" [formField]="registerForm.password" />
+        @for (error of registerForm.password().errors(); track error) {
+          <mat-error>{{ translateValidation(error | errorMessage) }}</mat-error>
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>{{ translate('password2') }}</mat-label>
         <input
           id="confirmPassword"
           type="password"
           matInput
           autocomplete="new-password"
-          formControlName="confirmPassword" />
-        @if (registerForm.get('confirmPassword')?.hasError('required')) {
-          <mat-error>{{ translate2('validation.required') }} </mat-error>
-        }
-        @if (registerForm.get('confirmPassword')?.hasError('passwordsMatch')) {
-          <mat-error>{{ translate2('validation.passwordsMatch') }}</mat-error>
+          [formField]="registerForm.confirmPassword" />
+        @for (error of registerForm.name().errors(); track error) {
+          <mat-error>{{ translateValidation(error | errorMessage) }}</mat-error>
         }
       </mat-form-field>
-      <sn-address-form></sn-address-form>
-
-      <sn-payment-information-form></sn-payment-information-form>
+      <sn-address-signal-form [addressForm]="registerForm" />
+      <sn-payment-information-signal-form [paymentInformationForm]="registerForm" />
     </form>
   </mat-card-content>
   @if (invalidRegistration) {
-    <mat-error> {{ translate('registration.invalid') }} </mat-error>
+    <mat-error>{{ translate('registration.invalid') }}</mat-error>
   }
   <mat-card-actions>
     <button
       mat-raised-button
-      color="primary"
-      [disabled]="registerForm.invalid || registerForm.status === 'PENDING'"
+      [disabled]="registerForm().invalid || registerForm().pending()"
       (click)="register()"
       (keyup.enter)="register()">
       {{ translate('createAccount') }}

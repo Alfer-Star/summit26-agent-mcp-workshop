@@ -1,85 +1,94 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatCard, MatCardActions, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AbsoluteAppRoutes } from '@core/app.routes.enum';
-import { TranslocoDirective } from '@jsverse/transloco';
 import { Address } from '@shared/model/address/address';
 import { AuthHttpService } from '@shared/service/auth/auth-http.service';
 import { UserService } from '@shared/service/user/user.service';
-import { MatFormField, MatLabel, MatError, MatInput } from '@angular/material/input';
+import { TranslocoDirective } from '@jsverse/transloco';
+import { MatCard, MatCardActions, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { AddressFormComponent } from "@shared/component/address-form/address-form.component";
+import { applyEach, FieldTree, form, FormField, required } from '@angular/forms/signals';
+import {
+  addressSchema,
+  AddressSignalFormComponent,
+  initAddress,
+} from '@shared/component/address-form/address-signal-form.component';
+import { ErrorMessagePipe } from '@shared/pipe/error-message/error-message.pipe';
 
 @Component({
-  templateUrl: './settings-signal-form.component.html',
-  styleUrls: ['./settings-signal-form.component.scss'],
+  selector: 'sn-settings-signal-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TranslocoDirective,
     MatCard,
-    ReactiveFormsModule,
     MatCardTitle,
     MatCardContent,
     MatFormField,
+    MatError,
     MatLabel,
     MatInput,
-    MatError,
     MatIcon,
     MatCardActions,
     MatButton,
-    MatIconButton,
-    AddressFormComponent
-],
+    MatMiniFabButton,
+    FormField,
+    AddressSignalFormComponent,
+    ErrorMessagePipe,
+  ],
+  templateUrl: './settings-signal-form.component.html',
+  styleUrl: './settings-signal-form.component.scss',
 })
 export class SettingsSignalFormComponent {
-  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthHttpService);
   private readonly userService = inject(UserService);
-  settingsForm!: FormGroup;
-  addressFormArray?: FormArray;
+
+  settingsModel?: WritableSignal<SettingsUser>;
+
+  settingsForm?: FieldTree<SettingsUser>;
 
   constructor() {
-    const user = this.userService.user;
+    const userService = this.userService;
+
+    const user = userService.user;
     if (user) {
-      this.settingsForm = this.fb.group({
-        id: [user.id],
-        name: [user.name, Validators.required],
-        addresses: this.fb.array(user.addresses.map((address) => this.getAddressFormGroup(address))),
+      this.settingsModel = signal({
+        id: user.id,
+        name: user.name,
+        addresses: user.addresses,
       });
-      this.addressFormArray = this.settingsForm.get('addresses') as FormArray;
+      this.settingsForm = form(this.settingsModel, (schemaPath) => {
+        required(schemaPath.name);
+        applyEach(schemaPath.addresses, addressSchema);
+      });
     } else {
       this.router.navigate([AbsoluteAppRoutes.login]);
     }
   }
 
   addAddress(): void {
-    this.addressFormArray?.push(this.getAddressFormGroup());
-  }
-
-  getAddressFormGroup(address?: Address): FormGroup {
-    return this.fb.group(
-      address
-        ? {
-            streetNr: [address.streetNr],
-            zip: [address.zip],
-            city: [address.city],
-          }
-        : {
-            streetNr: [''],
-            zip: [''],
-            city: [''],
-          },
-    );
+    this.settingsForm?.addresses().value.update((addresses) => [...addresses, { ...initAddress }]);
   }
 
   delete(index: number): void {
-    this.addressFormArray?.removeAt(index);
+    this.settingsForm?.addresses().value.update((addresses) => {
+      addresses.splice(index, 1);
+      return [...addresses];
+    });
   }
 
   saveSettings(): void {
-    this.authService.patch(this.settingsForm?.value).subscribe((user) => (this.userService.user = user));
+    if (this.settingsForm) {
+      this.authService.patch(this.settingsForm().value()).subscribe((user) => (this.userService.user = user));
+    }
   }
+}
+
+interface SettingsUser {
+  id: number;
+  name: string;
+  addresses: Address[];
 }
