@@ -1,0 +1,42 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  display: block;
+  margin: 0 auto;
+  width: 75%;
+  padding: map.get(variables.$paddings, 'large');
+}
+
+mat-card-title {
+  padding: map.get(variables.$paddings, 'default');
+  display: flex;
+  justify-content: center;
+}
+
+mat-card-content {
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: map.get(variables.$margins, 'default');
+    row-gap: map.get(variables.$margins, 'default');
+
+    > * {
+      flex: 0 0 calc(50% - map.get(variables.$margins, 'default') / 2);
+    }
+
+    sn-address-form {
+      flex: auto;
+    }
+  }
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
+
+mat-form-field {
+  width: 100%;
+}
