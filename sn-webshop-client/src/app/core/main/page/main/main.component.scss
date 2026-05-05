@@ -1,0 +1,27 @@
+@use 'variables';
+@use 'sass:map';
+
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--background-color);
+
+  &-content {
+    flex: auto;
+    overflow: auto;
+    padding: map.get(variables.$paddings, 'default');
+    margin: 0 auto;
+    max-width: variables.$app-max-width;
+  }
+}
+
+sn-checkout-button {
+  display: flex;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: map.get(variables.$margins, 'large');
+  margin-top: map.get(variables.$margins, 'large');
+  margin-right: map.get(variables.$margins, 'large');
+  margin-bottom: map.get(variables.$margins, 'large');
+}

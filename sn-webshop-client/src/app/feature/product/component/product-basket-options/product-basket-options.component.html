@@ -1,0 +1,8 @@
+<ng-container *transloco="let translate; prefix: 'product'">
+  <div>{{ translate('price') }}: {{ product().price }}$</div>
+  <div>{{ translate('delivery') }}: {{ product().deliveryDuration }}</div>
+  <div>{{ translate('availableQuantity') }}: {{ product().availableQuantity - productQuantity() }}</div>
+  <button mat-raised-button color="primary" [disabled]="product().availableQuantity - productQuantity() <= 0" (click)="addClick.emit()">
+    {{ translate('addToCart') }}
+  </button>
+</ng-container>

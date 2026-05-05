@@ -1,0 +1,18 @@
+<mat-card *transloco="let translate">
+  <table mat-table [dataSource]="userList" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>{{ translate('core.name') }}</th>
+      <td [snTestId]="'td-name-' + element.id" mat-cell *matCellDef="let element">{{ element.name }} {{ element.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>{{ translate('core.email') }}</th>
+      <td [snTestId]="'td-email-' + element.id" mat-cell *matCellDef="let element">
+        {{ element.email }}
+      </td>
+    </ng-container>
+
+    <tr snTestId="tr-header" mat-header-row *matHeaderRowDef="displayedColumns; let row"></tr>
+    <tr snTestId="tr-content" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</mat-card>

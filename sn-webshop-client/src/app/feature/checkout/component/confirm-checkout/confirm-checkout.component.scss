@@ -1,0 +1,16 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 0.1rem solid var(--border-color);
+  padding: map.get(variables.$paddings, 'default');
+}
+
+button {
+  width: 100%;
+  margin-bottom: map.get(variables.$margins, 'default');
+}

@@ -1,0 +1,20 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+mat-card {
+  max-width: 40rem;
+}
+
+mat-card-title {
+  padding: map.get(variables.$paddings, 'default');
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+}

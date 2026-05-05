@@ -1,0 +1,11 @@
+<mat-card *transloco="let translate; prefix: 'notFound'">
+  <mat-card-title> {{ translate('title') }} </mat-card-title>
+  <mat-card-content>
+    <span>{{ translate('description') }}</span>
+  </mat-card-content>
+  <mat-card-actions>
+    <a color="primary" [routerLink]="['/' + absoluteAppRoutes.dashboard]">
+      {{ translate('backToDashboard') }}
+    </a>
+  </mat-card-actions>
+</mat-card>

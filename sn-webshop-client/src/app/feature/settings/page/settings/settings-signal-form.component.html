@@ -1,0 +1,48 @@
+<ng-container *transloco="let translate">
+  @if (settingsForm) {
+    <mat-card appearance="outlined">
+      <mat-card-title>{{ translate('settings.addresses') }}</mat-card-title>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ translate('settings.name') }}</mat-label>
+          <input id="name" type="text" matInput [formField]="settingsForm.name" />
+          @for (error of settingsForm.name().errors(); track error) {
+            <mat-error>{{ translate(error | errorMessage) }}</mat-error>
+          }
+        </mat-form-field>
+        <div class="addresses">
+          @for (
+            address of settingsForm.addresses;
+            track address;
+            let i = $index;
+            let last = $last;
+            let count = $count
+          ) {
+            <div class="address">
+              <sn-address-signal-form [addressForm]="address" />
+              @if (count > 1) {
+                <button mat-mini-fab (click)="delete(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+              @if (last) {
+                <button mat-mini-fab (click)="addAddress()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          mat-raised-button
+          [disabled]="settingsForm().invalid() || !settingsForm().touched()"
+          (click)="saveSettings()"
+          (keyup.enter)="saveSettings()">
+          {{ translate('settings.save') }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  }
+</ng-container>

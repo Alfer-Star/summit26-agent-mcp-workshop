@@ -1,0 +1,6 @@
+<ng-container class="row" *transloco="let translate; prefix: 'checkout'">
+  <h2>{{ translate('payment') }}</h2>
+  <div class="payment">
+    <p>{{ translate('ibanEndsWith') }} {{ paymentInformation().iban | obscureString }}</p>
+  </div>
+</ng-container>

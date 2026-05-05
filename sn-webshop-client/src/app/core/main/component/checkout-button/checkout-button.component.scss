@@ -1,0 +1,6 @@
+@use 'variables';
+@use 'sass:map';
+
+a {
+  margin-left: map.get(variables.$margins, 'default');
+}

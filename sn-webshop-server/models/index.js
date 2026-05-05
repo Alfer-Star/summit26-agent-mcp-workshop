@@ -33,4 +33,12 @@ db.user.hasOne(db.refreshToken, {
 db.ROLES = ['user', 'admin'];
 
 db.product = require('../models/product.model.js')(sequelize, Sequelize);
+db.basketItem = require('../models/basket-item.model.js')(sequelize, Sequelize);
+
+db.basketItem.belongsTo(db.product, {
+  foreignKey: 'productId',
+  targetKey: 'id',
+  as: 'product',
+});
+
 module.exports = db;

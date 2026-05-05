@@ -1,0 +1,120 @@
+{
+  "core": {
+    "dashboardAnchor": "S&N Webshop",
+    "searchInput": "Geben Sie einen Suchbegriff ein...",
+    "userMenuTrigger": "Hallo {{username}}!",
+    "logout": "Abmelden",
+    "discover": "Entdecken",
+    "goToCheckout": "Zur Kasse",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "settings": "Einstellungen",
+    "adminSpace": "Administrator Bereich",
+    "aboutSnWebshop": "Über S&N Webshop",
+    "aboutUs": "Über uns",
+    "impressum": "Impressum",
+    "contact": "Kontakt",
+    "de": "DE",
+    "en": "EN",
+    "name": "Name",
+    "email": "{{auth.email}}"
+  },
+  "products": {
+    "noProducts": "Es wurden keine Produkte gefunden"
+  },
+  "product": {
+    "price": "Preis",
+    "delivery": "Lieferdauer (Tage)",
+    "availableQuantity": "Noch auf Lager",
+    "addToCart": "Zum Warenkorb hinzufügen"
+  },
+  "checkout": {
+    "deliveryAddress": "Versandadresse",
+    "payment": "Zahlungsart",
+    "articles": "Artikel",
+    "ibanEndsWith": "Ihre IBAN endet mit",
+    "pay": "Bezahlen",
+    "price": "Preis pro Einheit:",
+    "total": "Summe:",
+    "quantity": "Menge:",
+    "payTitle": "Abschluss",
+    "payHint0": "Alle Preise inkl. MwSt., ggf. zzgl. Versandkosten (werden im Warenkorb angezeigt).",
+    "payHint1": "Versand: Deutschland 2–4 Werktage, EU 3–6 Werktage. Sendungsverfolgung per E‑Mail.",
+    "payHint2": "Rückgabe &amp; Widerruf: 14 Tage ab Erhalt. Bitte senden Sie die Ware unbenutzt und im Originalzustand zurück. Rücksendelabel erhalten Sie über Ihr Kundenkonto oder unseren Support. Rückversand innerhalb DE kostenfrei.",
+    "payHint3": "Gewährleistung: 24 Monate gesetzliche Gewährleistung auf physische Produkte für Verbraucher.",
+    "payHint4": "Zahlungsarten: Kreditkarte, PayPal, SEPA‑Lastschrift, giropay/sofort, Kauf auf Rechnung (B2B nach Prüfung).",
+    "payHint5": " Rechnung: PDF‑Rechnung per E‑Mail. Bei Angabe einer gültigen USt‑IdNr. (EU/B2B) erfolgt Nettorechnung gemäß Reverse‑Charge, sofern anwendbar.",
+    "payHint6": "Mit Klick auf „Bezahlen“ geben Sie eine zahlungspflichtige Bestellung ab.",
+    "noItems": "Ihre Warenkorb ist leer",
+    "thanks": "Vielen Dank für Ihren Einkauf!",
+    "goToDashboard": "Zurück zur Startseite"
+  },
+  "auth": {
+    "name": "Dein Name",
+    "email": "E-Mail Adresse",
+    "password": "Passwort",
+    "password2": "Passwort wiederholen",
+    "registration": {
+      "title": "Konto erstellen",
+      "invalid": "Registrierung konnte nicht durchgeführt werden. Bitte versuchen Sie es später erneut!"
+    },
+    "createAccount": "S&N Webshop-Konto erstellen",
+    "login": {
+      "title": "Anmeldung",
+      "button": "Anmelden",
+      "invalid": "E-Mail und/oder Passwort falsch! Bitte überprüfen Sie Ihre Eingaben."
+    }
+  },
+  "validation": {
+    "required": "Pflichtangabe",
+    "passwordStrength": "Passwörter müssen mindestens 8 Zeichen lang sein, Großbuchstaben, Kleinbuchstaben, Sonderzeichen und Zahlen enthalten",
+    "passwordsMatch": "Die Passwörter stimmen nicht überein",
+    "emailAlreadyUsed": "Diese E-Mail wird bereits verwendet ",
+    "email": "E-Mail Adresse ungültig",
+    "iban": "Die eingegebene IBAN ist ungültig",
+    "unknown": "Bitte geben Sie einen korrekten Wert ein!"
+  },
+  "settings": {
+    "name": "Name",
+    "addresses": "Adressen",
+    "streetNr": "Straße und Hausnummer",
+    "zip": "Postleitzahl",
+    "city": "Ort",
+    "iban": "IBAN",
+    "ibanHint": "Beispiel-IBAN: AB12 1234 1234 1234 1234 12",
+    "save": "Änderungen speichern"
+  },
+  "productGroupName": {
+    "notebook": "Notebooks",
+    "fruit": "Früchte",
+    "shoe": "Schuhe",
+    "flower": "Blumen",
+    "coffee": "Kaffees",
+    "car": "Autos",
+    "vacation": "Urlaube",
+    "phone": "Telefone",
+    "clock": "Uhren",
+    "office": "Bürobedarf",
+    "bike": "Fahrräder",
+    "kitchenware": "Küchenwaren"
+  },
+  "productName": {
+    "notebook": "Notebook",
+    "fruit": "Frucht",
+    "shoe": "Schuh",
+    "flower": "Blume",
+    "coffee": "Kaffee",
+    "car": "Auto",
+    "vacation": "Urlaub",
+    "phone": "Telefon",
+    "clock": "Uhr",
+    "office": "Bürobedarf",
+    "bike": "Fahrrad",
+    "kitchenware": "Küchenware"
+  },
+  "notFound": {
+    "title": "Ups... 404",
+    "description": "Wir konnten die von Dir aufgerufene Seite leider nicht finden :(",
+    "backToDashboard": "Zurück zum Dashboard"
+  }
+}

@@ -1,0 +1,11 @@
+<ng-container *transloco="let translate; prefix: 'core'">
+  @for (language of languages(); track language) {
+    <a
+      href=""
+      class="language"
+      [class.active]="language === activeLanguage()"
+      (click)="changeLanguage(language, $event)">
+      {{ translate(language) }}
+    </a>
+  }
+</ng-container>

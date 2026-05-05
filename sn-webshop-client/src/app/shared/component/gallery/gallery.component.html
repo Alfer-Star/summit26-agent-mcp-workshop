@@ -1,0 +1,18 @@
+<div class="previous mat-elevation-z2">
+  <button mat-button (click)="nextImage()">
+    <mat-icon>arrow_back_ios</mat-icon>
+  </button>
+</div>
+
+<div class="items mat-elevation-z2">
+  @for (url of imageUrls(); track url; let i = $index) {
+    @if (i === active) {
+      <img class="item" [src]="url" alt="" />
+    }
+  }
+</div>
+<div class="next mat-elevation-z2">
+  <button mat-button (click)="previousImage()">
+    <mat-icon>arrow_forward_ios</mat-icon>
+  </button>
+</div>

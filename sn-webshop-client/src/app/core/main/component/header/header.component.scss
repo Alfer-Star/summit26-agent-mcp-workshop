@@ -1,0 +1,34 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: map.get(variables.$margins, 'default');
+  column-gap: map.get(variables.$margins, 'default');
+  padding: map.get(variables.$paddings, 'small');
+  align-items: center;
+  background-color: var(--mat-sys-primary);
+
+  ::ng-deep * {
+    color: var(--mat-sys-on-primary) !important;
+    border-color: var(--mat-sys-on-primary) !important;
+    caret-color: var(--mat-sys-on-primary) !important;
+  }
+}
+
+sn-dashboard-anchor {
+  flex: 0 0 auto;
+  align-items: center;
+  display: flex;
+}
+
+sn-search {
+  flex: auto;
+}
+
+sn-user-menu {
+  flex: 0 0 auto;
+  align-items: center;
+  display: flex;
+}

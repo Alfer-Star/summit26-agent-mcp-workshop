@@ -1,0 +1,9 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <sn-product-info [product]="detailedProduct()" />
+    <sn-product-basket-options
+      [product]="detailedProduct()"
+      [productQuantity]="productQuantity()"
+      (addClick)="addToBasket()" />
+  </mat-card-content>
+</mat-card>

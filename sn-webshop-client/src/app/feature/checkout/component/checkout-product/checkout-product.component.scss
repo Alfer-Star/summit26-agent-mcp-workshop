@@ -1,0 +1,20 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  display: flex;
+}
+
+.image {
+  flex: 0 0 auto;
+  margin-right: map.get(variables.$margins, 'large');
+
+  img {
+    object-fit: cover;
+    width: 15rem;
+  }
+}
+
+.product {
+  flex: auto;
+}

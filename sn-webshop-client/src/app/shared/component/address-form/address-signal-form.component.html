@@ -1,0 +1,26 @@
+<ng-container *transloco="let translate; prefix: 'settings'">
+  <form>
+    @let form = addressForm();
+    <mat-form-field class="street-nr">
+      <mat-label>{{ translate('streetNr') }}</mat-label>
+      <input type="text" matInput [formField]="form.streetNr" />
+      @for (error of form.streetNr().errors(); track error) {
+        <mat-error>{{ error | errorMessage | transloco }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="zip">
+      <mat-label>{{ translate('zip') }}</mat-label>
+      <input type="text" matInput [formField]="form.zip" />
+      @for (error of form.zip().errors(); track error) {
+        <mat-error>{{ error | errorMessage | transloco }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="city">
+      <mat-label>{{ translate('city') }}</mat-label>
+      <input type="text" matInput [formField]="form.city" />
+      @for (error of form.city().errors(); track error) {
+        <mat-error>{{ error | errorMessage | transloco }}</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</ng-container>

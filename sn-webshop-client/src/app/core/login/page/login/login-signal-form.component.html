@@ -1,0 +1,43 @@
+<mat-card appearance="outlined" *transloco="let translate; prefix: 'auth'" (keyup.enter)="login()">
+  <mat-card-title>
+    {{ translate('login.title') }}
+  </mat-card-title>
+
+  <mat-card-content>
+    <form>
+      <mat-form-field snTestId="email">
+        <mat-label>{{ translate('email') }}</mat-label>
+        <input id="email" type="text" matInput [formField]="loginForm.email" />
+        @for (error of loginForm.email().errors(); track error) {
+          <mat-error>{{ error | errorMessage | transloco }}</mat-error>
+        }
+      </mat-form-field>
+
+      @if (!loginForm.password().hidden()) {
+        <mat-form-field snTestId="password">
+          <mat-label>{{ translate('password') }}</mat-label>
+          <input id="password" type="password" matInput [formField]="loginForm.password" />
+          @for (error of loginForm.email().errors(); track error) {
+            <mat-error>{{ error | errorMessage | transloco }}</mat-error>
+          }
+        </mat-form-field>
+      }
+    </form>
+  </mat-card-content>
+  @if (invalidLogin) {
+    <mat-error>{{ translate('login.invalid') }}</mat-error>
+  }
+  <mat-card-actions>
+    <button snTestId="login-button" mat-raised-button [disabled]="!loginForm().valid()" (click)="login()">
+      {{ translate('login.button') }}
+    </button>
+
+    <a
+      snTestId="register-anchor"
+      mat-raised-button
+      *transloco="let translate; prefix: 'core'"
+      [routerLink]="['/' + absoluteAppRoutes.registration]">
+      {{ translate('register') }}
+    </a>
+  </mat-card-actions>
+</mat-card>

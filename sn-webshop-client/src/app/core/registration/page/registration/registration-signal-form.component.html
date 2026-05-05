@@ -1,0 +1,64 @@
+<mat-card appearance="outlined" *transloco="let translate; prefix: 'auth'" (keyup.enter)="register()">
+  <mat-card-title>
+    {{ translate('registration.title') }}
+  </mat-card-title>
+
+  <mat-card-content>
+    <form *transloco="let translateValidation">
+
+      <mat-form-field>
+        <mat-label>{{ translate('name') }}</mat-label>
+        <input id="name" type="text" matInput [formField]="registerForm.name" />
+        @for (error of registerForm.name().errors(); track error) {
+          <mat-error>{{ translateValidation(error | errorMessage) }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>{{ translate('email') }}</mat-label>
+        <input id="email" type="email" matInput autocomplete="username" [formField]="registerForm.email" />
+        @for (error of registerForm.email().errors(); track error) {
+          <mat-error>{{ translateValidation(error | errorMessage) }}</mat-error>
+        }
+        @if (registerForm.email().pending()) {
+          <mat-spinner matSuffix [diameter]="18"></mat-spinner>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>{{ translate('password') }}</mat-label>
+        <input id="password" type="password" matInput autocomplete="new-password" [formField]="registerForm.password" />
+        @for (error of registerForm.password().errors(); track error) {
+          <mat-error>{{ translateValidation(error | errorMessage) }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>{{ translate('password2') }}</mat-label>
+        <input
+          id="confirmPassword"
+          type="password"
+          matInput
+          autocomplete="new-password"
+          [formField]="registerForm.confirmPassword" />
+        @for (error of registerForm.name().errors(); track error) {
+          <mat-error>{{ translateValidation(error | errorMessage) }}</mat-error>
+        }
+      </mat-form-field>
+      <sn-address-signal-form [addressForm]="registerForm" />
+      <sn-payment-information-signal-form [paymentInformationForm]="registerForm" />
+    </form>
+  </mat-card-content>
+  @if (invalidRegistration) {
+    <mat-error>{{ translate('registration.invalid') }}</mat-error>
+  }
+  <mat-card-actions>
+    <button
+      mat-raised-button
+      [disabled]="registerForm().invalid || registerForm().pending()"
+      (click)="register()"
+      (keyup.enter)="register()">
+      {{ translate('createAccount') }}
+    </button>
+  </mat-card-actions>
+</mat-card>

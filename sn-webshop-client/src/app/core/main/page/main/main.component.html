@@ -1,0 +1,10 @@
+<div class="main">
+  <sn-header></sn-header>
+  <div class="main-content">
+    <router-outlet></router-outlet>
+    @if (isCheckoutButtonVisible()) {
+      <sn-checkout-button />
+    }
+  </div>
+  <sn-footer/>
+</div>

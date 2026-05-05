@@ -1,0 +1,15 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  display: flex;
+}
+
+h2 {
+  flex: 0 0 25%;
+  margin-right: map.get(variables.$margins, 'large');
+}
+
+.products {
+  flex: auto;
+}

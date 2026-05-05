@@ -1,0 +1,22 @@
+@use 'variables';
+@use 'sass:map';
+
+mat-card-title {
+  padding: map.get(variables.$paddings, 'default');
+  display: flex;
+  justify-content: center;
+}
+
+img {
+  cursor: pointer;
+  width: 100%;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,8 @@
+<mat-card appearance="outlined" *transloco="let translate; prefix: 'core'">
+  <mat-card-title> {{ productGroup.name }} </mat-card-title>
+  <img mat-card-image [src]="productGroup.imageUrl" [alt]="productGroup.name" [routerLink]="[productGroupUrl]" />
+  <mat-card-content> </mat-card-content>
+  <mat-card-actions>
+    <button mat-button [routerLink]="[productGroupUrl]">{{ translate('discover') }}</button>
+  </mat-card-actions>
+</mat-card>

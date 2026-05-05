@@ -1,0 +1,22 @@
+<ng-container *transloco="let translate; prefix: 'checkout'">
+  <div>
+    <h2>{{ translate('payTitle') }}</h2>
+    <ul>
+      <li>{{ translate('payHint0') }}</li>
+      <li>{{ translate('payHint1') }}</li>
+      <li>{{ translate('payHint2') }}</li>
+      <li>{{ translate('payHint3') }}</li>
+      <li>{{ translate('payHint4') }}</li>
+      <li>{{ translate('payHint5') }}</li>
+    </ul>
+    <p>
+      {{ translate('payHint6') }}
+    </p>
+    <p>
+      <b> {{ translate('total') }} {{ total() | currency }} </b>
+    </p>
+  </div>
+  <button [disabled]="total() === 0" mat-raised-button (click)="buyClick.emit()">
+    {{ translate('pay') }}
+  </button>
+</ng-container>

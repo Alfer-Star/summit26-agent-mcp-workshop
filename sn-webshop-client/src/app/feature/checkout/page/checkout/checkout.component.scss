@@ -1,0 +1,19 @@
+@use 'variables';
+@use 'sass:map';
+
+mat-card-content {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: map.get(variables.$margins, 'default');
+  row-gap: map.get(variables.$margins, 'default');
+}
+
+.checkout-information {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+}
+
+sn-confirm-checkout {
+  flex: 1 1 0;
+}

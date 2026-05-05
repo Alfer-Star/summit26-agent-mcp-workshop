@@ -1,0 +1,33 @@
+@use 'variables';
+@use 'sass:map';
+
+:host {
+  display: block;
+  width: max-content;
+  margin: 0 auto;
+  padding: map.get(variables.$paddings, 'large');
+}
+
+mat-card-title {
+  padding: map.get(variables.$paddings, 'default');
+  display: flex;
+  justify-content: center;
+}
+
+mat-card-content {
+  form {
+    display: flex;
+    flex-direction: column;
+    row-gap: map.get(variables.$margins, 'default');
+
+    > mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+  column-gap: map.get(variables.$margins, 'default');
+}

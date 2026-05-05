@@ -1,0 +1,29 @@
+@use 'variables';
+@use 'sass:map';
+
+button {
+  margin-bottom: 20px;
+}
+
+.addresses {
+  display: flex;
+  flex-direction: column;
+}
+
+.address {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: map.get(variables.$margins, 'default');
+}
+
+mat-card-title {
+  padding: map.get(variables.$paddings, 'default');
+  display: flex;
+  justify-content: start;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
