@@ -40,6 +40,7 @@ app.use('/', indexRouter);
 require('./routes/product-group.routes')(app);
 require('./routes/product.routes')(app);
 require('./routes/checkout.routes')(app);
+require('./routes/basket.routes')(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

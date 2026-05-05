@@ -1,0 +1,906 @@
+openapi: 3.0.3
+info:
+  title: SN Webshop API
+  description: |
+    REST API for the SN Webshop application.
+
+    **Authentication** uses JWTs passed via the `x-access-token` header.
+    Access tokens expire after **1 minute**; use `POST /auth/refreshtoken` to renew them.
+    Refresh tokens expire after **2 minutes**.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+tags:
+  - name: Auth
+    description: Sign-up, sign-in, token refresh
+  - name: User
+    description: User profile management and access-level tests
+  - name: Products
+    description: Product catalogue
+  - name: Product Groups
+    description: Product group catalogue and gallery
+  - name: Basket
+    description: Persistent basket — externally writable (MCP / AI agents), read via JWT
+  - name: Checkout
+    description: Order / checkout flow
+
+# ---------------------------------------------------------------------------
+# Security scheme
+# ---------------------------------------------------------------------------
+components:
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: x-access-token
+      description: JWT access token obtained from `POST /auth/signin` or `POST /auth/refreshtoken`.
+
+  # -------------------------------------------------------------------------
+  # Reusable schemas
+  # -------------------------------------------------------------------------
+  schemas:
+
+    # -- Auth ----------------------------------------------------------------
+    SignupRequest:
+      type: object
+      required: [name, email, password, streetNr, zip, city]
+      properties:
+        name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        password:
+          type: string
+          format: password
+          example: "s3cr3t!"
+        streetNr:
+          type: string
+          example: "Musterstrasse 12"
+        zip:
+          type: string
+          example: "8000"
+        city:
+          type: string
+          example: Zurich
+
+    SignupResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: User was registered successfully!
+        user:
+          $ref: '#/components/schemas/UserPrivate'
+
+    SigninRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        password:
+          type: string
+          format: password
+          example: "s3cr3t!"
+
+    SigninResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserPublic'
+        accessToken:
+          type: string
+          description: JWT access token (expires in 1 minute).
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          description: UUID refresh token (expires in 2 minutes).
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+    RefreshTokenRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+    RefreshTokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: New JWT access token (expires in 1 minute).
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          description: The same refresh token UUID that was sent in the request.
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+    # -- User ----------------------------------------------------------------
+    Address:
+      type: object
+      properties:
+        streetNr:
+          type: string
+          example: "Musterstrasse 12"
+        zip:
+          type: string
+          example: "8000"
+        city:
+          type: string
+          example: Zurich
+
+    PaymentInformation:
+      type: object
+      nullable: true
+      description: Free-form JSON object storing payment details.
+      example:
+        cardNumber: "4111111111111111"
+        expiryDate: "12/26"
+
+    UserPublic:
+      description: User data returned after sign-in (no password hash).
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        roles:
+          type: array
+          items:
+            type: string
+            enum: [ROLE_USER, ROLE_ADMIN]
+          example: [ROLE_USER]
+        paymentInformation:
+          $ref: '#/components/schemas/PaymentInformation'
+
+    UserPrivate:
+      description: Full user record including hashed password (admin / registration use).
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        password:
+          type: string
+          description: bcrypt hash of the password.
+          example: "$2a$08$..."
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        paymentInformation:
+          $ref: '#/components/schemas/PaymentInformation'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UpdateUserRequest:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        paymentInformation:
+          $ref: '#/components/schemas/PaymentInformation'
+
+    UpdateUserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        paymentInformation:
+          $ref: '#/components/schemas/PaymentInformation'
+
+    # -- Products ------------------------------------------------------------
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "prod-001"
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://example.com/images/prod-001.jpg"
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+          example: 4.3
+        price:
+          type: number
+          format: float
+          example: 29.99
+        availableQuantity:
+          type: integer
+          example: 150
+        deliveryDuration:
+          type: integer
+          description: Estimated delivery time in days.
+          example: 3
+        name:
+          type: string
+          description: Localised name (language selected via `lang` query param).
+          example: "Wooden Chair"
+        description:
+          type: string
+          description: Localised short description.
+          example: "Comfortable and durable wooden chair."
+        detailedDescription:
+          type: string
+          description: Localised detailed description.
+          example: "Hand-crafted from solid oak wood..."
+
+    # -- Product Groups ------------------------------------------------------
+    ProductGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "grp-001"
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://example.com/images/grp-001.jpg"
+        name:
+          type: string
+          description: Localised name (language selected via `lang` query param).
+          example: "Furniture"
+
+    GalleryItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "gal-001"
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://example.com/images/gal-001.jpg"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    # -- Checkout ------------------------------------------------------------
+    CheckoutRequest:
+      type: object
+      properties:
+        products:
+          type: array
+          description: Array of products to check out (structure TBD – endpoint is currently a stub).
+          items:
+            type: object
+
+    # -- Errors --------------------------------------------------------------
+    Error400:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Email is already in use!"
+
+    Error401:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Unauthorized! Access Token was expired!"
+
+    Error403:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "No token provided!"
+
+    Error404:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "User Not found."
+
+    Error500:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error."
+
+  # -------------------------------------------------------------------------
+  # Reusable responses
+  # -------------------------------------------------------------------------
+  responses:
+    Unauthorized:
+      description: Access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    Forbidden:
+      description: No token provided or insufficient role.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error403'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error404'
+    ServerError:
+      description: An unexpected server-side error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error500'
+
+# ===========================================================================
+# Paths
+# ===========================================================================
+paths:
+
+  # -------------------------------------------------------------------------
+  # Auth
+  # -------------------------------------------------------------------------
+  /auth/signup:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      description: |
+        Creates a new user account with the `user` role.
+        The provided `streetNr`, `zip`, and `city` values are stored as the first entry in the `addresses` JSON array.
+        The password is hashed with bcryptjs (8 salt rounds) before storage.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: User registered successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupResponse'
+        '400':
+          description: Email is already in use.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /auth/signin:
+    post:
+      tags: [Auth]
+      summary: Sign in and obtain tokens
+      description: |
+        Authenticates a user by email and password.
+        Returns a short-lived JWT **access token** (1 min) and a UUID **refresh token** (2 min).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SigninRequest'
+      responses:
+        '200':
+          description: Authentication successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SigninResponse'
+        '401':
+          description: Wrong password.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    nullable: true
+                    example: null
+                  message:
+                    type: string
+                    example: "Invalid Password!"
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /auth/checkEmail:
+    get:
+      tags: [Auth]
+      summary: Check whether an email address is already registered
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+            example: jane@example.com
+      responses:
+        '200':
+          description: "`true` if the email is already registered, `false` otherwise."
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: false
+
+  /auth/refreshtoken:
+    post:
+      tags: [Auth]
+      summary: Refresh an expired access token
+      description: |
+        Validates the supplied refresh token and issues a new access token.
+        Expired refresh tokens are automatically deleted from the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: New access token issued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+        '403':
+          description: Refresh token missing, not found in database, or expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Refresh token was expired. Please make a new signin request"
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # -------------------------------------------------------------------------
+  # User
+  # -------------------------------------------------------------------------
+  /test/all:
+    get:
+      tags: [User]
+      summary: Public test endpoint
+      description: Returns a plain-text string. No authentication required.
+      responses:
+        '200':
+          description: Public content.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Public Content."
+
+  /test/user:
+    get:
+      tags: [User]
+      summary: Authenticated user test endpoint
+      description: Returns a plain-text string. Requires a valid JWT access token.
+      security:
+        - AccessToken: []
+      responses:
+        '200':
+          description: User content.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "User Content."
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/test/admin:
+    get:
+      tags: [User]
+      summary: Admin board – list all users
+      description: Returns the full user list. Requires a valid JWT access token **and** the `admin` role.
+      security:
+        - AccessToken: []
+      responses:
+        '200':
+          description: Array of all registered users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserPrivate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: No token provided or caller lacks the `admin` role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /user:
+    patch:
+      tags: [User]
+      summary: Update user profile
+      description: |
+        Partially updates a user record. The `id` field is required; all other fields
+        (`name`, `email`, `addresses`, `paymentInformation`) are optional and will
+        only be overwritten if present in the request body.
+      security:
+        - AccessToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Updated user data (excluding password).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # -------------------------------------------------------------------------
+  # Product Groups
+  # -------------------------------------------------------------------------
+  /product-groups/get:
+    get:
+      tags: [Product Groups]
+      summary: List all product groups
+      description: Returns all product groups with localised names.
+      parameters:
+        - name: lang
+          in: query
+          required: true
+          description: Language code for name localisation.
+          schema:
+            type: string
+            enum: [de, en]
+            example: de
+      responses:
+        '200':
+          description: Array of product groups.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductGroup'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /product-groups/gallery:
+    get:
+      tags: [Product Groups]
+      summary: List product group gallery items
+      description: Returns all gallery image entries (used for the homepage image carousel / gallery section).
+      responses:
+        '200':
+          description: Array of gallery items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GalleryItem'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # -------------------------------------------------------------------------
+  # Products
+  # -------------------------------------------------------------------------
+  /products/get:
+    get:
+      tags: [Products]
+      summary: List products
+      description: |
+        Returns all products, optionally filtered by product group and/or a search query.
+        The `lang` parameter controls which language variant of `name`, `description`,
+        and `detailedDescription` is returned.
+
+        - `productGroupId` and `searchQuery` can be combined.
+        - The search is a **case-sensitive substring match** on both `name` and `description`.
+      parameters:
+        - name: lang
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [de, en]
+            example: de
+        - name: productGroupId
+          in: query
+          required: false
+          description: Filter results to a specific product group.
+          schema:
+            type: string
+            example: "grp-001"
+        - name: searchQuery
+          in: query
+          required: false
+          description: Substring to search for in product name and description.
+          schema:
+            type: string
+            example: "chair"
+      responses:
+        '200':
+          description: Array of matching products.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /products/get-product:
+    get:
+      tags: [Products]
+      summary: Get a single product by ID
+      parameters:
+        - name: productId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "prod-001"
+        - name: lang
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [de, en]
+            example: de
+      responses:
+        '200':
+          description: The requested product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # -------------------------------------------------------------------------
+  # Basket
+  # -------------------------------------------------------------------------
+  /basket/items:
+    post:
+      tags: [Basket]
+      summary: Add a product to a user's basket
+      description: |
+        **No authentication required.** Intended for external services and AI / MCP agents.
+
+        If the product is already in the basket the quantities are summed.
+        `userId` must match an existing user in the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, productId]
+              properties:
+                userId:
+                  type: integer
+                  description: ID of the target user (obtained from `POST /auth/signin`).
+                  example: 1
+                productId:
+                  type: string
+                  description: ID of the product to add.
+                  example: "prod-001"
+                quantity:
+                  type: integer
+                  default: 1
+                  minimum: 1
+                  example: 2
+      responses:
+        '200':
+          description: Item added or quantity updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item added to basket.
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /basket:
+    get:
+      tags: [Basket]
+      summary: Get the current user's basket with full product details
+      description: Returns all basket items for the authenticated user with localised product data ready for the checkout UI.
+      security:
+        - AccessToken: []
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [de, en]
+            default: de
+            example: de
+      responses:
+        '200':
+          description: Array of basket items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    quantity:
+                      type: integer
+                      example: 2
+                    product:
+                      $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags: [Basket]
+      summary: Clear the entire basket for the current user
+      security:
+        - AccessToken: []
+      responses:
+        '200':
+          description: Basket cleared.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Basket cleared.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /basket/items/{productId}:
+    delete:
+      tags: [Basket]
+      summary: Remove a single product from the basket
+      security:
+        - AccessToken: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "prod-001"
+      responses:
+        '200':
+          description: Item removed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item removed.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # -------------------------------------------------------------------------
+  # Checkout
+  # -------------------------------------------------------------------------
+  /checkout:
+    post:
+      tags: [Checkout]
+      summary: Submit a checkout order
+      description: |
+        **Currently a stub.** Accepts a list of products but returns an empty `200` response.
+        No authentication is enforced on this route at present.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+      responses:
+        '200':
+          description: Order received (no response body).

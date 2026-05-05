@@ -48,6 +48,6 @@ export class CheckoutComponent {
   }
 
   clearBasket(): void {
-    this.checkoutService.clearBasket();
+    this.checkoutService.clearAll().subscribe();
   }
 }
