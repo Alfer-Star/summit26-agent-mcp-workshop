@@ -3,6 +3,7 @@ import { UserMenuComponent } from './user-menu/user-menu.component';
 import { SearchComponent } from './search/search.component';
 import { DashboardAnchorComponent } from './dashboard-anchor/dashboard-anchor.component';
 import { LanguageSelectComponent } from './language-select/language-select.component';
+import { BasketIconComponent } from './basket-icon/basket-icon.component';
 
 @Component({
   selector: 'sn-header',
@@ -10,6 +11,6 @@ import { LanguageSelectComponent } from './language-select/language-select.compo
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [DashboardAnchorComponent, SearchComponent, UserMenuComponent, LanguageSelectComponent],
+  imports: [DashboardAnchorComponent, SearchComponent, BasketIconComponent, UserMenuComponent, LanguageSelectComponent],
 })
 export class HeaderComponent {}

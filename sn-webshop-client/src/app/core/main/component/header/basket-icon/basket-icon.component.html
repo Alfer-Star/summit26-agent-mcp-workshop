@@ -1,0 +1,5 @@
+<a mat-icon-button [routerLink]="'/' + AbsoluteAppRoutes.checkout"
+   [matBadge]="itemCount()"
+   [matBadgeHidden]="itemCount() === 0">
+  <mat-icon>shopping_cart</mat-icon>
+</a>
