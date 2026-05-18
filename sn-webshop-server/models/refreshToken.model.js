@@ -1,5 +1,5 @@
 const config = require('../config/auth.config');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 module.exports = (sequelize, Sequelize) => {
   const RefreshToken = sequelize.define('refreshToken', {
     token: {
@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
   RefreshToken.createToken = async function (user) {
     let expiredAt = new Date();
     expiredAt.setSeconds(expiredAt.getSeconds() + config.jwtRefreshExpiration);
-    let _token = uuidv4();
+    let _token = randomUUID();
     let refreshToken = await this.create({
       token: _token,
       userId: user.id,
