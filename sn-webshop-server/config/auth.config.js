@@ -1,5 +1,5 @@
 module.exports = {
   secret: 'bezkoder-secret-key',
-  jwtExpiration: 60, // 1 minute
-  jwtRefreshExpiration: 120, // 2 minutes
+  jwtExpiration: 7200, // 2 hours
+  jwtRefreshExpiration: 14400, // 4 hours
 };

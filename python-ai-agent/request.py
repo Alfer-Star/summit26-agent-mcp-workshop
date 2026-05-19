@@ -1,26 +1,58 @@
+import time
 import httpx
 
-SHOP_API_BASE = "http://localhost:3000/"  # Base URL for the S&N Shop API
+SHOP_API_BASE = "http://localhost:3000/"
+
+
+class ShopAuth(httpx.Auth):
+    def __init__(self, email: str, password: str):
+        self._email = email
+        self._password = password
+        self._token: str | None = None
+        self._token_expiry: float = 0.0
+        self.user_id: int | None = None
+
+    async def ensure_authenticated(self) -> None:
+        if self._token and time.time() < self._token_expiry:
+            return
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                SHOP_API_BASE + "auth/signin",
+                json={"email": self._email, "password": self._password},
+                timeout=30.0,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            self._token = data["accessToken"]
+            self._token_expiry = time.time() + 7200 - 60
+            self.user_id = data["user"]["id"]
+
+    async def async_auth_flow(self, request):
+        await self.ensure_authenticated()
+        request.headers["x-access-token"] = self._token
+        yield request
+
+
+_auth = ShopAuth("test@test.de", "password1")
+
 
 async def get_product_list(lang="de", **kwargs) -> dict | None:
     """Make a request to the S&N Shop API /products/get.
     Get all Products if no parameters are provided, otherwise filter by productGroupId and search by searchQuery.
 
     Args:
-        data (dict): API parameter as Key Value pairs.  productGroupId (Example: "GAD-001"), searchQuery (Example: "Hoodie").
         lang (str): de or en, default is de.
+        productGroupId (str): Example "GAD-001".
+        searchQuery (str): Example "Hoodie".
 
     Returns:
         dict | None: The JSON response from the API or None if an error occurs.
     """
-    path = "products/get"
-    data = {
+    return await _get_request("products/get", {
         "lang": lang,
         "productGroupId": kwargs.get("productGroupId"),
         "searchQuery": kwargs.get("searchQuery"),
-    }
-
-    return await _get_request(path, data)
+    })
 
 
 async def get_product(productId: str, lang="de") -> dict | None:
@@ -34,10 +66,8 @@ async def get_product(productId: str, lang="de") -> dict | None:
     Returns:
         dict | None: The JSON response from the API or None if an error occurs.
     """
-    path = "products/get-product"
-    data = {"lang": lang, "productId": productId}
+    return await _get_request("products/get-product", {"lang": lang, "productId": productId})
 
-    return await _get_request(path, data)
 
 async def get_basket(lang="de") -> dict | None:
     """Make a request to the S&N Shop API /basket.
@@ -49,112 +79,83 @@ async def get_basket(lang="de") -> dict | None:
     Returns:
         dict | None: The JSON response from the API or None if an error occurs.
     """
-    path = "basket"
-    data = {"lang": lang}
+    return await _get_request("basket", {"lang": lang})
 
-    return await _get_request(path, data)
 
-async def signin(email = "test@test,de", password = "password1") -> dict | None:
-    """Make a request to the S&N Shop API /signin.
-    Sign in to the shop.
-
-    Args:
-        email (str): default is Testuser, See /initial-data/initial-user.js for cred
-        password (str): default is Testuser, See /initial-data/initial-user.js for cred
-
-    Returns:
-        dict | None: return jwt token if successful, otherwise None.
-    """
-    path = "signin"
-    data = {"email": email, "password": password}
-
-    return await _post_request(path, data)
-
-async def post_basket(productId: str, quantity: int, lang="de") -> dict | None:
-    """Make a request to the S&N Shop API /basket.
+async def post_basket(productId: str, quantity: int) -> dict | None:
+    """Make a request to the S&N Shop API /basket/items.
     Add an item to the shopping basket.
 
     Args:
-        productId (str): Concatination of group and number, example "GAD-001" 
-        quantity (int) 
-        lang (str): de or en, default is de.
+        productId (str): Concatination of group and number, example "GAD-001"
+        quantity (int)
 
     Returns:
         dict | None: The JSON response from the API or None if an error occurs.
     """
-    path = "basket"
-    data = {"lang": lang, "productId": productId, "quantity": quantity}
+    await _auth.ensure_authenticated()
+    return await _post_request("basket/items", {
+        "userId": _auth.user_id,
+        "productId": productId,
+        "quantity": quantity,
+    })
 
-    return await _post_request(path, data)
 
 async def post_checkout() -> dict | None:
     """Make a request to the S&N Shop API /checkout.
     Checkout the current shopping basket and create an order.
 
-    Args:
-        lang (str): de or en, default is de.
-
     Returns:
-        dict | None: The ordered Products as List, otherwise None.
+        dict | None: The ordered products as a list, otherwise None.
     """
-    path = "checkout"
-    data = {}
+    return await _post_request("checkout", {})
 
-    return await _post_request(path, data)
 
 async def delete_from_basket(productId: str) -> dict | None:
-    """Make a delete request to the S&N Shop API /basket.
+    """Make a delete request to the S&N Shop API /basket/items/{productId}.
     Remove an item from the shopping basket.
 
     Args:
         productId (str): Concatination of group and number, example "GAD-001"
-        lang (str): de or en, default is de.
 
     Returns:
         dict | None: The JSON response from the API or None if an error occurs.
     """
-    path = "basket/items"
-    params = {"productId": productId}
+    return await _delete_request(f"basket/items/{productId}")
 
-    return await _delete_request(path, params)
 
 async def clear_basket() -> dict | None:
     """Make a delete request to the S&N Shop API /basket.
-
-    Args:
-        lang (str): de or en, default is de.
+    Clear all items from the shopping basket.
 
     Returns:
         dict | None: The JSON response from the API or None if an error occurs.
     """
-    path = "basket"
-
-    return await _delete_request(path)
-
-
+    return await _delete_request("basket")
 
 
 """============ Request Helper ================"""
 
 
 async def _get_request(path: str, data: dict) -> dict | None:
-    """Make a GET request to the S&N Shop API."""
-    return await _request('GET', path, data)
+    return await _request("GET", path, data)
+
 
 async def _post_request(path: str, data: dict) -> dict | None:
-    """Make a POST request to the S&N Shop API."""
-    return await _request('POST', path, data)
+    return await _request("POST", path, data)
 
-async def _delete_request(path: str, data: dict={}) -> dict | None:
-    """Make a DELETE request to the S&N Shop API."""
-    return await _request('DELETE', path, data)
-        
-async def _request(method:str, path: str, data: dict) -> dict | None:
-    """Make a GET request to the S&N Shop API."""
-    auth = httpx.BasicAuth(username="test@test,de", password="password1")
-    async with httpx.AsyncClient(auth=auth) as client:
+
+async def _delete_request(path: str) -> dict | None:
+    return await _request("DELETE", path, {})
+
+
+async def _request(method: str, path: str, data: dict) -> dict | None:
+    async with httpx.AsyncClient(auth=_auth) as client:
         try:
-            response = await client.request(method, SHOP_API_BASE + path, params=data, timeout=30.0)
+            if method == "GET":
+                response = await client.request(method, SHOP_API_BASE + path, params=data, timeout=30.0)
+            else:
+                response = await client.request(method, SHOP_API_BASE + path, json=data, timeout=30.0)
             response.raise_for_status()
             return response.json()
         except Exception:
