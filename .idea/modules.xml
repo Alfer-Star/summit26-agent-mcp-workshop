@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/advanced-angular-training.iml" filepath="$PROJECT_DIR$/.idea/advanced-angular-training.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-ai-agent/showcasesummit.iml" filepath="$PROJECT_DIR$/spring-ai-agent/showcasesummit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-ai-agent/spring-ai-agent.iml" filepath="$PROJECT_DIR$/spring-ai-agent/spring-ai-agent.iml" />
     </modules>
   </component>
 </project>
