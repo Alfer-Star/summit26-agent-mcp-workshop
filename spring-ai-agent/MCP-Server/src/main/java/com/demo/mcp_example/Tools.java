@@ -40,7 +40,7 @@ public class Tools {
 	private final RestClient restClient = RestClient.create();
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	@McpTool(description = "Ruft eine Liste von Produktgruppen ab")
+	@McpTool(description = "Gib eine Liste von Produktgruppen zurück")
 	public List<ProductGroupRecord> getProductGroups(
 			 @McpToolParam(description = "Die Sprachvariante des Produktnames") String lang) {
 
@@ -73,7 +73,7 @@ public class Tools {
 	//
 	//productGroupId and searchQuery can be combined.
 	//The search is a case-sensitive substring match on both name and description.
-	@McpTool(description = "Gibt alle Produkte zurück, optional gefiltert nach Produktgruppe und/oder einem Suchbegriff. " +
+	@McpTool(description = "Gib alle Produkte zurück, optional gefiltert nach Produktgruppe und/oder einem Suchbegriff. " +
 			"Der Parameter „lang“ steuert, welche Sprachvariante von Name, Beschreibung und Detailbeschreibung zurückgegeben wird.")
 	public List<ProductRecord> getProducts(
 			@McpToolParam(description = "Die Sprachvariante von Name, Beschreibung und Detailbeschreibung") String lang,
