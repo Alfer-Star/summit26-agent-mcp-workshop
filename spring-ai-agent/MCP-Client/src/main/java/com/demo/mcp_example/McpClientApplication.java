@@ -17,6 +17,7 @@ package com.demo.mcp_example;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +25,13 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class McpClientApplication {
+
+	// 1. Credentials aus den application.properties injizieren
+	@Value("${shopping.api.username:test@test.de}")
+	private String apiUsername;
+
+	@Value("${shopping.api.password:password1}")
+	private String apiPassword;
 
 	public static void main(String[] args) {
 		SpringApplication.run(McpClientApplication.class, args).close();
@@ -37,20 +45,37 @@ public class McpClientApplication {
 
 			ChatClient chatClient = chatClientBuilder.defaultToolCallbacks(toolCallbackProvider).build();
 
-			/*String userQuestion = """
-					What is the weather in Amsterdam right now?
-					Please incorporate all createive responses from all LLM providers.
-					After the other providers add a poem that synthesizes the the poems from all the other providers.
-					""";*/
+			String systemPrompt = """
+                Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
+                Der Benutzer beauftragt dich, passende Produkte zu suchen und den Kauf vollständig abzuschließen.
+                
+                WICHTIG FÜR DIE AUTHENTIFIZIERUNG:
+                Nutze für alle geschützten Aktionen (wie den Checkout) die folgenden hinterlegten Benutzerdaten:
+                - Benutzername/E-Mail: %s
+                - Passwort: %s
+                
+                Rufe zuerst das Login-Tool mit diesen Daten auf, um den Bearer Token zu erhalten, bevor du den Checkout ausführst.
+                """.formatted(apiUsername, apiPassword);
+
 			String userQuestion = """
-					Suche mir bitte TV-Produkte mit einem Preis < 600 Euro und zeige dies als Liste an!
-					Lege bitte das meine Anforderungen am besten entsprechende Produkt in den Warenkorb, 
+					Suche mir bitte ein bequemes Kleidungsstück zu einem Preis < 100 Euro und zeige die Liste passender Produkte an!
+					Was ist das für meine Anforderungen am besten entsprechende Produkt?
+					Kaufe das bitte und 
 					sende die Ware bitte an Testvorname Testnachname Teststrasse 15 99999 Testort 
-					und melde mich bitte unter meinem registrierten User testuser und Passwort testpasswort an 
+					und melde mich bitte unter meinem registrierten User test@test.de und Passwort password1 an 
 					""";
 
+			System.out.println("> SYSTEM PROMPT INJECTED (Credentials hidden in console)");
 			System.out.println("> USER: " + userQuestion);
-			System.out.println("> ASSISTANT: " + chatClient.prompt(userQuestion).call().content());
+
+			//Aufruf des ChatClients mit getrenntem System- und User-Prompt
+			String assistantResponse = chatClient.prompt()
+					.system(systemPrompt) // Hier wird die Rolle & Credentials übergeben
+					.user(userQuestion)   // Hier wird die eigentliche Aufgabe übergeben
+					.call()
+					.content();
+
+			System.out.println("> ASSISTANT: " + assistantResponse);
 		};
 	}
 }

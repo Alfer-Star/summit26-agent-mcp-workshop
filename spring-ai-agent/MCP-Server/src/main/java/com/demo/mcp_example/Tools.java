@@ -18,7 +18,6 @@ package com.demo.mcp_example;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 
 import org.springframework.ai.mcp.annotation.McpTool;
@@ -26,6 +25,7 @@ import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.ai.mcp.annotation.context.McpSyncRequestContext;
 import org.springframework.ai.model.ModelOptionsUtils;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -72,23 +72,23 @@ public class Tools {
 	}
 
 	//Returns all products, optionally filtered by product group and/or a search query. The lang parameter controls which language variant of name, description, and detailedDescription is returned.
-	//
 	//productGroupId and searchQuery can be combined.
 	//The search is a case-sensitive substring match on both name and description.
-	@McpTool(description = "Gib alle Produkte zurück, optional gefiltert nach Produktgruppe und/oder einem Suchbegriff. " +
-			"Der Parameter „lang“ steuert, welche Sprachvariante von Name, Beschreibung und Detailbeschreibung zurückgegeben wird.")
+	@McpTool(description = "Gibt alle Produkte zurück." +
+			"Der Parameter „lang“ steuert, welche Sprachvariante von Name, Beschreibung und Detailbeschreibung zurückgegeben wird." +
+			"Nur optional ist due Angabe von Produktgruppe oder einem Suchbegriff notwendig, womit die Ausgabe gefiltert wird. ")
 	public List<ProductRecord> getProducts(
 			@McpToolParam(description = "Die Sprachvariante von Name, Beschreibung und Detailbeschreibung") String lang,
-			@McpToolParam(description = "Filtert Ergebnisse auf eine Produktgruppe") String productGroupId,
-			@McpToolParam(description = "Suchbegriff für Suche auf Produktname und Produktbeschreibung") String searchQuery) {
+			@McpToolParam(description = "Nur optional: Filtert Ergebnisse auf eine Produktgruppe") String productGroupId,
+			@McpToolParam(description = "Nur optional: Filter Ergebnisse nach Suchbegriff auf Produktname und Produktbeschreibung") String searchQuery) {
 
-		System.out.println("MCP Server: Aufruf Tool Methode getProducts");
-		/**
+		System.out.println("MCP Server: Aufruf Tool Methode getProducts: Language=" + lang + " Produktgruppe=" + productGroupId +  " Suchbegriff=" + searchQuery);
+
 		// Dynamischer Aufbau der URI inklusive der optionalen Query-Parameter
 		String uri = UriComponentsBuilder.fromUriString("http://localhost:3000/products/get")
 				.queryParam("lang", lang)
-				.queryParamIfPresent("productGroupId", java.util.Optional.ofNullable(productGroupId))
-				.queryParamIfPresent("searchQuery", java.util.Optional.ofNullable(searchQuery))
+				//.queryParamIfPresent("productGroupId", java.util.Optional.ofNullable(productGroupId))
+				//.queryParamIfPresent("searchQuery", java.util.Optional.ofNullable(searchQuery))
 				.toUriString();
 
 		// REST-Aufruf mit dem korrekten Ziel-Typ (ProductRecord)
@@ -97,13 +97,11 @@ public class Tools {
 				.retrieve()
 				.body(new ParameterizedTypeReference<List<ProductRecord>>() {});
 
-		return listProducts;-->
-		**/
 
+		/*
 		// Falls zu Testzwecken benötigt (angepasst an die OpenAPI-Spezifikation):
-
-        return List.of(
-             new ProductRecord(
+		List<ProductRecord> listProducts = List.of(
+				new ProductRecord(
                    new ProductRecord.Product(
                        "prod-001",
                        "https://example.com/images/prod-001.jpg",
@@ -130,97 +128,141 @@ public class Tools {
                    )
              )
         );
+		*/
+
+		System.out.println("MCP Server: Ergebnis Tool Methode getProducts: " + listProducts.toString());
+		return listProducts;
 
 	}
 
-	/*
-	* # -- Products ------------------------------------------------------------
-    Product:
-      type: object
-      properties:
-        id:
-          type: string
-          example: "prod-001"
-        imageUrl:
-          type: string
-          format: uri
-          example: "https://example.com/images/prod-001.jpg"
-        rating:
-          type: number
-          format: float
-          minimum: 0
-          maximum: 5
-          example: 4.3
-        price:
-          type: number
-          format: float
-          example: 29.99
-        availableQuantity:
-          type: integer
-          example: 150
-        deliveryDuration:
-          type: integer
-          description: Estimated delivery time in days.
-          example: 3
-        name:
-          type: string
-          description: Localised name (language selected via `lang` query param).
-          example: "Wooden Chair"
-        description:
-          type: string
-          description: Localised short description.
-          example: "Comfortable and durable wooden chair."
-        detailedDescription:
-          type: string
-          description: Localised detailed description.
-          example: "Hand-crafted from solid oak wood..."
+	public record ProductRecord(
+			String id,
+			String imageUrl,
+			String name,
+			String description
+	) {}
 
-*/
-	public record ProductRecord(Product product) {
-		public record Product(String id, String imageUrl, float rating, float price, int availableQuantity,
-		int deliveryDuration, String name, String description, String detailedDescription) {
-		}
+	@McpTool(description = "Hole die Details zu einem spezifischen Produkt anhand seiner ID. " +
+			"Gibt ein Objekt mit folgenden Feldern zurück: " +
+			"- id: Eindeutige Produkt-ID\n" +
+			"- imageUrl: Link zum Produktbild\n" +
+			"- rating: Bewertung von 0.0 bis 5.0\n" +
+			"- price: Preis in Euro\n" +
+			"- availableQuantity: Lagerbestand\n" +
+			"- deliveryDuration: Lieferzeit in Tagen\n" +
+			"- detailedDescription: Ausführliche Kursinhalte und Details.")
+	public SingleProductResponse getProductDetails(
+			@McpToolParam(description = "Die eindeutige ID des Produkts (z.B. prod-001)") String productId,
+			@McpToolParam(description = "Die Sprachvariante (z.B. de oder en)") String lang) {
+
+		System.out.println("MCP Server: Aufruf Tool Methode getProductDetails. Produkt ID: " + productId + " Sprache: " +  lang);
+
+		// Dynamischer Aufbau der URI: http://localhost:3000/products/get-product?productId=...&lang=...
+		String uri = UriComponentsBuilder.fromUriString("http://localhost:3000/products/get-product")
+				.queryParam("productId", productId)
+				.queryParam("lang", lang)
+				.toUriString();
+
+		// Ausführen des GET-Requests analog zum Curl-Befehl
+
+		SingleProductResponse singleProduct = restClient.get()
+				.uri(uri)
+				.header("accept", MediaType.APPLICATION_JSON_VALUE) // -H 'accept: application/json'
+				.retrieve()
+				.body(SingleProductResponse.class); // Automatisches Mapping in den Record
+
+		System.out.println("MCP Server: Rückgabe Tool Methode getProductDetails: " + singleProduct.toString());
+		return singleProduct;
 	}
 
-/*
-# -- Product Groups ------------------------------------------------------
-    ProductGroup:
-      type: object
-      properties:
-        id:
-          type: string
-          example: "grp-001"
-        imageUrl:
-          type: string
-          format: uri
-          example: "https://example.com/images/grp-001.jpg"
-        name:
-          type: string
-          description: Localised name (language selected via `lang` query param).
-          example: "Furniture"
-* */
+	public record SingleProductResponse(
+			String id,
+			String imageUrl,
+			double rating,
+			double price,
+			int availableQuantity,
+			int deliveryDuration,
+			String name,
+			String description,
+			String detailedDescription
+	) {}
 
 	@McpTool(description = "Authentifiziert den Benutzer und gibt einen Bearer Token zurück, der für geschützte Aktionen wie den Checkout erforderlich ist.")
 	public LoginResponse login(
 			@McpToolParam(description = "Der Benutzername für den API-Zugang") String username,
 			@McpToolParam(description = "Das Passwort für den API-Zugang") String password) {
 
-		System.out.println("MCP Server: Aufruf Tool Methode login");
+		System.out.println("MCP Server: Aufruf Tool Methode login. Username: " + username + " Passwort: " +  password);
 
-       /*
-       return restClient.post()
-             .uri("http://localhost:3000/auth/login")
+		LoginResponse authResponse = restClient.post()
+             .uri("http://localhost:3000/auth/signin")
              .body(new LoginRequest(username, password))
              .retrieve()
              .body(LoginResponse.class);
-       */
 
+		/*
 		// Zu Testzwecken: Mock-Token zurückgeben
-		return new LoginResponse("mock-jwt-token-xyz-12345");
+		// 1. Die Adressen-Liste erstellen
+		List<LoginResponse.Address> addresses = List.of(
+				new LoginResponse.Address("Musterstraße", "00000", "Musterstadt"),
+				new LoginResponse.Address("Musterweg", "11111", "Musterort")
+		);
+
+		// 2. Die Rollen-Liste erstellen
+		List<String> roles = List.of("ROLE_USER");
+
+		// 3. Die Zahlungsinformationen erstellen
+		LoginResponse.PaymentInformation paymentInfo =
+				new LoginResponse.PaymentInformation("0001110001110001110001");
+
+		// 4. Das User-Objekt zusammenbauen
+		LoginResponse.User user = new LoginResponse.User(
+				1L,
+				"Thorsten Tester",
+				"test@test.de",
+				addresses,
+				roles,
+				paymentInfo
+		);
+
+		// 5. Das finale Haupt-Record-Objekt (AuthResponseRecord) erzeugen
+		LoginResponse authResponse = new LoginResponse(
+				user,
+				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzgxMjU3MTE0LCJleHAiOjE3ODEyNjQzMTR9.AP2cIwICA8EIFA1da7DNGyPDMrsUtetkifP_mETKfKs",
+				"15c007f8-ad5e-4fbe-abd7-b06855b8ae4e"
+		);
+		*/
+
+		System.out.println("MCP Server: Ergebnis Tool Methode login: " + authResponse.toString());
+		return authResponse;
 	}
 
-	public record LoginRequest(String username, String password) {}
-	public record LoginResponse(String token) {}
+	public record LoginRequest(String email, String password) {}
+	//public record LoginResponse(String token) {}
+	public record LoginResponse(
+			User user,
+			String accessToken,
+			String refreshToken
+	) {
+		public record User(
+				Long id,
+				String name,
+				String email,
+				List<Address> addresses,
+				List<String> roles,
+				PaymentInformation paymentInformation
+		) {}
+
+		public record Address(
+				String streetNr,
+				String zip,
+				String city
+		) {}
+
+		public record PaymentInformation(
+				String iban
+		) {}
+	}
 
 	@McpTool(description = "Führt den Checkout für einen Warenkorb aus. Erfordert zwingend einen gültigen Bearer Token aus dem Login.")
 	public CheckoutResponse checkout(
@@ -230,24 +272,39 @@ public class Tools {
 
 		CheckoutRequest body = new CheckoutRequest(items, shippingAddress);
 
-		System.out.println("MCP Server: Aufruf Tool Methode checkout");
+		System.out.println("MCP Server: Aufruf Tool Methode checkout: Liste der zu bestellenden Artikel: " + items.toString() + " Lieferadresse: " + shippingAddress +  " Token: " +  bearerToken);
 
-       /*
-       return restClient.post()
-             .uri("http://localhost:3000/checkout")
-             .header("Authorization", "Bearer " + bearerToken) // Token wird in den Header injiziert
-             .body(body)
-             .retrieve()
-             .body(CheckoutResponse.class);
-       */
-
+		/*
 		// Zu Testzwecken: Mock-Bestätigung zurückgeben
 		double mockTotal = items.stream().mapToDouble(item -> item.quantity() * 29.99).sum();
-		return new CheckoutResponse(
-				"order-" + java.util.UUID.randomUUID().toString().substring(0, 8),
-				"SUCCESS",
-				mockTotal
-		);
+		CheckoutResponse checkoutResponse = new CheckoutResponse("order-" + java.util.UUID.randomUUID().toString().substring(0, 8), "SUCCESS", mockTotal);
+		*/
+
+		String rawJson = restClient.post()
+				.uri("http://localhost:3000/checkout")
+				.header("Authorization", "Bearer " + bearerToken)
+				.body(body)
+				.retrieve()
+				.body(String.class);
+
+		System.out.println("MCP Server: Rohe API-Antwort: " + rawJson);
+
+		// 2. Prüfen, ob die Antwort leer war
+		if (rawJson == null || rawJson.isBlank()) {
+			System.out.println("MCP Server: Warnung! API hat einen leeren Body zurückgegeben.");
+			return new CheckoutResponse("unknown", "SUCCESS_NO_BODY", 0.0);
+		}
+
+		// 3. Wenn Text da ist, in den Record umwandeln
+		try {
+			CheckoutResponse checkoutResponse = objectMapper.readValue(rawJson, CheckoutResponse.class);
+			System.out.println("MCP Server: Ergebnis Tool Methode checkout erfolgreich gemappt.");
+			return checkoutResponse; // Hier wird die Methode erfolgreich beendet
+		} catch (Exception e) {
+			System.err.println("MCP Server: Mapping-Fehler! Das JSON passte nicht zum Record: " + e.getMessage());
+			throw new RuntimeException("API-Antwort konnte nicht verarbeitet werden: " + rawJson); // Hier bricht die Methode ab
+		}
+
 	}
 
 	// --- Checkout ---
@@ -255,55 +312,5 @@ public class Tools {
 		public record CartItem(String productId, int quantity) {}
 	}
 	public record CheckoutResponse(String orderId, String status, double totalAmount) {}
-
-
-
-	@McpTool(description = "Greeting response")
-	public String hello(String myName) {
-		return "Hello " + myName + "!";
-	}
-
-	@McpTool(description = "Get the temperature (in celsius) for a specific location")
-	public String poeticWeatherForecast(McpSyncRequestContext context,
-			@McpToolParam(description = "The location latitude") double latitude,
-			@McpToolParam(description = "The location longitude") double longitude) {
-
-		WeatherResponse weather = restClient.get()
-			.uri("https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m",
-					latitude, longitude)
-			.retrieve()
-			.body(WeatherResponse.class);
-
-		//var weatherJson = ModelOptionsUtils.toJsonStringPrettyPrinter(weather);
-		String weatherJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(weather);
-
-		context.info("Raw weather response: " + weatherJson);
-
-		String weatherPoem = "none";
-
-		if (context.sampleEnabled()) {
-
-			context.info("Start sampling");
-
-			var sampleResponse = context.sample(spec -> spec.systemPrompt("You are a poet!")
-				.message(
-						"Please write a poem about this weather forecast (temperature is in Celsius). Use markdown format :\n "
-								+ weatherJson));
-
-			weatherPoem = ((TextContent) sampleResponse.content()).text();
-
-			context.info("Finish Sampling");
-		}
-
-		context.info("Weather poem is done!");
-
-		return "Poem about the weather: " + weatherPoem + "\n" + weatherJson;
-
-	}
-
-	public record WeatherResponse(Current current) {
-		public record Current(LocalDateTime time, int interval, double temperature_2m) {
-		}
-	}
 
 }
