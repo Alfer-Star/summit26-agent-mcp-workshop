@@ -44,23 +44,25 @@ public class Tools {
 	public List<ProductGroupRecord> getProductGroups(
 			 @McpToolParam(description = "Die Sprachvariante des Produktnames") String lang) {
 
-
+		System.out.println("MCP Server: Aufruf Tool Methode getProductGroups");
+		/**
 		List<ProductGroupRecord> listProductGroups = restClient.get()
 				.uri("http://localhost:3000/product-groups/get?lang={lang}", lang)
 				.retrieve()
 				.body(new ParameterizedTypeReference<List<ProductGroupRecord>>() {});
 
 		return listProductGroups;
+		**/
 
 		//Falls zu Testzwecken benötigt:
-		/*return List.of(
+		return List.of(
 				new ProductGroupRecord(
 						new ProductGroupRecord.ProductGroup("1", "https://example.com/img1.png", "Elektronik")
 				),
 				new ProductGroupRecord(
 						new ProductGroupRecord.ProductGroup("2", "https://example.com/img2.png", "Kleidung")
 				)
-		);*/
+		);
 
 	}
 
@@ -80,6 +82,8 @@ public class Tools {
 			@McpToolParam(description = "Filtert Ergebnisse auf eine Produktgruppe") String productGroupId,
 			@McpToolParam(description = "Suchbegriff für Suche auf Produktname und Produktbeschreibung") String searchQuery) {
 
+		System.out.println("MCP Server: Aufruf Tool Methode getProducts");
+		/**
 		// Dynamischer Aufbau der URI inklusive der optionalen Query-Parameter
 		String uri = UriComponentsBuilder.fromUriString("http://localhost:3000/products/get")
 				.queryParam("lang", lang)
@@ -93,10 +97,11 @@ public class Tools {
 				.retrieve()
 				.body(new ParameterizedTypeReference<List<ProductRecord>>() {});
 
-		return listProducts;
+		return listProducts;-->
+		**/
 
 		// Falls zu Testzwecken benötigt (angepasst an die OpenAPI-Spezifikation):
-        /*
+
         return List.of(
              new ProductRecord(
                    new ProductRecord.Product(
@@ -125,7 +130,6 @@ public class Tools {
                    )
              )
         );
-        */
 
 	}
 
@@ -195,6 +199,64 @@ public class Tools {
           description: Localised name (language selected via `lang` query param).
           example: "Furniture"
 * */
+
+	@McpTool(description = "Authentifiziert den Benutzer und gibt einen Bearer Token zurück, der für geschützte Aktionen wie den Checkout erforderlich ist.")
+	public LoginResponse login(
+			@McpToolParam(description = "Der Benutzername für den API-Zugang") String username,
+			@McpToolParam(description = "Das Passwort für den API-Zugang") String password) {
+
+		System.out.println("MCP Server: Aufruf Tool Methode login");
+
+       /*
+       return restClient.post()
+             .uri("http://localhost:3000/auth/login")
+             .body(new LoginRequest(username, password))
+             .retrieve()
+             .body(LoginResponse.class);
+       */
+
+		// Zu Testzwecken: Mock-Token zurückgeben
+		return new LoginResponse("mock-jwt-token-xyz-12345");
+	}
+
+	public record LoginRequest(String username, String password) {}
+	public record LoginResponse(String token) {}
+
+	@McpTool(description = "Führt den Checkout für einen Warenkorb aus. Erfordert zwingend einen gültigen Bearer Token aus dem Login.")
+	public CheckoutResponse checkout(
+			@McpToolParam(description = "Der gültige Bearer Token (ohne das Präfix 'Bearer ')") String bearerToken,
+			@McpToolParam(description = "Die Liste der zu bestellenden Artikel") List<CheckoutRequest.CartItem> items,
+			@McpToolParam(description = "Die Lieferadresse für die Bestellung") String shippingAddress) {
+
+		CheckoutRequest body = new CheckoutRequest(items, shippingAddress);
+
+		System.out.println("MCP Server: Aufruf Tool Methode checkout");
+
+       /*
+       return restClient.post()
+             .uri("http://localhost:3000/checkout")
+             .header("Authorization", "Bearer " + bearerToken) // Token wird in den Header injiziert
+             .body(body)
+             .retrieve()
+             .body(CheckoutResponse.class);
+       */
+
+		// Zu Testzwecken: Mock-Bestätigung zurückgeben
+		double mockTotal = items.stream().mapToDouble(item -> item.quantity() * 29.99).sum();
+		return new CheckoutResponse(
+				"order-" + java.util.UUID.randomUUID().toString().substring(0, 8),
+				"SUCCESS",
+				mockTotal
+		);
+	}
+
+	// --- Checkout ---
+	public record CheckoutRequest(List<CartItem> items, String shippingAddress) {
+		public record CartItem(String productId, int quantity) {}
+	}
+	public record CheckoutResponse(String orderId, String status, double totalAmount) {}
+
+
 
 	@McpTool(description = "Greeting response")
 	public String hello(String myName) {

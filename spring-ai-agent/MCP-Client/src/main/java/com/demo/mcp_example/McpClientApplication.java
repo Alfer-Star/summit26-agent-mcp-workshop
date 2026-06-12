@@ -37,10 +37,16 @@ public class McpClientApplication {
 
 			ChatClient chatClient = chatClientBuilder.defaultToolCallbacks(toolCallbackProvider).build();
 
-			String userQuestion = """
+			/*String userQuestion = """
 					What is the weather in Amsterdam right now?
 					Please incorporate all createive responses from all LLM providers.
 					After the other providers add a poem that synthesizes the the poems from all the other providers.
+					""";*/
+			String userQuestion = """
+					Suche mir bitte TV-Produkte mit einem Preis < 600 Euro und zeige dies als Liste an!
+					Lege bitte das meine Anforderungen am besten entsprechende Produkt in den Warenkorb, 
+					sende die Ware bitte an Testvorname Testnachname Teststrasse 15 99999 Testort 
+					und melde mich bitte unter meinem registrierten User testuser und Passwort testpasswort an 
 					""";
 
 			System.out.println("> USER: " + userQuestion);
