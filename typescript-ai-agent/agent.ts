@@ -1,7 +1,6 @@
 import "dotenv/config";
 import * as readline from "readline";
-import { createReactAgent } from "@langchain/langgraph/prebuilt";
-import { ChatAnthropic } from "@langchain/anthropic";
+import { createAgent } from "langchain";
 import { MultiServerMCPClient } from "@langchain/mcp-adapters";
 import { BaseCallbackHandler } from "@langchain/core/callbacks/base";
 import type { Serialized } from "@langchain/core/load/serializable";
@@ -51,12 +50,10 @@ async function main() {
   const client = new MultiServerMCPClient(mcpConfig);
   const tools = await client.getTools();
 
-  const agent = createReactAgent({
-    llm: new ChatAnthropic({
-      model: "claude-sonnet-4-6",
-    }),
+  const agent = createAgent({
+    model: "anthropic:claude-sonnet-4-6",
     tools,
-    stateModifier: SYSTEM_PROMPT,
+    prompt: SYSTEM_PROMPT,
   });
 
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
