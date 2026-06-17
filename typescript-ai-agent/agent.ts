@@ -1,17 +1,16 @@
-import "dotenv/config";
-import * as readline from "readline";
-import { createAgent } from "langchain";
-import { MultiServerMCPClient } from "@langchain/mcp-adapters";
-import { BaseCallbackHandler } from "@langchain/core/callbacks/base";
-import type { Serialized } from "@langchain/core/load/serializable";
-
+import 'dotenv/config';
+import * as readline from 'readline';
+import { createAgent } from 'langchain';
+import { MultiServerMCPClient } from '@langchain/mcp-adapters';
+import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
+import type { Serialized } from '@langchain/core/load/serializable';
 
 class ToolDebugHandler extends BaseCallbackHandler {
-  name = "ToolDebugHandler";
+  name = 'ToolDebugHandler';
   private toolNames = new Map<string, string>();
 
   async handleToolStart(tool: Serialized, input: string, runId: string) {
-    const toolName = (tool.id as string[])?.[tool.id.length - 1] ?? "unknown";
+    const toolName = (tool.id as string[])?.[tool.id.length - 1] ?? 'unknown';
     this.toolNames.set(runId, toolName);
     try {
       console.debug(`[Tool Call] ${toolName}`, JSON.parse(input));
@@ -21,7 +20,7 @@ class ToolDebugHandler extends BaseCallbackHandler {
   }
 
   async handleToolEnd(output: string, runId: string) {
-    const toolName = this.toolNames.get(runId) ?? "unknown";
+    const toolName = this.toolNames.get(runId) ?? 'unknown';
     this.toolNames.delete(runId);
     console.debug(`[Tool Result] ${toolName}`, output);
   }
@@ -37,8 +36,8 @@ You have access to the following tools to help you user interacting with the Wor
 
 const mcpConfig = {
   shop: {
-    transport: "http" as const,
-    url: "http://127.0.0.1:3010/mcp",
+    transport: 'http' as const,
+    url: 'http://127.0.0.1:3010/mcp',
   },
 };
 
@@ -51,9 +50,9 @@ async function main() {
   const tools = await client.getTools();
 
   const agent = createAgent({
-    model: "anthropic:claude-sonnet-4-6",
+    model: 'anthropic:claude-sonnet-4-6',
     tools,
-    prompt: SYSTEM_PROMPT,
+    systemPrompt: SYSTEM_PROMPT,
   });
 
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -62,13 +61,13 @@ async function main() {
   let messages: any[] = [];
 
   while (true) {
-    const userInput = await prompt(rl, "\nDu: ");
-    if (userInput.trim().toLowerCase() === "exit") break;
+    const userInput = await prompt(rl, '\nDu: ');
+    if (userInput.trim().toLowerCase() === 'exit') break;
     if (!userInput.trim()) continue;
 
     const result = await agent.invoke(
-      { messages: [...messages, { role: "user", content: userInput }] },
-      { callbacks: [new ToolDebugHandler()] }
+      { messages: [...messages, { role: 'user', content: userInput }] },
+      { callbacks: [new ToolDebugHandler()] },
     );
     messages = result.messages;
 
