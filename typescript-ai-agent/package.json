@@ -1,0 +1,24 @@
+{
+  "name": "typescript-ai-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "agent:start": "tsx agent.ts",
+    "mcp:start": "tsx mcp-server-shop.ts"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^1.4.0",
+    "@langchain/core": "^1.1.48",
+    "@langchain/langgraph": "^1.4.1",
+    "@langchain/mcp-adapters": "^1.1.3",
+    "dotenv": "^17",
+    "fastmcp": "^4.1.0",
+    "zod": "^4",
+    "zod-to-json-schema": "^3.25.0"
+  },
+  "devDependencies": {
+    "tsx": "^4",
+    "typescript": "^5"
+  }
+}
