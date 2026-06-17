@@ -6,20 +6,6 @@ import { MultiServerMCPClient } from "@langchain/mcp-adapters";
 import { BaseCallbackHandler } from "@langchain/core/callbacks/base";
 import type { Serialized } from "@langchain/core/load/serializable";
 
-// @langchain/anthropic 0.3.x sends top_p: -1 as a "not set" sentinel,
-// but claude-sonnet-4-6 rejects it. Strip it at the HTTP level.
-const patchedFetch: typeof fetch = async (input, init) => {
-  if (init?.body && typeof init.body === "string") {
-    try {
-      const body = JSON.parse(init.body);
-      if (body.top_p === -1) delete body.top_p;
-      init = { ...init, body: JSON.stringify(body) };
-    } catch {
-      // body is not JSON, leave as-is
-    }
-  }
-  return globalThis.fetch(input, init);
-};
 
 class ToolDebugHandler extends BaseCallbackHandler {
   name = "ToolDebugHandler";
@@ -68,7 +54,6 @@ async function main() {
   const agent = createReactAgent({
     llm: new ChatAnthropic({
       model: "claude-sonnet-4-6",
-      clientOptions: { fetch: patchedFetch } as never,
     }),
     tools,
     stateModifier: SYSTEM_PROMPT,
