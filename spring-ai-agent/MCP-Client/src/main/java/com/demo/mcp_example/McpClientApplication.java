@@ -27,14 +27,16 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.Scanner;
 
+/**
+		* @author Jochen Kirchner
+ */
+
 @SpringBootApplication
 public class McpClientApplication {
 
-	@Value("${shopping.api.username:test@test.de}")
-	private String apiUsername;
+	@Value("${shopping.api.userid:1}")
+	private String apiUserId;
 
-	@Value("${shopping.api.password:password1}")
-	private String apiPassword;
 
 	public static void main(String[] args) {
 		SpringApplication.run(McpClientApplication.class, args).close();
@@ -45,14 +47,7 @@ public class McpClientApplication {
 			ToolCallbackProvider toolCallbackProvider) {
 
 		return args -> {
-			/**
-			var memory = new InMemoryChatMemory();
 
-			ChatClient chatClient = chatClientBuilder
-					.defaultToolCallbacks(toolCallbackProvider)
-					.defaultAdvisors(new MessageChatMemoryAdvisor(memory))
-					.build();
-			 **/
 
 			// CHAT MEMORY
 			var chatMemory = MessageWindowChatMemory.builder().maxMessages(10).build();
@@ -66,21 +61,18 @@ public class McpClientApplication {
 					.build();
 
 
-
 			String systemPrompt = """
                 Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
-                Der Benutzer beauftragt dich, passende Produkte zu suchen und den Kauf vollständig abzuschließen.
+                Der Benutzer beauftragt dich, passende Produkte zu suchen und in den Warenkorb zu legen. und ggf. Verkauf abzuschließen.
+                Der Verkauf (Checkout) erfolgt nicht hier, sondern über die Portal-Oberfläche
 
-                WICHTIG FÜR DIE AUTHENTIFIZIERUNG:
-                Nutze für alle geschützten Aktionen (wie den Checkout) die folgenden hinterlegten Benutzerdaten:
-                - Benutzername/E-Mail: %s
-                - Passwort: %s
-
-                Rufe zuerst das Login-Tool mit diesen Daten auf, um den Bearer Token zu erhalten, bevor du den Checkout ausführst.
+                WICHTIG FÜR DIE Einstellung von Produkten in den Warenkorb:
+                Nutze die folgenden hinterlegten Benutzerdaten:
+                - User ID: %s
 
                 Falls du für eine Aufgabe wichtige Informationen benötigst (z.B. Lieferadresse, Größe, Farbe),
                 stelle gezielte Rückfragen an den Benutzer, bevor du fortfährst.
-                """.formatted(apiUsername, apiPassword);
+                """.formatted(apiUserId);
 
 			Scanner scanner = new Scanner(System.in);
 
