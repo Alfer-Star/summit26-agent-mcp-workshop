@@ -16,6 +16,8 @@
 package com.demo.mcp_example;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -23,10 +25,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Scanner;
+
 @SpringBootApplication
 public class McpClientApplication {
 
-	// 1. Credentials aus den application.properties injizieren
 	@Value("${shopping.api.username:test@test.de}")
 	private String apiUsername;
 
@@ -38,44 +41,80 @@ public class McpClientApplication {
 	}
 
 	@Bean
-	public CommandLineRunner predefinedQuestions(ChatClient.Builder chatClientBuilder,
+	public CommandLineRunner interactiveChat(ChatClient.Builder chatClientBuilder,
 			ToolCallbackProvider toolCallbackProvider) {
 
 		return args -> {
+			/**
+			var memory = new InMemoryChatMemory();
 
-			ChatClient chatClient = chatClientBuilder.defaultToolCallbacks(toolCallbackProvider).build();
+			ChatClient chatClient = chatClientBuilder
+					.defaultToolCallbacks(toolCallbackProvider)
+					.defaultAdvisors(new MessageChatMemoryAdvisor(memory))
+					.build();
+			 **/
+
+			// CHAT MEMORY
+			var chatMemory = MessageWindowChatMemory.builder().maxMessages(10).build();
+
+			ChatClient chatClient = chatClientBuilder
+					.defaultToolCallbacks(toolCallbackProvider)
+					.defaultAdvisors(MyLoggingAdvisor.builder()
+							.showConversationHistory(true)
+							.build())
+					.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+					.build();
+
+
 
 			String systemPrompt = """
                 Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
                 Der Benutzer beauftragt dich, passende Produkte zu suchen und den Kauf vollständig abzuschließen.
-                
+
                 WICHTIG FÜR DIE AUTHENTIFIZIERUNG:
                 Nutze für alle geschützten Aktionen (wie den Checkout) die folgenden hinterlegten Benutzerdaten:
                 - Benutzername/E-Mail: %s
                 - Passwort: %s
-                
+
                 Rufe zuerst das Login-Tool mit diesen Daten auf, um den Bearer Token zu erhalten, bevor du den Checkout ausführst.
+
+                Falls du für eine Aufgabe wichtige Informationen benötigst (z.B. Lieferadresse, Größe, Farbe),
+                stelle gezielte Rückfragen an den Benutzer, bevor du fortfährst.
                 """.formatted(apiUsername, apiPassword);
 
-			String userQuestion = """
-					Suche mir bitte ein bequemes Kleidungsstück zu einem Preis < 100 Euro und zeige die Liste passender Produkte an!
-					Was ist das für meine Anforderungen am besten entsprechende Produkt?
-					Kaufe das bitte und 
-					sende die Ware bitte an Testvorname Testnachname Teststrasse 15 99999 Testort 
-					und melde mich bitte unter meinem registrierten User test@test.de und Passwort password1 an 
-					""";
+			Scanner scanner = new Scanner(System.in);
 
-			System.out.println("> SYSTEM PROMPT INJECTED (Credentials hidden in console)");
-			System.out.println("> USER: " + userQuestion);
+			System.out.println("╔══════════════════════════════════════════╗");
+			System.out.println("║         Einkaufs-Agent gestartet         ║");
+			System.out.println("║  'exit' oder 'quit' zum Beenden eingeben ║");
+			System.out.println("╚══════════════════════════════════════════╝");
+			System.out.println();
 
-			//Aufruf des ChatClients mit getrenntem System- und User-Prompt
-			String assistantResponse = chatClient.prompt()
-					.system(systemPrompt) // Hier wird die Rolle & Credentials übergeben
-					.user(userQuestion)   // Hier wird die eigentliche Aufgabe übergeben
-					.call()
-					.content();
+			while (true) {
+				System.out.print("Sie: ");
+				System.out.flush();
 
-			System.out.println("> ASSISTANT: " + assistantResponse);
+				String userInput = scanner.nextLine().trim();
+
+				if (userInput.equalsIgnoreCase("exit") || userInput.equalsIgnoreCase("quit")) {
+					System.out.println("Auf Wiedersehen!");
+					break;
+				}
+
+				if (userInput.isEmpty()) {
+					continue;
+				}
+
+				String response = chatClient.prompt()
+						.system(systemPrompt)
+						.user(userInput)
+						.call()
+						.content();
+
+				System.out.println();
+				System.out.println("Agent: " + response);
+				System.out.println();
+			}
 		};
 	}
 }
