@@ -60,45 +60,6 @@ public class Tools {
 
 	}
 
-
-	@McpTool(description = "Hole die Details zu einem spezifischen Produkt anhand seiner ID. " +
-			"Gibt ein Objekt mit folgenden Feldern zurück: " +
-			"- id: Eindeutige Produkt-ID" +
-			"- imageUrl: Link zum Produktbild" +
-			"- rating: Bewertung von 0.0 bis 5.0" +
-			"- price: Preis in Euro" +
-			"- availableQuantity: Lagerbestand" +
-			"- deliveryDuration: Lieferzeit in Tagen" +
-			"- detailedDescription: Ausführliche Kursinhalte und Details.")
-	public SingleProductResponse getProductDetails(
-			@McpToolParam(description = "Die eindeutige ID des Produkts (z.B. prod-001)") String productId,
-			@McpToolParam(description = "Die Sprachvariante (z.B. de oder en)") String lang) {
-
-		System.out.println("MCP Server: Aufruf Tool Methode getProductDetails. Produkt ID: " + productId + " Sprache: " + lang);
-
-		SingleProductResponse singleProduct = fetchProductDetails(productId, lang);
-
-		System.out.println("MCP Server: Rückgabe Tool Methode getProductDetails: " + singleProduct.toString());
-		return singleProduct;
-	}
-
-	@McpTool(description = "Fügt einen Artikel in den Warenkorb des Benutzers ein. Erfordert zwingend die User ID aus dem Login." +
-			"Gibt ein Objekt mit folgendem Feld zurück:" +
-			"- message: Bestätigungsnachricht der Operation.")
-	public BasketItemResponse addToBasket(
-			@McpToolParam(description = "Die ID des Benutzers") long userId,
-			@McpToolParam(description = "Die eindeutige ID des Produkts (z.B. MER-001)") String productId,
-			@McpToolParam(description = "Die gewünschte Menge des Produkts") int quantity) {
-
-		System.out.println("MCP Server: Aufruf Tool Methode addToBasket. UserId: " + userId + " ProduktId: " + productId + " Menge: " + quantity);
-
-		BasketItemResponse response = addItemToBasket(new BasketItemRequest(userId, productId, quantity));
-
-		System.out.println("MCP Server: Ergebnis Tool Methode addToBasket: " + response.toString());
-		return response;
-	}
-
-
 	// -------------------------------------------------------------------------
 	// Private REST-Zugriffe
 	// -------------------------------------------------------------------------
