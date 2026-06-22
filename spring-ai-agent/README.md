@@ -6,13 +6,18 @@
 * Agent Tool mit Hello World einbinden (lokal)
 * Agent CLI ansprechbar
 
-## Session 2 Ziel (Most Time)
+## Session 2
 
+### Ziel
 * MCP Schnittstelle für Get Product Liste: `/products/get`
 * MCP Tool Signatur erstellen
 * MCP als Tool in den Agenten einbauen
 * Agenten Testen: Produkte abrufen
 * Test
+* 
+### Vorbereitung Session 2
+* Lade den git Branch in ein lokales Verzeichnis:
+* git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
 
 ### MCP Client - Anpassung Agent
 * Ändere den System Prompt wie folgt:
