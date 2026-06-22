@@ -8,7 +8,13 @@ Der Agent soll auf der Konsole ansprechbar sein und mit dem Benutzer interagiere
 
 ### Vorbereitung Session 1
 * Lade den git Branch in ein lokales Verzeichnis:
-* git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+* git clone -b session_1_agent https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+
+### Entwicklung
+
+### Test
+* Starte im Maven Modul MCP-CLient die Applikations-Klasse in der IDE
+* Öffne alternativ in der Konsole das Verzeichnis MCP-Client und führe "mvn spring-boot:run" aus.
 
 
 ## Session 2
@@ -25,8 +31,7 @@ Hierbei kann per Log-Level-Einstellung auch die MCP-Client-Server-Kommunikation 
 ### Vorbereitung Session 2
 * Lade den git Branch in ein lokales Verzeichnis:
 * git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
-
-### MCP Client - Anpassung Agent
+exit### MCP Client - Anpassung Agent
 * Ändere den System Prompt wie folgt:
 ```
 """Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
@@ -130,10 +135,8 @@ Für Input- und Outputparameter sind Beschreibungen zur Auswertung für das KI-M
 npm install
 npm run server:start      # Starts Express on port 3000
  ```
-* Starte das Webfrontend
 * Starte zuerst die Spring Boot Anwendung des MCP Servers, danach die des MCP Clients
-* Teste den Workflow zum Abruf von Produkten, optional Produkt-Details und lege Produkte in den Warenkorb
-* Überprüfe den Warenkorb im Webfrontend (ggf. mit Aktualisierung (F5))
+* Teste den Workflow zum Abruf von Produkten.
 
 ### Überprüfe die MCP Kommunikation zwischen MCP Client und Server
 * Ändere den Log-Level in der MCP Client Datei "application.properties"
@@ -187,6 +190,8 @@ rkshop.git
 npm install
 npm run server:start      # Starts Express on port 3000
  ```
+* Starte zuerst die Spring Boot Anwendung des MCP Servers, danach die des MCP Clients
+* Teste den Workflow zum Abruf von Produkten, optional Produkt-Details und lege Produkte in den Warenkorb
 * Öffne ein weiteres Terminal und starte das Webfrontend
 ```
 npm install
@@ -197,9 +202,8 @@ npm run client:test                       # Vitest (headless)
 npm run client:test:browser               # Vitest in Chromium
 npm run client:test:browser:headless      # Vitest in headless Chromium
 ```
-* Starte zuerst die Spring Boot Anwendung des MCP Servers, danach die des MCP Clients
-* Teste den Workflow zum Abruf von Produkten, optional Produkt-Details und lege Produkte in den Warenkorb
-* Überprüfe den Warenkorb im Webfrontend (ggf. mit Aktualisierung (F5))
+* Melde Dich im Webfrontend mit Username "test@test.de" und Passwort "password1" an
+* Überprüfe den Warenkorb im Webfrontend (ggf. mit Aktualisierung (F5)) und starte dort den Verkauf
 
 ### Überlegungen zur Optimierung und Erweiterung
 * Überlege, ob der System Prompt je nach Gesprächsverlauf noch justiert werden sollte:
