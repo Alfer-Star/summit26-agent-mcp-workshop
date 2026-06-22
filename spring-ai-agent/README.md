@@ -35,6 +35,7 @@ rkshop.git
 ### Erweiterung des System Prompts im MCP Client
 * Erweitere die System Prompt Beschreibung, dass der Kunde ausser der Abfrage der Produktliste Produktdetails anzeigen und ausgewählte Artikel in den Warenkorb legen kann
 * Weise den Kunden nach Befüllen des Warenkorbes darauf hin, dass der Verkauf und das Bezahlen nur in der Weboberfläche des Verkaufsportals möglich ist
+ 
 
 ### Test des Agenten
 * Start das Backend mit der REST Schnittstelle
@@ -44,6 +45,9 @@ rkshop.git
 * Überprüfe den Warenkorb im Webfrontend (ggf. mit Aktualisierung (F5))
 
 ### Überlegungen zur Optimierung und Erweiterung
+* Überlege, ob der System Prompt je nach Gesprächsverlauf noch justiert werden sollte:
+* * Fall 1 (Geführter Verkauf): Zeige mir zuerst Produktliste ->  zeigen mir Details zu Produkt XXX --> Lege mir das Produkt in den Warenkorb
+* + Fall 2 (Delegierter Verkauf): Wähle das bequemste Kleidungsstück und lege es in den Warenkorb
 * Überlege, wie das Ganze getestet werden kann
 
-### Lösung : Main Branch
+### Finale Lösung : Main Branch
