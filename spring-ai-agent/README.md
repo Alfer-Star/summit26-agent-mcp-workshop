@@ -14,6 +14,41 @@
 * Agenten Testen: Produkte abrufen
 * Test
 
+### MCP Client - Anpassung Agent
+* Ändere den System Prompt wie folgt:
+```
+"""Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
+Der Benutzer beauftragt dich, passende Produkte zu suchen und in den Warenkorb zu legen. und ggf. Verkauf abzuschließen.
+Der Verkauf (Checkout) erfolgt nicht hier, sondern über die Portal-Oberfläche
+
+WICHTIG FÜR DIE Einstellung von Produkten in den Warenkorb:
+Nutze die folgenden hinterlegten Benutzerdaten:
+- User ID: %s
+
+Falls du für eine Aufgabe wichtige Informationen benötigst (z.B. Lieferadresse, Größe, Farbe),
+stelle gezielte Rückfragen an den Benutzer, bevor du fortfährst.
+""".formatted(apiUserId);
+```
+* Passe die Chat Client Initialisierung wie folgt an:
+* * Hinzufuegen: .defaultToolCallbacks(toolCallbackProvider) // Wird für serverseitige Tools auf Basis der Konfiguration benoetigt
+* * Entfernen: .defaultTools(localProductTools) //Das lokale Tool wird nicht mehr benoetigt
+
+```
+ChatClient chatClient = chatClientBuilder
+.defaultToolCallbacks(toolCallbackProvider) // Hinzufuegen! Wird für serverseitige Tools auf Basis der Konfiguration benoetigt
+.defaultAdvisors(MyLoggingAdvisor.builder()
+.showConversationHistory(true)
+.build())
+.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+.build();
+```
+* Lösche weiterhin die Injizierung der Klass LocalProductTools
+```
+* @Autowired
+  private LocalProductTools localProductTools;
+```
+* ... und lösche die Klasse LocalProductTools
+
 ### MCP Client - Konfiguration
 * Ergänze folgenden Inhalt in der application.properties Datei
 ```
@@ -26,7 +61,7 @@ logging.level.io.modelcontextprotocol.spec=WARN
 
 Die MCP Tool Methoden des MCP Servers werden vom Agenten eingebunden.
 
-### MCP Server - Konfiguration
+### MCP Server Konfiguration 
 * Öffne das Maven Modul MCP-Server
 * Öffne die Konfigurationsdatei application properties
 ```application.properties (Ausschnitt)
@@ -35,12 +70,12 @@ spring.ai.mcp.server.version=0.0.1
 spring.ai.mcp.server.protocol=STATELESS
 # spring.ai.mcp.server.protocol=STREAMABLE
 ```
-Der MCP Server mit HTTP Streamable Protokoll auf Standard-Port 8080 gestartet.
+* Der MCP Server mit HTTP Streamable Protokoll auf Standard-Port 8080 gestartet.
 
-Das Spring AI Framework bietet hier eine (im Beispiel nicht verwendete) stateful Variante "Streanable" mit Callbacks Option zum Server
+* Das Spring AI Framework bietet hier eine (im Beispiel nicht verwendete) stateful Variante "Streanable" mit Callbacks Option zum Server
 und eine "Cloud-Native" kompatible stateless Variante ohne Callbackoption an
 
-### MCP Server Tool
+### MCP Server Tools
 * Öffne die Klasse "Tools"
 * Füge die Methode get Products zum Abruf der Produktliste in der Klasse ein:
 ```Java

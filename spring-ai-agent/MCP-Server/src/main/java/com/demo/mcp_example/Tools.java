@@ -38,27 +38,7 @@ public class Tools {
 	private final RestClient restClient = RestClient.create();
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	@McpTool(description = "Gibt alle Produkte zurück. " +
-			"Der Parameter 'lang' steuert, welche Sprachvariante von Name, Beschreibung und Detailbeschreibung zurückgegeben wird. " +
-			"Es kann die Angabe von Produktgruppe oder einem Suchbegriff ergänzt werden, womit die Ausgabe gefiltert wird. " +
-			"Gibt eine Liste von Objekten mit folgenden Feldern zurück:" +
-			"- id: Eindeutige Produkt-ID" +
-			"- imageUrl: Link zum Produktbild" +
-			"- name: Name des Produkts in der gewählten Sprache" +
-			"- description: Kurzbeschreibung des Produkts in der gewählten Sprache.")
-	public List<ProductRecord> getProducts(
-			@McpToolParam(description = "Die Sprachvariante von Name, Beschreibung und Detailbeschreibung") String lang,
-			@McpToolParam(description = "Nur optional: Filtert Ergebnisse auf eine Produktgruppe") String productGroupId,
-			@McpToolParam(description = "Nur optional: Filter Ergebnisse nach Suchbegriff auf Produktname und Produktbeschreibung") String searchQuery) {
 
-		System.out.println("MCP Server: Aufruf Tool Methode getProducts: Language=" + lang + " Produktgruppe=" + productGroupId +  " Suchbegriff=" + searchQuery);
-
-		List<ProductRecord> listProducts = fetchProducts(lang, productGroupId, searchQuery);
-
-		System.out.println("MCP Server: Ergebnis Tool Methode getProducts: " + listProducts.toString());
-		return listProducts;
-
-	}
 
 	// -------------------------------------------------------------------------
 	// Private REST-Zugriffe

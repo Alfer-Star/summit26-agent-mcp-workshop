@@ -19,6 +19,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.beans.factory.annotation.Autowired; // NEU: für Field Injection
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -37,6 +38,10 @@ public class McpClientApplication {
 	@Value("${shopping.api.userid:1}")
 	private String apiUserId;
 
+	// Field Injection für lokale Tool-Klasse mit Testprodukten
+	@Autowired
+	private LocalProductTools localProductTools;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(McpClientApplication.class, args).close();
@@ -53,7 +58,8 @@ public class McpClientApplication {
 			var chatMemory = MessageWindowChatMemory.builder().maxMessages(10).build();
 
 			ChatClient chatClient = chatClientBuilder
-					.defaultToolCallbacks(toolCallbackProvider)
+					//.defaultToolCallbacks(toolCallbackProvider) // Wird für serverseitige Tools auf Basis der Konfiguration benoetigt
+					.defaultTools(localProductTools) // Wird für das lokale Tool benoetigt
 					.defaultAdvisors(MyLoggingAdvisor.builder()
 							.showConversationHistory(true)
 							.build())
@@ -63,15 +69,8 @@ public class McpClientApplication {
 
 			String systemPrompt = """
                 Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
-                Der Benutzer beauftragt dich, passende Produkte zu suchen und in den Warenkorb zu legen. und ggf. Verkauf abzuschließen.
-                Der Verkauf (Checkout) erfolgt nicht hier, sondern über die Portal-Oberfläche
-
-                WICHTIG FÜR DIE Einstellung von Produkten in den Warenkorb:
-                Nutze die folgenden hinterlegten Benutzerdaten:
-                - User ID: %s
-
-                Falls du für eine Aufgabe wichtige Informationen benötigst (z.B. Lieferadresse, Größe, Farbe),
-                stelle gezielte Rückfragen an den Benutzer, bevor du fortfährst.
+                Du kannst dem Benutzer Produkte aus einer Liste vorschlagen.
+                Der Verkauf muss dann im Online Portal stattfinden.
                 """.formatted(apiUserId);
 
 			Scanner scanner = new Scanner(System.in);
