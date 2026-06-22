@@ -17,7 +17,11 @@
 ### MCP Client - Konfiguration
 * Ergänze folgenden Inhalt in der application.properties Datei
 ```
+# spring.ai.mcp.client.sse.connections.shop-server.url=http://localhost:8080
+spring.ai.mcp.client.streamable-http.connections.shop-server.url=http://localhost:8080
 
+logging.level.io.modelcontextprotocol.client=WARN
+logging.level.io.modelcontextprotocol.spec=WARN
 ```
 
 Die MCP Tool Methoden des MCP Servers werden vom Agenten eingebunden.
@@ -57,17 +61,23 @@ public List<ProductRecord> getProducts(
 
 		List<ProductRecord> listProducts = fetchProducts(lang, productGroupId, searchQuery);
 
-		System.out.println("CP Server: Ergebnis Tool Methode getProducts: " + listProducts.toString());
+		System.out.println("MCP Server: Ergebnis Tool Methode getProducts: " + listProducts.toString());
 		return listProducts;
 
 	}
 ```
 
-Die Tool Methode ist für den MCP CLient verfügbar.
-
+Die Tool Methode ist nun für den MCP Client verfügbar.
 Für Input- und Outputparameter sind Beschreibungen zur Auswertung für das KI-Modell vorhanden.
 
-### Test des Agenten mit dem MCP Server
+### (Optional) Test des MCP Servers mit MCP Inspector (Anthropic)
+* Installiere den MCP Inspector (Node.js vorausgesetzt) ```npx @modelcontextprotocol/inspector```
+* (Nach Start des Browsers) Wähle Transport Type "Streamable HTTP"
+* (Falls nicht eingestellt) Setze URL ```http://localhost:8080/mcp```
+* Verbinde Dich mit dem Server
+* Zeige die verfügbaren Tools an (Menü "Resources" oder "Tools")
+
+### Test des Agenten (MCP Client) mit dem MCP Server
 * Öffne ein Terminal und starte das Backend mit der REST Schnittstelle
 ```
 npm install
@@ -78,6 +88,16 @@ npm run server:start      # Starts Express on port 3000
 * Teste den Workflow zum Abruf von Produkten, optional Produkt-Details und lege Produkte in den Warenkorb
 * Überprüfe den Warenkorb im Webfrontend (ggf. mit Aktualisierung (F5))
 
+### Überprüfe die MCP Kommunikation zwischen MCP Client und Server
+* Ändere den Log-Level in der MCP Client Datei "application.properties"
+```
+logging.level.io.modelcontextprotocol.client=TRACE
+logging.level.io.modelcontextprotocol.spec=TRACE
+```
+*  Verfolge die Reihenfolge der MCP Methoden Aufrufe
+* * "Sending message for method initialize"
+* * "Sending message for method tools/list"
+* * "Sending message for method tools/call"
 
 ## Session 3 
 ### Vorbereitung

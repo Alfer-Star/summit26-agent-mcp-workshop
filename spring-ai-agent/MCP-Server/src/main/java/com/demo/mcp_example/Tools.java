@@ -55,7 +55,7 @@ public class Tools {
 
 		List<ProductRecord> listProducts = fetchProducts(lang, productGroupId, searchQuery);
 
-		System.out.println("CP Server: Ergebnis Tool Methode getProducts: " + listProducts.toString());
+		System.out.println("MCP Server: Ergebnis Tool Methode getProducts: " + listProducts.toString());
 		return listProducts;
 
 	}
