@@ -12,6 +12,7 @@
 * MCP Tool Signatur erstellen
 * MCP als Tool in den Agenten einbauen
 * Agenten Testen: Produkte abrufen
+* Test
 
 ## Session 3 
 ### Vorbereitung
