@@ -1,20 +1,27 @@
 # README
 
-## Session 1 Ziel
+## Session 1
+### Ziel
+Ziel der Session ist es, einen KI Agenten zu erstellen, ein Modell anzubinden und ein lokales Tool für das Lesen einer Produktliste zu erstellen.
 
-* Modell anbinden
-* Agent Tool mit Hello World einbinden (lokal)
-* Agent CLI ansprechbar
+Der Agent soll auf der Konsole ansprechbar sein und mit dem Benutzer interagieren.
+
+### Vorbereitung Session 1
+* Lade den git Branch in ein lokales Verzeichnis:
+* git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+
 
 ## Session 2
 
 ### Ziel
-* MCP Schnittstelle für Get Product Liste: `/products/get`
-* MCP Tool Signatur erstellen
-* MCP als Tool in den Agenten einbauen
-* Agenten Testen: Produkte abrufen
-* Test
-* 
+Ziel der Session ist es, einen MCP Server an den bestehenden Agenten anzubinden 
+und dort eine erste Tool Schnittstelle zum Lesen einer Produktliste zu erstellen und anzubinden.
+
+Für die Schnittstelle ist passend zum vorhandenen Rest-Aufruf eine Signatur zu erstellen.
+
+Der Agenten-Workflow ist anschließend inhaltlich zu testen und ggf. der System Prompt anzupassen.
+Hierbei kann per Log-Level-Einstellung auch die MCP-Client-Server-Kommunikation analysiert werden.
+
 ### Vorbereitung Session 2
 * Lade den git Branch in ein lokales Verzeichnis:
 * git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
@@ -47,12 +54,12 @@ ChatClient chatClient = chatClientBuilder
 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
 .build();
 ```
-* Lösche weiterhin die Injizierung der Klass LocalProductTools
+* Lösche die Injizierung der Klasse LocalProductTools
 ```
 * @Autowired
   private LocalProductTools localProductTools;
 ```
-* ... und lösche die Klasse LocalProductTools
+* ... und lösche auch die Klasse LocalProductTools, da lokale Tools nicht mehr benötigt werden.
 
 ### MCP Client - Konfiguration
 * Ergänze folgenden Inhalt in der application.properties Datei
@@ -140,6 +147,17 @@ logging.level.io.modelcontextprotocol.spec=TRACE
 * * "Sending message for method tools/call"
 
 ## Session 3 
+Ziel dieser Session ist es, über den Agenten Workflow via MCP Server Tool Schnittstellen 
+ein oder mehrere Produkte auszuwählen und für den Benutzer mit der ID 1 in den Einkaufswagen zu legen. 
+
+Es werden folgende Tool Schnittstellen verwendet:
+* Produkteliste lesen
+* Produktdetails lesen
+* Produkt in Einkaufswagen legen
+
+Im Webshop kann danach der Warenkorb angesehen und der Verkauf gestartet werden.
+
+
 ### Vorbereitung
 Lade den git Branch in ein lokales Verzeichnis:
 * git clone -b session_3_agent_mcp_conn
