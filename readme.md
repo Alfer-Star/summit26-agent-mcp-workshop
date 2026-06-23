@@ -26,14 +26,17 @@ Important for the workshop are the agent folders.
 workshop  
 ├── sn-webshop-client  
 │   └── ... Angular Client project structure
-├── sn-webshop-client  
+├── sn-webshop-server  
 │   ├── ... express.js structure
 │   ├── swagger.yaml
 ├── python-ai-agent  
 │   ├── home  
 │   ├── app  
 │   └── help  
+├── spring-ai-agent  
+│   ├── MCP-Client  
+│   └── MCP-Server
+│   └── Common
+│   └── ... Maven project with sub modules
 └── readme.md
 ``` 
-
-
