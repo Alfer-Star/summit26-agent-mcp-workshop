@@ -19,7 +19,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.tool.ToolCallbackProvider;
-import org.springframework.beans.factory.annotation.Autowired; // NEU: für Field Injection
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -38,11 +38,6 @@ public class McpClientApplication {
 	@Value("${shopping.api.userid:1}")
 	private String apiUserId;
 
-	// Field Injection für lokale Tool-Klasse mit Testprodukten
-	@Autowired
-	private LocalProductTools localProductTools;
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(McpClientApplication.class, args).close();
 	}
@@ -53,30 +48,22 @@ public class McpClientApplication {
 
 		return args -> {
 
-
-			// CHAT MEMORY
-			var chatMemory = MessageWindowChatMemory.builder().maxMessages(10).build();
-
 			ChatClient chatClient = chatClientBuilder
-					//.defaultToolCallbacks(toolCallbackProvider) // Wird für serverseitige Tools auf Basis der Konfiguration benoetigt
-					.defaultTools(localProductTools) // Wird für das lokale Tool benoetigt
 					.defaultAdvisors(MyLoggingAdvisor.builder()
 							.showConversationHistory(true)
 							.build())
-					.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
 					.build();
 
 
 			String systemPrompt = """
-                Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
-                Du kannst dem Benutzer Produkte aus einer Liste vorschlagen.
-                Der Verkauf muss dann im Online Portal stattfinden.
-                """.formatted(apiUserId);
+                Du bist ein persönlicher Assistent.
+                Stelle die Frage nach Vornamen, spreche den Benutzer mit seinem Vornamen an und stelle die Frage nach Wünschen des Nutzers.
+                """;
 
 			Scanner scanner = new Scanner(System.in);
 
 			System.out.println("╔══════════════════════════════════════════╗");
-			System.out.println("║         Einkaufs-Agent gestartet         ║");
+			System.out.println("║         Persönlicher-Agent gestartet     ║");
 			System.out.println("║  'exit' oder 'quit' zum Beenden eingeben ║");
 			System.out.println("╚══════════════════════════════════════════╝");
 			System.out.println();

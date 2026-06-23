@@ -3,18 +3,111 @@
 ## Session 1
 ### Ziel
 Ziel der Session ist es, einen KI Agenten zu erstellen, ein Modell anzubinden und ein lokales Tool für das Lesen einer Produktliste zu erstellen.
-
 Der Agent soll auf der Konsole ansprechbar sein und mit dem Benutzer interagieren.
 
 ### Vorbereitung Session 1
 * Lade den git Branch in ein lokales Verzeichnis:
 * git clone -b session_1_agent https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+* Für die Session sind folgende Ordner relevant
+```ASCII
+workshop  
+├── spring-ai-agent --> Entwicklung in Java, Maven Hauptprojekt
+│   └── MCP-Client --> Per Konsole nutzbarer KI-Agent und MCP Client, Maven Sub-Modul
+│   └── MCP-Server --> MCP Server mit Tools, die das REST-Backend aufrufen, Maven Sub-Modul
+│   └── Common --> Logging-Utilities für KI-Agent, Maven Sub-Modul
+├── sn-webshop-server  --> REST Backend, wird über Java Tools angesprochen
+├── sn-webshop-client  --> Webshop GUI für Test Verkauf
+└── ...``` 
+```
 
-### Entwicklung
+### Schritt 1: Interaktiver KI Agent
+* Öffne den Ordner MCP-CLient und in der Unterstruktur die Datei application Properties
+* Füge Deinen Token ein "spring.ai.anthropic.api-key=<Token>"
+* Öffne die Klasse McpClientApplication. 
+* Es ist bereits ein KI-Agent als einfacher Chat Client umgesetzt, der per Konsole aufrufbar ist.
+* Starte die Klasse McpClientApplication in der IDE oder öffne alternativ in der Konsole das Verzeichnis MCP-Client und führe "mvn spring-boot:run" aus.
+* Der Agent sollte sich mit dem Anthropic Modell verbinden können.
+* Stelle Dich unter Deinem Namen vor. Frage im nächsten Schritt nach Deinem Namen. Kann sich der Agent an Inhalte vorheriger Fragen / Antwortern erinnern?
 
-### Test
+#### Schritt 2: Ergänzen eines Gedächtnisses
+* Füge eine chatMemory sowie in der Initialisierung des chatClients den Spring-AI Advisor MessageChatMemoryAdvisor hinzu
+``` Chat Client
+
+        // CHAT MEMORY 
+		var chatMemory = MessageWindowChatMemory.builder().maxMessages(10).build(); //--> Hinzufügen
+  		
+  		ChatClient chatClient = chatClientBuilder
+    				.defaultAdvisors(MyLoggingAdvisor.builder()
+  						.showConversationHistory(true)
+  						.build())
+  				.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build()) <-- Zeile Einfügen
+  				.build();
+```
+* Starte die Klasse erneut, stelle Dich als Person vor, und frage im nächsten Schritt nach Deinem Namen. Kann sich der Agent nun an die vorherige Interaktion erinnern?
+* Schließe den Dialog mit "exit"
+
+#### Schritt 3: Ergänzen eines Tools
+* In diesem Schritt möchten wir den ChatClient zu einem Verkaufsassistent mit der Fähigkeit zum Abruf einer Produktliste ausbauen.
+* Passe den System-Prompt Text an, dass der ChatClient als autnomer Einkaufs-Agent für ein Online-Portalagiert und  dem Benutzer Produkte aus einer Liste vorschlägt.
+  Der Verkauf muss aber gesondert im Online Portal stattfinden.
+* Die Fähigkeit zum Auslesen einer Produktliste erhält der Chatbot zunächts mit einem "lokalen" Tool. 
+* Lege parallel zur Applikationsklasse eine weitere Klasse LocalProductTools mit folgendem Inhalt an:
+``` Chat Client
+package com.demo.mcp_example;
+
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class LocalProductTools {
+
+    public record LocalProduct(String id, String name, double price, String description) {}
+
+    @Tool(description = "Gibt eine Liste verfügbarer Produkte zurück (Testdaten)")
+    public List<LocalProduct> getProductList() {
+        return List.of(
+                new LocalProduct("P001", "Laptop Pro 15",    1299.99, "Leistungsstarker Laptop für Profis"),
+                new LocalProduct("P002", "Wireless Mouse",     29.99, "Ergonomische kabellose Maus"),
+                new LocalProduct("P003", "USB-C Hub",          49.99, "7-in-1 USB-C Hub mit HDMI und SD-Kartenleser"),
+                new LocalProduct("P004", "Mechanical Keyboard",149.99, "Mechanische Tastatur mit RGB-Beleuchtung"),
+                new LocalProduct("P005", "Monitor 27\"",      399.99, "4K-Monitor mit IPS-Panel")
+        );
+    }
+}
+```
+* Injiziere den Service in der Applikations-Klasse
+```
+* // Field Injection für lokale Tool-Klasse mit Testprodukten
+  @Autowired
+  private LocalProductTools localProductTools;
+```
+* Binde den Service in der Applikations-Klasse beim Initialisieren des Chatbots ein:
+```
+* ChatClient chatClient = chatClientBuilder
+  //.defaultToolCallbacks(toolCallbackProvider) // Wird für serverseitige Tools auf Basis der Konfiguration benoetigt
+  .defaultTools(localProductTools) --> Hinzufügen
+  .defaultAdvisors(MyLoggingAdvisor.builder()
+  .showConversationHistory(true)
+  .build())
+  .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+  .build();
+```
+* Passe die Startanzeige der Konsole auf einen Verkausfs-Agenten an
+```
+System.out.println("╔══════════════════════════════════════════╗");
+System.out.println("║         Einkaufs-Agent gestartet         ║");
+System.out.println("║  'exit' oder 'quit' zum Beenden eingeben ║");
+System.out.println("╚══════════════════════════════════════════╝");
+System.out.println();
+```
+
+### Test des Verkaufs-Workflows
 * Starte im Maven Modul MCP-CLient die Applikations-Klasse in der IDE
-* Öffne alternativ in der Konsole das Verzeichnis MCP-Client und führe "mvn spring-boot:run" aus.
+* Frage den Assistenen nach seinen Fähigkeiten
+* Lass Dir die Produktliste ausgeben.
+* Schließe den Dialog mit "exit"
 
 
 ## Session 2
