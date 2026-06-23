@@ -1,25 +1,130 @@
 # README
 
-## Session 1 Ziel
+## Session 1
+### Ziel
+Ziel der Session ist es, einen KI Agenten zu erstellen, ein Modell anzubinden und ein lokales Tool für das Lesen einer Produktliste zu erstellen.
+Der Agent soll auf der Konsole ansprechbar sein und mit dem Benutzer interagieren.
 
-* Modell anbinden
-* Agent Tool mit Hello World einbinden (lokal)
-* Agent CLI ansprechbar
+### Vorbereitung Session 1
+* Lade den git Branch in ein lokales Verzeichnis:
+* git clone -b session_1_agent https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+* Für die Session sind folgende Ordner relevant
+```ASCII
+workshop  
+├── spring-ai-agent --> Entwicklung in Java, Maven Hauptprojekt
+│   └── MCP-Client --> Per Konsole nutzbarer KI-Agent und MCP Client, Maven Sub-Modul
+│   └── MCP-Server --> MCP Server mit Tools, die das REST-Backend aufrufen, Maven Sub-Modul
+│   └── Common --> Logging-Utilities für KI-Agent, Maven Sub-Modul
+├── sn-webshop-server  --> REST Backend, wird über Java Tools angesprochen
+├── sn-webshop-client  --> Webshop GUI für Test Verkauf
+└── ...``` 
+```
+
+### Schritt 1: Interaktiver KI Agent
+* Öffne den Ordner MCP-CLient und in der Unterstruktur die Datei application Properties
+* Füge Deinen Token ein "spring.ai.anthropic.api-key=<Token>"
+* Öffne die Klasse McpClientApplication.
+* Es ist bereits ein KI-Agent als einfacher Chat Client umgesetzt, der per Konsole aufrufbar ist.
+* Starte die Klasse McpClientApplication in der IDE oder öffne alternativ in der Konsole das Verzeichnis MCP-Client und führe "mvn spring-boot:run" aus.
+* Der Agent sollte sich mit dem Anthropic Modell verbinden können.
+* Stelle Dich unter Deinem Namen vor. Frage im nächsten Schritt nach Deinem Namen. Kann sich der Agent an Inhalte vorheriger Fragen / Antwortern erinnern?
+
+#### Schritt 2: Ergänzen eines Gedächtnisses
+* Füge eine chatMemory sowie in der Initialisierung des chatClients den Spring-AI Advisor MessageChatMemoryAdvisor hinzu
+``` Chat Client
+
+        // CHAT MEMORY 
+		var chatMemory = MessageWindowChatMemory.builder().maxMessages(10).build(); //--> Hinzufügen
+  		
+  		ChatClient chatClient = chatClientBuilder
+    				.defaultAdvisors(MyLoggingAdvisor.builder()
+  						.showConversationHistory(true)
+  						.build())
+  				.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build()) <-- Zeile Einfügen
+  				.build();
+```
+* Starte die Klasse erneut, stelle Dich als Person vor, und frage im nächsten Schritt nach Deinem Namen. Kann sich der Agent nun an die vorherige Interaktion erinnern?
+* Schließe den Dialog mit "exit"
+
+#### Schritt 3: Ergänzen eines Tools
+* In diesem Schritt möchten wir den ChatClient zu einem Verkaufsassistent mit der Fähigkeit zum Abruf einer Produktliste ausbauen.
+* Passe den System-Prompt Text an, dass der ChatClient als autnomer Einkaufs-Agent für ein Online-Portalagiert und  dem Benutzer Produkte aus einer Liste vorschlägt.
+  Der Verkauf muss aber gesondert im Online Portal stattfinden.
+* Die Fähigkeit zum Auslesen einer Produktliste erhält der Chatbot zunächts mit einem "lokalen" Tool.
+* Lege parallel zur Applikationsklasse eine weitere Klasse LocalProductTools mit folgendem Inhalt an:
+``` Chat Client
+package com.demo.mcp_example;
+
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class LocalProductTools {
+
+    public record LocalProduct(String id, String name, double price, String description) {}
+
+    @Tool(description = "Gibt eine Liste verfügbarer Produkte zurück (Testdaten)")
+    public List<LocalProduct> getProductList() {
+        return List.of(
+                new LocalProduct("P001", "Laptop Pro 15",    1299.99, "Leistungsstarker Laptop für Profis"),
+                new LocalProduct("P002", "Wireless Mouse",     29.99, "Ergonomische kabellose Maus"),
+                new LocalProduct("P003", "USB-C Hub",          49.99, "7-in-1 USB-C Hub mit HDMI und SD-Kartenleser"),
+                new LocalProduct("P004", "Mechanical Keyboard",149.99, "Mechanische Tastatur mit RGB-Beleuchtung"),
+                new LocalProduct("P005", "Monitor 27\"",      399.99, "4K-Monitor mit IPS-Panel")
+        );
+    }
+}
+```
+* Injiziere den Service in der Applikations-Klasse
+```
+* // Field Injection für lokale Tool-Klasse mit Testprodukten
+  @Autowired
+  private LocalProductTools localProductTools;
+```
+* Binde den Service in der Applikations-Klasse beim Initialisieren des Chatbots ein:
+```
+* ChatClient chatClient = chatClientBuilder
+  //.defaultToolCallbacks(toolCallbackProvider) // Wird für serverseitige Tools auf Basis der Konfiguration benoetigt
+  .defaultTools(localProductTools) --> Hinzufügen
+  .defaultAdvisors(MyLoggingAdvisor.builder()
+  .showConversationHistory(true)
+  .build())
+  .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+  .build();
+```
+* Passe die Startanzeige der Konsole auf einen Verkausfs-Agenten an
+```
+System.out.println("╔══════════════════════════════════════════╗");
+System.out.println("║         Einkaufs-Agent gestartet         ║");
+System.out.println("║  'exit' oder 'quit' zum Beenden eingeben ║");
+System.out.println("╚══════════════════════════════════════════╝");
+System.out.println();
+```
+
+### Test des Verkaufs-Workflows
+* Starte im Maven Modul MCP-CLient die Applikations-Klasse in der IDE
+* Frage den Assistenen nach seinen Fähigkeiten
+* Lass Dir die Produktliste ausgeben.
+* Schließe den Dialog mit "exit"
+
 
 ## Session 2
 
 ### Ziel
-* MCP Schnittstelle für Get Product Liste: `/products/get`
-* MCP Tool Signatur erstellen
-* MCP als Tool in den Agenten einbauen
-* Agenten Testen: Produkte abrufen
-* Test
-* 
+Ziel der Session ist es, einen MCP Server an den bestehenden Agenten anzubinden
+und dort eine erste Tool Schnittstelle zum Lesen einer Produktliste zu erstellen und anzubinden.
+
+Für die Schnittstelle ist passend zum vorhandenen Rest-Aufruf eine Signatur zu erstellen.
+
+Der Agenten-Workflow ist anschließend inhaltlich zu testen und ggf. der System Prompt anzupassen.
+Hierbei kann per Log-Level-Einstellung auch die MCP-Client-Server-Kommunikation analysiert werden.
+
 ### Vorbereitung Session 2
 * Lade den git Branch in ein lokales Verzeichnis:
 * git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
-
-### MCP Client - Anpassung Agent
+  exit### MCP Client - Anpassung Agent
 * Ändere den System Prompt wie folgt:
 ```
 """Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
@@ -47,12 +152,12 @@ ChatClient chatClient = chatClientBuilder
 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
 .build();
 ```
-* Lösche weiterhin die Injizierung der Klass LocalProductTools
+* Lösche die Injizierung der Klasse LocalProductTools
 ```
 * @Autowired
   private LocalProductTools localProductTools;
 ```
-* ... und lösche die Klasse LocalProductTools
+* ... und lösche auch die Klasse LocalProductTools, da lokale Tools nicht mehr benötigt werden.
 
 ### MCP Client - Konfiguration
 * Ergänze folgenden Inhalt in der application.properties Datei
@@ -66,7 +171,7 @@ logging.level.io.modelcontextprotocol.spec=WARN
 
 Die MCP Tool Methoden des MCP Servers werden vom Agenten eingebunden.
 
-### MCP Server Konfiguration 
+### MCP Server Konfiguration
 * Öffne das Maven Modul MCP-Server
 * Öffne die Konfigurationsdatei application properties
 ```application.properties (Ausschnitt)
@@ -78,7 +183,7 @@ spring.ai.mcp.server.protocol=STATELESS
 * Der MCP Server mit HTTP Streamable Protokoll auf Standard-Port 8080 gestartet.
 
 * Das Spring AI Framework bietet hier eine (im Beispiel nicht verwendete) stateful Variante "Streanable" mit Callbacks Option zum Server
-und eine "Cloud-Native" kompatible stateless Variante ohne Callbackoption an
+  und eine "Cloud-Native" kompatible stateless Variante ohne Callbackoption an
 
 ### MCP Server Tools
 * Öffne die Klasse "Tools"
@@ -123,10 +228,8 @@ Für Input- und Outputparameter sind Beschreibungen zur Auswertung für das KI-M
 npm install
 npm run server:start      # Starts Express on port 3000
  ```
-* Starte das Webfrontend
 * Starte zuerst die Spring Boot Anwendung des MCP Servers, danach die des MCP Clients
-* Teste den Workflow zum Abruf von Produkten, optional Produkt-Details und lege Produkte in den Warenkorb
-* Überprüfe den Warenkorb im Webfrontend (ggf. mit Aktualisierung (F5))
+* Teste den Workflow zum Abruf von Produkten.
 
 ### Überprüfe die MCP Kommunikation zwischen MCP Client und Server
 * Ändere den Log-Level in der MCP Client Datei "application.properties"
@@ -139,12 +242,23 @@ logging.level.io.modelcontextprotocol.spec=TRACE
 * * "Sending message for method tools/list"
 * * "Sending message for method tools/call"
 
-## Session 3 
+## Session 3
+Ziel dieser Session ist es, über den Agenten Workflow via MCP Server Tool Schnittstellen
+ein oder mehrere Produkte auszuwählen und für den Benutzer mit der ID 1 in den Einkaufswagen zu legen.
+
+Es werden folgende Tool Schnittstellen verwendet:
+* Produkteliste lesen
+* Produktdetails lesen
+* Produkt in Einkaufswagen legen
+
+Im Webshop kann danach der Warenkorb angesehen und der Verkauf gestartet werden.
+
+
 ### Vorbereitung
 Lade den git Branch in ein lokales Verzeichnis:
 * git clone -b session_3_agent_mcp_conn
-ect https://<username>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-wo
-rkshop.git
+  ect https://<username>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-wo
+  rkshop.git
 
 ### Hinzufügen weiterer MCPTools Methoden im MCP Server
 * Öffne die Klasse Tools im Maven Modul MCP-Server
@@ -161,7 +275,7 @@ rkshop.git
 ### Erweiterung des System Prompts im MCP Client
 * Erweitere die System Prompt Beschreibung, dass der Kunde ausser der Abfrage der Produktliste Produktdetails anzeigen und ausgewählte Artikel in den Warenkorb legen kann
 * Weise den Kunden nach Befüllen des Warenkorbes darauf hin, dass der Verkauf und das Bezahlen nur in der Weboberfläche des Verkaufsportals möglich ist
- 
+
 
 ### Test des Agenten
 * Öffne ein Terminal und starte das Backend mit der REST Schnittstelle
@@ -169,6 +283,8 @@ rkshop.git
 npm install
 npm run server:start      # Starts Express on port 3000
  ```
+* Starte zuerst die Spring Boot Anwendung des MCP Servers, danach die des MCP Clients
+* Teste den Workflow zum Abruf von Produkten, optional Produkt-Details und lege Produkte in den Warenkorb
 * Öffne ein weiteres Terminal und starte das Webfrontend
 ```
 npm install
@@ -179,9 +295,8 @@ npm run client:test                       # Vitest (headless)
 npm run client:test:browser               # Vitest in Chromium
 npm run client:test:browser:headless      # Vitest in headless Chromium
 ```
-* Starte zuerst die Spring Boot Anwendung des MCP Servers, danach die des MCP Clients
-* Teste den Workflow zum Abruf von Produkten, optional Produkt-Details und lege Produkte in den Warenkorb
-* Überprüfe den Warenkorb im Webfrontend (ggf. mit Aktualisierung (F5))
+* Melde Dich im Webfrontend mit Username "test@test.de" und Passwort "password1" an
+* Überprüfe den Warenkorb im Webfrontend (ggf. mit Aktualisierung (F5)) und starte dort den Verkauf
 
 ### Überlegungen zur Optimierung und Erweiterung
 * Überlege, ob der System Prompt je nach Gesprächsverlauf noch justiert werden sollte:
