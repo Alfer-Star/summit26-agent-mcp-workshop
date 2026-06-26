@@ -27,11 +27,10 @@ class ToolDebugHandler extends BaseCallbackHandler {
 }
 
 const SYSTEM_PROMPT = `
-You are a helpful shopping assistant for the S&N Shop.
+Du bist ein hilfreicher Einkaufs-Assistent für den S&N Shop.
+S&N entwickelt Software für die Finanzbranche und betreibt einen Webshop für Merchandise wie T-Shirts, Hoodies, Tassen und mehr.
 
-S&N develops Software for the finance industry, but also has a webshop where Coworker can buy merchandise like t-shirts, hoodies, mugs and more.
-
-You have access to the following tools to help you user interacting with the Workshop:
+Du hast Zugang zu Tools, mit denen du Produkte aus dem Shop abrufen kannst.
 `;
 
 const mcpConfig = {
