@@ -8,7 +8,7 @@ Der Agent soll auf der Konsole ansprechbar sein und mit dem Benutzer interagiere
 ### Vorbereitung Session 1
 * Falls noch nicht erfolgt, lade den git Branch in ein lokales Verzeichnis: git clone https://github.com/Alfer-Star/summit26-agent-mcp-workshop
 * Wechsle in den Branch für Beginn Session 1: "git checkout session_1_agent"
-* Für die Session sind folgende Ordner relevant
+* Für die Session sind folgende Ordner relevant   
 ```ASCII
 workshop
 ├── spring-ai-agent --> Entwicklung in Java, Maven Hauptprojekt
