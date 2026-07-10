@@ -40,7 +40,7 @@ workshop
     				.defaultAdvisors(MyLoggingAdvisor.builder()
   						.showConversationHistory(true)
   						.build())
-  				.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build()) <-- Zeile Einfügen
+  				.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build()) // <-- Zeile Einfügen
   				.build();
 ```
 * Starte die Klasse erneut, stelle Dich als Person vor, und frage im nächsten Schritt nach Deinem Namen. Kann sich der Agent nun an die vorherige Interaktion erinnern?
@@ -86,8 +86,7 @@ public class LocalProductTools {
 * Binde den Service in der Applikations-Klasse beim Initialisieren des Chatbots ein:
 ```
 * ChatClient chatClient = chatClientBuilder
-  //.defaultToolCallbacks(toolCallbackProvider) // Wird für serverseitige Tools auf Basis der Konfiguration benoetigt
-  .defaultTools(localProductTools) --> Hinzufügen
+  .defaultTools(localProductTools) // --> Hinzufügen
   .defaultAdvisors(MyLoggingAdvisor.builder()
   .showConversationHistory(true)
   .build())
@@ -105,6 +104,7 @@ System.out.println();
 
 ### Test des Verkaufs-Workflows
 * Starte im Maven Modul MCP-CLient die Applikations-Klasse in der IDE
+* Oder öffne ein Terminal, gehe in das Verzeichnis MCP-Client und starte die Applikation mit "mvn spring-boot:run"
 * Frage den Assistenen nach seinen Fähigkeiten
 * Lass Dir die Produktliste ausgeben.
 * Schließe den Dialog mit "exit"
@@ -122,7 +122,7 @@ Der Agenten-Workflow ist anschließend inhaltlich zu testen und ggf. der System 
 Hierbei kann per Log-Level-Einstellung auch die MCP-Client-Server-Kommunikation analysiert werden.
 
 ### Vorbereitung Session 2
-* Wechsle in den Branch für Beginn Session 2 oder fahre mit lauffähigem Stand Ende Session 1 fort: git checkoutsession_2_mcp
+* Fahre mit lauffähigem Code fort oder wechsle in den Branch für Beginn Session 2: git checkout session_2_mcp
 * ### MCP Client - Anpassung Agent
 * Ändere den System Prompt wie folgt:
 ```
@@ -214,21 +214,23 @@ public List<ProductRecord> getProducts(
 Die Tool Methode ist nun für den MCP Client verfügbar.
 Für Input- und Outputparameter sind Beschreibungen zur Auswertung für das KI-Modell vorhanden.
 
-### (Optional) Test des MCP Servers mit MCP Inspector (Anthropic)
-* Installiere den MCP Inspector (Node.js vorausgesetzt) ```npx @modelcontextprotocol/inspector```
-* (Nach Start des Browsers) Wähle Transport Type "Streamable HTTP"
-* (Falls nicht eingestellt) Setze URL ```http://localhost:8080/mcp```
-* Verbinde Dich mit dem Server
-* Zeige die verfügbaren Tools an (Menü "Resources" oder "Tools")
-
 ### Test des Agenten (MCP Client) mit dem MCP Server
-* Öffne ein Terminal und starte das Backend mit der REST Schnittstelle
+* Öffne ein Terminal und starte das Webshop Backend mit der REST Schnittstelle
+* Verzeichnis: summit-26-agent-workshop\sn-webshop-server
 ```
 npm install
 npm run server:start      # Starts Express on port 3000
  ```
 * Starte zuerst die Spring Boot Anwendung des MCP Servers, danach die des MCP Clients
 * Teste den Workflow zum Abruf von Produkten.
+
+### (Optional) Test des MCP Servers mit MCP Inspector (Anthropic)
+* Installiere den MCP Inspector (Node.js vorausgesetzt) ```npx @modelcontextprotocol/inspector```
+* (Nach Start des Browsers) Wähle Transport Type "Streamable HTTP"
+* (Falls nicht eingestellt) Setze URL ```http://localhost:8080/mcp```
+* Verbinde Dich mit dem Server
+* Zeige die verfügbaren Tools an (Menü "Resources" oder "Tools")
+* Führe das Tool getProducts aus und setze für Parameter "lang" den Wert "de"
 
 ### Überprüfe die MCP Kommunikation zwischen MCP Client und Server
 * Ändere den Log-Level in der MCP Client Datei "application.properties"
@@ -254,9 +256,7 @@ Im Webshop kann danach der Warenkorb angesehen und der Verkauf gestartet werden.
 
 
 ### Vorbereitung
-* Wechsle in den Branch für Beginn Session 3 oder fahre mit lauffähigem Ergebnis aus Session 2 fort: git checkout session_3_agent_mcp_connect
-  ect https://<username>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-wo
-  rkshop.git
+* Fahre mit lauffähigem Code fort oder wechsle in den Branch für Beginn Session 3: git checkout session_3_agent_mcp_connect
 
 ### Hinzufügen weiterer MCPTools Methoden im MCP Server
 * Öffne die Klasse Tools im Maven Modul MCP-Server
