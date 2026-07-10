@@ -6,18 +6,18 @@ Ziel der Session ist es, einen KI Agenten zu erstellen, ein Modell anzubinden un
 Der Agent soll auf der Konsole ansprechbar sein und mit dem Benutzer interagieren.
 
 ### Vorbereitung Session 1
-* Lade den git Branch in ein lokales Verzeichnis:
-* git clone -b session_1_agent https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+* Falls noch nicht erfolgt, lade den git Branch in ein lokales Verzeichnis: git clone https://github.com/Alfer-Star/summit26-agent-mcp-workshop
+* Wechsle in den Branch für Beginn Session 1: "git checkout session_1_agent"
 * Für die Session sind folgende Ordner relevant
 ```ASCII
-workshop  
+workshop
 ├── spring-ai-agent --> Entwicklung in Java, Maven Hauptprojekt
 │   └── MCP-Client --> Per Konsole nutzbarer KI-Agent und MCP Client, Maven Sub-Modul
 │   └── MCP-Server --> MCP Server mit Tools, die das REST-Backend aufrufen, Maven Sub-Modul
 │   └── Common --> Logging-Utilities für KI-Agent, Maven Sub-Modul
 ├── sn-webshop-server  --> REST Backend, wird über Java Tools angesprochen
 ├── sn-webshop-client  --> Webshop GUI für Test Verkauf
-└── ...``` 
+└── ...```
 ```
 
 ### Schritt 1: Interaktiver KI Agent
@@ -33,9 +33,9 @@ workshop
 * Füge eine chatMemory sowie in der Initialisierung des chatClients den Spring-AI Advisor MessageChatMemoryAdvisor hinzu
 ``` Chat Client
 
-        // CHAT MEMORY 
+        // CHAT MEMORY
 		var chatMemory = MessageWindowChatMemory.builder().maxMessages(10).build(); //--> Hinzufügen
-  		
+
   		ChatClient chatClient = chatClientBuilder
     				.defaultAdvisors(MyLoggingAdvisor.builder()
   						.showConversationHistory(true)
@@ -122,9 +122,8 @@ Der Agenten-Workflow ist anschließend inhaltlich zu testen und ggf. der System 
 Hierbei kann per Log-Level-Einstellung auch die MCP-Client-Server-Kommunikation analysiert werden.
 
 ### Vorbereitung Session 2
-* Lade den git Branch in ein lokales Verzeichnis:
-* git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
-  exit### MCP Client - Anpassung Agent
+* Wechsle in den Branch für Beginn Session 2 oder fahre mit lauffähigem Stand Ende Session 1 fort: git checkoutsession_2_mcp
+* ### MCP Client - Anpassung Agent
 * Ändere den System Prompt wie folgt:
 ```
 """Du bist ein autonomer Einkaufs-Agent für ein Online-Portal.
@@ -255,8 +254,7 @@ Im Webshop kann danach der Warenkorb angesehen und der Verkauf gestartet werden.
 
 
 ### Vorbereitung
-Lade den git Branch in ein lokales Verzeichnis:
-* git clone -b session_3_agent_mcp_conn
+* Wechsle in den Branch für Beginn Session 3 oder fahre mit lauffähigem Ergebnis aus Session 2 fort: git checkout session_3_agent_mcp_connect
   ect https://<username>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-wo
   rkshop.git
 
