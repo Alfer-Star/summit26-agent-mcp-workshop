@@ -1,20 +1,20 @@
-# TypeScript AI Agent – Session 2
+# TypeScript AI Agent – Session 3
 
 ## Ziel dieser Session
 
-Der Agent kann Produkte aus dem Webshop abrufen – mit einem einzigen Tool. In dieser Session verbesserst du den **System-Prompt** und erweiterst das bestehende Produktlisten-Tool um **Filterparameter** (Sprache, Suchbegriff, Produktgruppe), damit der Agent gezielter antworten kann.
+Der Agent kann am Ende von Session 2 Produkte abrufen – aber noch keine Produktgruppen abfragen und nichts in den Warenkorb legen. In dieser Session fügst du die zwei fehlenden Tools hinzu.
 
-**Startpunkt:** Agent + MCP-Server mit einem Tool (`request_product_list`) aus Session 1.  
-**Ziel:** Verbesserter System-Prompt und ein flexibleres Produktlisten-Tool mit Filtern.
+**Startpunkt:** Agent + MCP-Server mit einem Tool (`request_product_list`) aus Session 2.  
+**Ziel:** `request_product_groups` und `add_to_basket` im MCP-Server registrieren.
 
 ---
 
 ## Vorbereitung
 
-### 1. Repository laden (Branch: `session_2_mcp`)
+### 1. Repository laden (Branch: `session_3_agent_mcp_connect`)
 
 ```bash
-git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+git checkout session_3_agent_mcp_connect
 cd summit-26-agent-workshop/typescript-ai-agent
 ```
 
@@ -22,79 +22,68 @@ cd summit-26-agent-workshop/typescript-ai-agent
 
 ```
 typescript-ai-agent/
-├── agent.ts              ← System-Prompt wird hier verbessert
-├── mcp-server-shop.ts    ← Tool bekommt Filterparameter
-├── request.ts            ← getProductList() unterstützt bereits Filter
+├── mcp-server-shop.ts    ← Hier werden die neuen Tools ergänzt
+├── request.ts            ← Hilfsfunktionen bereits vorhanden (kein Änderungsbedarf)
 └── package.json
 ```
 
-### 3. Setup
-
-```bash
-cp .env-example .env
-# ANTHROPIC_API_KEY in .env eintragen
-npm install
-```
-
-### 4. Webshop-Backend starten
+### 3. Webshop-Backend starten
 
 ```bash
 cd ../sn-webshop-server
-npm install
 npm run server:start    # Port 3000
+```
+
+```bash
+cd ../sn-webshop-client
+npm run client:start    # Port 4200
 ```
 
 ---
 
 ## Aufgaben
 
-### Schritt 1: System-Prompt verbessern
+### Schritt 1: Produktgruppen-Tool hinzufügen
 
-Der aktuelle System-Prompt ist sehr allgemein. Öffne `agent.ts` und passe `SYSTEM_PROMPT` so an, dass der Agent klarer weiß, was er tun soll und was nicht:
-
-```typescript
-const SYSTEM_PROMPT = `
-Du bist ein hilfreicher Einkaufs-Assistent für den S&N Shop.
-S&N entwickelt Software für die Finanzbranche und betreibt einen Webshop für Merchandise wie T-Shirts, Hoodies, Tassen und mehr.
-
-Du kannst Produkte aus dem Shop anzeigen und nach Produkten suchen.
-
-Wichtige Regeln:
-- Frage nach, wenn der Benutzer nicht klar sagt, was er sucht (z.B. Kategorie, Stichwort).
-- Antworte immer auf Deutsch, außer der Benutzer wechselt die Sprache.
-- Du kannst noch keine Produkte kaufen oder in den Warenkorb legen – das kommt später.
-`;
-```
-
-Starte den Agenten und teste, ob sich das Verhalten verbessert hat:
-- "Was kann ich hier kaufen?"
-- "Zeig mir etwas Warmes."
-- "Gibt es Tassen?"
-
----
-
-### Schritt 2: Produktlisten-Tool mit Filtern erweitern
-
-Die Funktion `getProductList()` in `request.ts` unterstützt bereits drei optionale Parameter:
+In `request.ts` ist `getProductGroups()` bereits vorhanden. Registriere das Tool in `mcp-server-shop.ts`:
 
 ```typescript
-getProductList(lang?, productGroupId?, searchQuery?)
+import { getProductList, getProductGroups } from "./request.js";
 ```
-
-Nutze diese in `mcp-server-shop.ts`, damit der Agent gezielt suchen kann:
 
 ```typescript
 mcp.addTool({
-  name: "request_product_list",
-  description: "Gibt Produkte aus dem S&N Shop zurück. Kann nach Sprache, Produktgruppe oder Suchbegriff gefiltert werden.",
+  name: "request_product_groups",
+  description: "Return all product groups from S&N Shop.",
+  parameters: z.object({}),
+  execute: async () => {
+    const result = await getProductGroups();
+    return `product groups: ${JSON.stringify(result)}`;
+  },
+});
+```
+
+---
+
+### Schritt 2: Warenkorb-Tool hinzufügen
+
+`postBasket()` in `request.ts` ist ebenfalls schon vorhanden. Ergänze den Import und füge das Tool hinzu:
+
+```typescript
+import { getProductList, getProductGroups, postBasket } from "./request.js";
+```
+
+```typescript
+mcp.addTool({
+  name: "add_to_basket",
+  description: "Add a product to the shopping basket.",
   parameters: z.object({
-    lang: z.string().optional().describe('Sprache der Produktdaten, z.B. "de" oder "en". Standard: "de"'),
-    productGroupId: z.string().optional().describe("Nur optional: Filtert auf eine bestimmte Produktgruppe (ID)"),
-    searchQuery: z.string().optional().describe("Nur optional: Freitextsuche nach Produktname oder Beschreibung"),
+    productId: z.string().describe('Product ID, e.g. "GAD-001"'),
+    quantity: z.number().int().positive().describe("Number of items to add"),
   }),
-  execute: async ({ lang, productGroupId, searchQuery }) => {
-    const result = await getProductList(lang ?? "de", productGroupId, searchQuery);
-    return `products: ${JSON.stringify(result)}`;
+  execute: async ({ productId, quantity }) => {
+    const result = await postBasket(productId, quantity);
+    return `basket: ${JSON.stringify(result)}`;
   },
 });
 ```
@@ -115,53 +104,32 @@ cd typescript-ai-agent && npm run mcp:start
 cd typescript-ai-agent && npm run agent:start
 ```
 
-Teste die neuen Filtermöglichkeiten:
-- "Suche nach Hoodies."
-- "Show me all products in English."
-- "Gibt es etwas für unter 30 Euro?" (Kann der Agent mit seiner begrenzten Tool-Basis sinnvoll antworten?)
+Teste den vollständigen Einkaufs-Workflow:
+1. "In welchen Kategorien gibt es Produkte?"
+2. "Welche Hoodies habt ihr?"
+3. "Lege einen Hoodie in meinen Warenkorb."
+4. Öffne den Webshop unter `http://localhost:4200` und prüfe, ob der Artikel im Warenkorb erscheint.
 
 ---
 
-### Schritt 4: Grenzen des Agenten beobachten
+### Schritt 4: (Optional) MCP-Kommunikation verfolgen
 
-Mit nur einem Tool stoßt du jetzt bewusst an Grenzen. Teste:
-
-- "In welchen Kategorien gibt es Produkte?" – Der Agent kennt keine Produktgruppen-IDs, kann also nicht sinnvoll filtern.
-- "Lege eine Tasse in meinen Warenkorb." – Der Agent hat kein Warenkorb-Tool.
-
-Beobachte, wie der Agent auf diese Anfragen reagiert. Passt seine Antwort zum System-Prompt?
-
-Diese fehlenden Tools kommen in Session 3.
-
----
-
-### Schritt 5: (Optional) MCP-Kommunikation verfolgen
-
-Wenn du den `ToolDebugHandler` in `agent.ts` aktiviert hast, siehst du im Agenten-Terminal, welche Parameter der Agent an das Tool übergibt:
+Der `ToolDebugHandler` in `agent.ts` zeigt im Terminal, welche Tools der Agent aufruft:
 
 ```
-[Tool Call] request_product_list {"lang": "de", "searchQuery": "Hoodie"}
+[Tool Call] request_product_groups {}
+[Tool Result] request_product_groups [{"id": "GRP-001", "name": "Hoodies", ...}]
+[Tool Call] request_product_list {}
 [Tool Result] request_product_list [{"id": "APP-003", "name": "Hoodie", ...}]
+[Tool Call] add_to_basket {"productId": "APP-003", "quantity": 1}
+[Tool Result] add_to_basket {"success": true}
 ```
-
-Teste, ob der Agent die Filterparameter korrekt befüllt – oder ob er alle Produkte abruft, obwohl eine Suche möglich wäre.
 
 ---
 
-## Checkliste vor Session 3
+## Checkliste
 
-- [ ] System-Prompt ist klarer und verhindert sinnlose Antworten
-- [ ] `request_product_list` akzeptiert Filterparameter (`lang`, `searchQuery`, `productGroupId`)
-- [ ] Agent nutzt Filterparameter bei gezielten Suchanfragen
-- [ ] Grenzen des Agenten (kein Warenkorb, keine Produktgruppen) sind verstanden
-
----
-
-## Weiter zu Session 3
-
-In Session 3 fügst du die fehlenden Tools hinzu (`request_product_groups`, `add_to_basket`) und testest den kompletten Einkaufs-Workflow bis zum Checkout im Webshop-Frontend.
-
-**Branch für Session 3:**
-```bash
-git clone -b session_3_agent_mcp_connect https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
-```
+- [ ] `request_product_groups` ist im MCP-Server registriert
+- [ ] `add_to_basket` ist im MCP-Server registriert
+- [ ] Agent kann einen vollständigen Einkauf durchführen (Kategorien → Produkte → Warenkorb)
+- [ ] Artikel erscheint nach dem Chat im Webshop-Frontend unter `http://localhost:4200`

@@ -25,14 +25,14 @@ Jeder Session-Branch enthält den Startpunkt für die jeweilige Session sowie ei
 
 ## Sessions im Überblick
 
-| Branch | Inhalt |
-|---|---|
+| Branch      | Inhalt                                                                |
+| ----------- | --------------------------------------------------------------------- |
 | `session_0` | Vorbereitung zu Hause: Repo einrichten, Shop starten, Umgebung prüfen |
-| `session_1` | KI-Agenten bauen: Claude anbinden, Gesprächsgedächtnis, erstes Tool |
-| `session_2` | Lösung zu Session 1 + MCP-Anbindung: Agent mit Webshop verbinden |
-| `session_3` | Erweiterung: weitere Tools, Optimierungen |
+| `session_1` | KI-Agenten bauen: Claude anbinden, Gesprächsgedächtnis, erstes Tool   |
+| `session_2` | Lösung zu Session 1 + MCP-Anbindung: Agent mit Webshop verbinden      |
+| `session_3` | Erweiterung: weitere Tools, Optimierungen                             |
 
-Die README im jeweiligen Branch `typescript-ai-agent/README.md` beschreibt die Aufgaben der Session.
+Die README im jeweiligen Branch `(typescript-ai-agent|spring-ai-agent|python-ai-agent)/README.md` beschreibt die Aufgaben der Session.
 
 ---
 
@@ -41,18 +41,35 @@ Die README im jeweiligen Branch `typescript-ai-agent/README.md` beschreibt die A
 Der Webshop (Backend + Frontend) läuft lokal und wird vom Agenten als Datenquelle genutzt. Starte ihn vom Root-Verzeichnis aus:
 
 **Windows (PowerShell):**
+
 ```powershell
 .\start-shop.ps1
 ```
 
 **macOS:**
+
 ```bash
 ./start-shop-mac.sh
 ```
 
 **Linux:**
+
 ```bash
 ./start-shop.sh
+```
+
+Sollte es mit den Start-Skripten Probleme geben, können die Schritte wie folgt manuell ausgeführt werden:
+
+```bash
+cd sn-webshop-client
+npm install
+npm run client:start
+
+in einer weiteren CMD oder per cmd /c:
+
+cd sn-webshop-server
+npm install
+npm run server:start
 ```
 
 - Frontend: http://localhost:4200
@@ -60,9 +77,9 @@ Der Webshop (Backend + Frontend) läuft lokal und wird vom Agenten als Datenquel
 
 ### Testaccounts
 
-| Rolle | E-Mail | Passwort |
-|---|---|---|
-| User | test@test.de | password1 |
+| Rolle | E-Mail        | Passwort  |
+| ----- | ------------- | --------- |
+| User  | test@test.de  | password1 |
 | Admin | admin@test.de | password1 |
 
 ---
