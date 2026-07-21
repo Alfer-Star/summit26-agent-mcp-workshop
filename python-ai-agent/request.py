@@ -69,6 +69,19 @@ async def get_product(productId: str, lang="de") -> dict | None:
     return await _get_request("products/get-product", {"lang": lang, "productId": productId})
 
 
+async def get_product_groups(lang="de") -> dict | None:
+    """Make a request to the S&N Shop API /product-groups/get.
+    Get all product groups.
+
+    Args:
+        lang (str): de or en, default is de.
+
+    Returns:
+        dict | None: The JSON response from the API or None if an error occurs.
+    """
+    return await _get_request("product-groups/get", {"lang": lang})
+
+
 async def get_basket(lang="de") -> dict | None:
     """Make a request to the S&N Shop API /basket.
     Get the current shopping basket.

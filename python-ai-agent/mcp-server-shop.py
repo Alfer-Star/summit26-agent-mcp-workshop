@@ -3,7 +3,7 @@
 
 from fastmcp import FastMCP
 
-from request import get_product_list, get_product, get_basket, post_basket
+from request import get_product_list, get_product_groups, get_product, get_basket, post_basket
 
 mcp = FastMCP(
     "S&N Webshop",
@@ -15,6 +15,25 @@ async def request_product_list() -> str:
     """Return product list from S&N Shop."""
     result = await get_product_list()
     return f'products: {result}'
+
+@mcp.tool()
+async def request_product_groups() -> str:
+    """Return all product groups from S&N Shop."""
+    result = await get_product_groups()
+    return f'product groups: {result}'
+
+
+@mcp.tool()
+async def add_to_basket(productId: str, quantity: int) -> str:
+    """Add a product to the shopping basket.
+
+    Args:
+        productId (str): Product ID, e.g. "GAD-001".
+        quantity (int): Number of items to add.
+    """
+    result = await post_basket(productId, quantity)
+    return f'basket: {result}'
+
 
 def main():
     # Initialize and run the server
