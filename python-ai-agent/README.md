@@ -1,10 +1,10 @@
-# TypeScript MCP Server – Session 2
+# TypeScript AI Agent – Session 2
 
 ## Ziel dieser Session
 
-Der Agent aus Session 1 spricht mit Claude, kennt aber noch keine Tools. In dieser Session passieren zwei Dinge: Du erweiterst `agent.ts` um die MCP-Anbindung und baust gleichzeitig den **MCP-Server** (`mcp-server-shop.ts`), der dem Agenten echte Werkzeuge für den S&N-Webshop bereitstellt.
+Der Agent aus Session 1 spricht mit Claude, kennt aber noch keine Tools. In dieser Session passieren zwei Dinge: Du erweiterst `agent.py` um die MCP-Anbindung und baust gleichzeitig den **MCP-Server** (`mcp-server-shop.py`), der dem Agenten echte Werkzeuge für den S&N-Webshop bereitstellt.
 
-**Startpunkt:** Einfacher Chat-Agent ohne Tools aus Session 0.  
+**Startpunkt:** Einfacher Chat-Agent ohne Tools aus Session 1.  
 **Ziel:** Agent ist per MCP mit dem Shop verbunden und kann Produkte und Produktgruppen abrufen.
 
 ---
@@ -15,16 +15,16 @@ Der Agent aus Session 1 spricht mit Claude, kennt aber noch keine Tools. In dies
 
 ```bash
 git clone -b session_1_agent https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
-cd summit-26-agent-workshop/typescript-ai-agent
+cd summit-26-agent-workshop/python-ai-agent
 ```
 
 ### 2. Relevante Dateien
 
 ```
-typescript-ai-agent/
-├── agent.ts              ← Agent (aus Session 1) – wird hier um MCP erweitert
-├── mcp-server-shop.ts    ← MCP-Server – hier arbeitest du
-├── request.ts            ← HTTP-Hilfsfunktionen (bereits vorhanden)
+python-ai-agent/
+├── agent.py              ← Agent (aus Session 0) – wird hier um MCP erweitert
+├── mcp-server-shop.py    ← MCP-Server – hier arbeitest du
+├── request.py            ← HTTP-Hilfsfunktionen (bereits vorhanden)
 ├── .env-example
 └── package.json
 ```
@@ -34,7 +34,7 @@ typescript-ai-agent/
 ```bash
 cp .env-example .env
 # ANTHROPIC_API_KEY in .env eintragen
-npm install
+uv sync
 ```
 
 ### 4. Webshop-Backend starten
@@ -54,16 +54,16 @@ npm run server:start    # Startet Express auf Port 3000
 ```
 Du (Konsole)
     ↓
-agent.ts  (LangChain Agent + Claude-Modell)
+agent.py  (LangChain Agent + Claude-Modell)
     ↓  MCP-Protokoll (HTTP, Port 3010)
-mcp-server-shop.ts  (FastMCP Server)
+mcp-server-shop.py  (FastMCP Server)
     ↓  HTTP-Requests
 sn-webshop-server  (REST API, Port 3000)
 ```
 
-- **`request.ts`** – Enthält fertige Hilfsfunktionen (`getProductList`, `getProductGroups`, `postBasket`), die das REST-Backend aufrufen und sich automatisch authentifizieren.
-- **`mcp-server-shop.ts`** – Der MCP-Server stellt diese Funktionen als Tools für den Agenten bereit.
-- **`agent.ts`** – Der Agent verbindet sich beim Start mit dem MCP-Server und kennt dann alle verfügbaren Tools.
+- **`request.py`** – Enthält fertige Hilfsfunktionen (`getProductList`, `getProductGroups`, `postBasket`), die das REST-Backend aufrufen und sich automatisch authentifizieren.
+- **`mcp-server-shop.py`** – Der MCP-Server stellt diese Funktionen als Tools für den Agenten bereit.
+- **`agent.py`** – Der Agent verbindet sich beim Start mit dem MCP-Server und kennt dann alle verfügbaren Tools.
 
 ---
 
@@ -71,7 +71,7 @@ sn-webshop-server  (REST API, Port 3000)
 
 ### Schritt 1: Agent um MCP-Anbindung erweitern
 
-Öffne `agent.ts` und ergänze die MCP-Verbindung, damit der Agent später Tools vom MCP-Server nutzen kann.
+Öffne `agent.py` und ergänze die MCP-Verbindung, damit der Agent später Tools vom MCP-Server nutzen kann.
 
 **Import ergänzen:**
 
@@ -81,44 +81,41 @@ import { MultiServerMCPClient } from '@langchain/mcp-adapters';
 
 **MCP-Konfiguration hinzufügen** (vor `main()`):
 
-```typescript
-const mcpConfig = {
-  shop: {
-    transport: 'http' as const,
-    url: 'http://127.0.0.1:3010/mcp',
-  },
-};
+```python
+mcp_config = {
+    "shop": {
+        "transport": "http", 
+        "url": "http://127.0.0.1:9000/mcp",
+    }
+}
 ```
 
 **`main()`-Funktion anpassen** – MCP-Client initialisieren und Tools an den Agent übergeben:
 
-```typescript
+```python
 async function main() {
-  const client = new MultiServerMCPClient(mcpConfig);
-  const tools = await client.getTools();
+    client = MultiServerMCPClient(mcp_config)
+    tools = await client.get_tools()
 
-  const agent = createAgent({
-    model: 'anthropic:claude-sonnet-4-6',
-    tools,                    // ← Tools aus dem MCP-Server
-    systemPrompt: SYSTEM_PROMPT,
-  });
+    agent = create_agent(
+        model="claude-sonnet-4-6",
+        tools=tools,              # ← Tools aus dem MCP-Server
+        system_prompt=SYSTEM_PROMPT,
+    )
 
   // ... Rest der Funktion unverändert ...
-
-  rl.close();
-  await client.close();      // ← MCP-Verbindung sauber schließen
 }
 ```
 
 **System-Prompt anpassen**, damit der Agent weiß, dass er jetzt Shop-Tools hat:
 
-```typescript
-const SYSTEM_PROMPT = `
+```python
+SYSTEM_PROMPT = """
 Du bist ein hilfreicher Einkaufs-Assistent für den S&N Shop.
 S&N entwickelt Software für die Finanzbranche und betreibt einen Webshop für Merchandise wie T-Shirts, Hoodies, Tassen und mehr.
 
 Du hast Zugang zu Tools, mit denen du Produkte und Produktgruppen aus dem Shop abrufen kannst.
-`;
+""";
 ```
 
 **Hinweis:** Der Agent kann erst starten, wenn der MCP-Server auf Port 3010 läuft (Schritt 3). Starte den Agenten nach dem MCP-Server.
@@ -129,31 +126,30 @@ Du hast Zugang zu Tools, mit denen du Produkte und Produktgruppen aus dem Shop a
 
 Öffne `mcp-server-shop.ts`. Erstelle einen FastMCP-Server und füge das erste Tool hinzu:
 
-```typescript
-import { FastMCP } from "fastmcp";
-import { z } from "zod";
-import { getProductList } from "./request.js";
+```python
+from fastmcp import FastMCP
 
-const mcp = new FastMCP({
-  name: "S&N Webshop",
-  version: "1.0.0",
-  instructions: "Stellt Tools für die Interaktion mit dem S&N Webshop bereit.",
-});
+from request import get_product_list
 
-mcp.addTool({
-  name: "request_product_list",
-  description: "Gibt die Produktliste des S&N Shops zurück.",
-  parameters: z.object({}),
-  execute: async () => {
-    const result = await getProductList();
-    return `products: ${JSON.stringify(result)}`;
-  },
-});
+mcp = FastMCP(
+    "S&N Webshop",
+    instructions="Provides tools for interacting with Webshop, like shwoing products, adding items to the cart and more.",
+)
 
-mcp.start({
-  transportType: "httpStream",
-  httpStream: { port: 3010 },
-});
+@mcp.tool()
+async def request_product_list() -> str:
+    """Return product list from S&N Shop."""
+    result = await get_product_list()
+    return f'products: {result}'
+
+def main():
+    # Initialize and run the server
+    mcp.run(transport="http", host="127.0.0.1", port=9000)
+    
+if __name__ == "__main__":
+    main()
+
+
 ```
 
 ---
@@ -163,7 +159,7 @@ mcp.start({
 Starte den MCP-Server in einem separaten Terminal:
 
 ```bash
-npm run mcp:start
+uv run mcp-server-shop.py
 ```
 
 Du solltest sehen, dass der Server auf Port 3010 läuft.
@@ -185,7 +181,7 @@ npx @modelcontextprotocol/inspector
 Starte jetzt in einem dritten Terminal den Agenten:
 
 ```bash
-npm run agent:start
+uv run agent.py
 ```
 
 Frage den Agenten:
@@ -203,14 +199,20 @@ Damit du siehst, welche Tools der Agent in welcher Reihenfolge aufruft, kannst d
 
 **Imports ergänzen:**
 
-```typescript
-import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
-import type { Serialized } from '@langchain/core/load/serializable';
+```python
+import json
+import logging
+
+from langchain_core.callbacks import BaseCallbackHandler
 ```
 
 **Klasse vor `main()` einfügen:**
 
-```typescript
+```python
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 class ToolDebugHandler(BaseCallbackHandler):
     name = "ToolDebugHandler"
 
@@ -253,11 +255,18 @@ class ToolDebugHandler(BaseCallbackHandler):
 
 **`agent.invoke(...)` anpassen:**
 
-```typescript
-const result = await agent.invoke(
-  { messages: [...messages, { role: 'user', content: userInput }] },
-  { callbacks: [new ToolDebugHandler()] },
-);
+```python
+result = agent.invoke(
+    {
+        "messages": [
+            *messages,
+            {"role": "user", "content": user_input},
+        ]
+    },
+    config={
+        "callbacks": [ToolDebugHandler()],
+    },
+)
 ```
 
 Du siehst dann im Agenten-Terminal z.B.:
