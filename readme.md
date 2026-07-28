@@ -72,15 +72,15 @@ npm install
 npm run server:start
 ```
 
-- Frontend: http://localhost:4200
-- Backend API: http://localhost:3000
+- Frontend: <http://localhost:4200>
+- Backend API: <http://localhost:3000>
 
 ### Testaccounts
 
 | Rolle | E-Mail        | Passwort  |
 | ----- | ------------- | --------- |
-| User  | test@test.de  | password1 |
-| Admin | admin@test.de | password1 |
+| User  | <test@test.de>  | password1 |
+| Admin | <admin@test.de> | password1 |
 
 ---
 
