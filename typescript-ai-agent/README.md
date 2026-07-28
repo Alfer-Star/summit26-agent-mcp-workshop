@@ -9,7 +9,7 @@ Du startest mit einem leeren Grundgerüst und baust daraus einen funktionierende
 
 ---
 
-## Vorbereitung
+## Vorbereitung (falls nicht über Session_0 bereits geschehen)
 
 Abhängigkeiten installieren und API-Key einrichten (falls noch nicht erledigt):
 
@@ -138,6 +138,7 @@ npm run agent:start
 ```
 
 Beispielfragen:
+
 - „Ruf mal die Testdaten ab."
 - „Was liefert das get_test_data-Tool?"
 
