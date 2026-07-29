@@ -14,7 +14,7 @@ Der Agent kann Produkte aus dem Webshop abrufen – mit einem einzigen Tool (`re
 ### 1. Auf den Branch dieser Session wechseln (`session_3_agent_mcp_connect`)
 
 ```bash
-git checkout session_3_agent_mcp_connect
+git checkout -f session_3_agent_mcp_connect
 cd typescript-ai-agent
 ```
 
@@ -154,5 +154,7 @@ Wenn du den `ToolDebugHandler` in `agent.ts` aktiviert hast, siehst du im Agente
 Der Branch `main` enthält die vollständige Referenzlösung (Agent + MCP-Server mit `requestProductList` und `addToBasket`). Vergleiche deinen Stand damit:
 
 ```bash
-git checkout main
+git checkout -f main
 ```
+
+> **Hinweis:** `-f` verwirft deine lokalen Änderungen (deine bisherige Lösung). Das ist hier gewollt – der Zielbranch enthält den passenden Stand bereits.
