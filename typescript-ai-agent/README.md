@@ -161,5 +161,7 @@ In Session 2 verbindest du den Agenten per MCP mit dem Webshop, sodass er echte 
 **Branch für Session 2:**
 
 ```bash
-git checkout session_2_mcp
+git checkout -f session_2_mcp
 ```
+
+> **Hinweis:** `-f` verwirft deine lokalen Änderungen (deine bisherige Lösung). Das ist hier gewollt – der Zielbranch enthält den passenden Stand bereits.
