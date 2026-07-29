@@ -23,12 +23,12 @@ cd summit26-agent-mcp-workshop
 
 Jeder Session-Branch enthält den Startpunkt für die jeweilige Session sowie eine README mit den konkreten Aufgaben.
 
-| Branch      | Inhalt                                                                |
-| ----------- | --------------------------------------------------------------------- |
+| Branch | Inhalt |
+|---|---|
 | `session_0` | Vorbereitung zu Hause: Repo einrichten, Shop starten, Umgebung prüfen |
-| `session_1_agent` | KI-Agenten bauen: Claude anbinden, Gesprächsgedächtnis, erstes Tool   |
-| `session_2_mcp` | Lösung zu Session 1 + MCP-Anbindung: Agent mit Webshop verbinden      |
-| `session_3_agent_mcp_connect` | Erweiterung: weitere Tools, Optimierungen                             |
+| `session_1_agent` | KI-Agenten bauen: Claude anbinden, Gesprächsgedächtnis, erstes Tool |
+| `session_2_mcp` | Lösung zu Session 1 + MCP-Anbindung: Agent mit Webshop verbinden |
+| `session_3_agent_mcp_connect` | Erweiterung: weitere Tools, Optimierungen |
 | `main` | Referenzlösung: vollständiger Agent + MCP-Server mit allen Tools |
 
 Die README im jeweiligen Branch `(typescript-ai-agent|spring-ai-agent|python-ai-agent)/README.md` beschreibt die Aufgaben der Session.
@@ -40,19 +40,16 @@ Die README im jeweiligen Branch `(typescript-ai-agent|spring-ai-agent|python-ai-
 Der Webshop (Backend + Frontend) läuft lokal und wird vom Agenten als Datenquelle genutzt. Starte ihn vom Root-Verzeichnis aus:
 
 **Windows (PowerShell):**
-
 ```powershell
 .\start-shop.ps1
 ```
 
 **macOS:**
-
 ```bash
 ./start-shop-mac.sh
 ```
 
 **Linux:**
-
 ```bash
 ./start-shop.sh
 ```
@@ -71,15 +68,15 @@ npm install
 npm run server:start
 ```
 
-- Frontend: <http://localhost:4200>
-- Backend API: <http://localhost:3000>
+- Frontend: http://localhost:4200
+- Backend API: http://localhost:3000
 
 ### Testaccounts
 
-| Rolle | E-Mail        | Passwort  |
-| ----- | ------------- | --------- |
-| User  | <test@test.de>  | password1 |
-| Admin | <admin@test.de> | password1 |
+| Rolle | E-Mail | Passwort |
+|---|---|---|
+| User | test@test.de | password1 |
+| Admin | admin@test.de | password1 |
 
 ---
 
