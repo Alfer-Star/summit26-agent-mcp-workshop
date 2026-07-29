@@ -108,16 +108,19 @@ mcp.addTool({
 Öffne zwei Terminals:
 
 **Terminal 1 – MCP-Server:**
+
 ```bash
 cd typescript-ai-agent && npm run mcp:start
 ```
 
 **Terminal 2 – Agent:**
+
 ```bash
 cd typescript-ai-agent && npm run agent:start
 ```
 
 Teste jetzt den kompletten Einkaufs-Workflow:
+
 - "Zeig mir eure Hoodies."
 - "Leg mir bitte eine Tasse in den Warenkorb."
 - "Ich hätte gerne zwei T-Shirts."
@@ -126,11 +129,11 @@ Teste jetzt den kompletten Einkaufs-Workflow:
 
 ### Schritt 4: Warenkorb im Frontend prüfen
 
-Öffne den Webshop im Browser unter **http://localhost:4200** und melde dich mit dem Testaccount an (E-Mail **test@test.de**, Passwort **password1**). Sieh im Warenkorb nach, ob die vom Agenten hinzugefügten Artikel dort auftauchen, und führe den Bestellvorgang bis zum Checkout durch.
+Öffne den Webshop im Browser unter **<http://localhost:4200>** und melde dich mit dem Testaccount an (E-Mail **<test@test.de>**, Passwort **password1**). Sieh im Warenkorb nach, ob die vom Agenten hinzugefügten Artikel dort auftauchen, und führe den Bestellvorgang bis zum Checkout durch.
 
 ---
 
-### Schritt 4: (Optional) MCP-Kommunikation verfolgen
+### Schritt 5: (Optional) MCP-Kommunikation verfolgen
 
 Wenn du den `ToolDebugHandler` in `agent.ts` aktiviert hast, siehst du im Agenten-Terminal, welche Tools der Agent mit welchen Parametern aufruft:
 
@@ -148,7 +151,7 @@ Wenn du den `ToolDebugHandler` in `agent.ts` aktiviert hast, siehst du im Agente
 - [ ] System-Prompt ist klarer und beschreibt, was der Agent kann
 - [ ] `addToBasket`-Tool ist im MCP-Server ergänzt
 - [ ] Agent kann Produkte anzeigen UND in den Warenkorb legen
-- [ ] Artikel tauchen im Webshop-Frontend (http://localhost:4200) im Warenkorb auf
+- [ ] Artikel tauchen im Webshop-Frontend (<http://localhost:4200>) im Warenkorb auf
 
 ---
 
