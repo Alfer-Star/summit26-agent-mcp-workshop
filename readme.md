@@ -31,7 +31,7 @@ Jeder Session-Branch enthält den Startpunkt für die jeweilige Session sowie ei
 | `session_1_agent` | KI-Agenten bauen: Claude anbinden, Gesprächsgedächtnis, erstes Tool   |
 | `session_2_mcp` | Lösung zu Session 1 + MCP-Anbindung: Agent mit Webshop verbinden      |
 | `session_3_agent_mcp_connect` | Erweiterung: weitere Tools, Optimierungen                             |
-| `main` | Referenzlösung: fertiger Agent + MCP-Server (requestProductList, addToBasket) |
+| `main` | Referenzlösung: vollständiger Agent + MCP-Server mit allen Tools |
 
 Die README im jeweiligen Branch `(typescript-ai-agent|spring-ai-agent|python-ai-agent)/README.md` beschreibt die Aufgaben der Session.
 
