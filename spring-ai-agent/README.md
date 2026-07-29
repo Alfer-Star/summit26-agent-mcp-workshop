@@ -8,7 +8,7 @@ Der Agent soll auf der Konsole ansprechbar sein und mit dem Benutzer interagiere
 ### Vorbereitung Session 1
 * Falls noch nicht erfolgt, lade den git Branch in ein lokales Verzeichnis: git clone https://github.com/Alfer-Star/summit26-agent-mcp-workshop
 * Wechsle in den Branch für Beginn Session 1: "git checkout session_1_agent"
-* Für die Session sind folgende Ordner relevant   
+* Für die Session sind folgende Ordner relevant
 ```ASCII
 workshop
 ├── spring-ai-agent --> Entwicklung in Java, Maven Hauptprojekt
@@ -122,7 +122,7 @@ Der Agenten-Workflow ist anschließend inhaltlich zu testen und ggf. der System 
 Hierbei kann per Log-Level-Einstellung auch die MCP-Client-Server-Kommunikation analysiert werden.
 
 ### Vorbereitung Session 2
-* Fahre mit lauffähigem Code fort oder wechsle in den Branch für Beginn Session 2: git checkout session_2_mcp
+* Fahre mit lauffähigem Code fort oder wechsle in den Branch für Beginn Session 2: git checkout -f session_2_mcp
 * ### MCP Client - Anpassung Agent
 * Ändere den System Prompt wie folgt:
 ```
@@ -256,7 +256,7 @@ Im Webshop kann danach der Warenkorb angesehen und der Verkauf gestartet werden.
 
 
 ### Vorbereitung
-* Fahre mit lauffähigem Code fort oder wechsle in den Branch für Beginn Session 3: git checkout session_3_agent_mcp_connect
+* Fahre mit lauffähigem Code fort oder wechsle in den Branch für Beginn Session 3: git checkout -f session_3_agent_mcp_connect
 
 ### Hinzufügen weiterer MCPTools Methoden im MCP Server
 * Öffne die Klasse Tools im Maven Modul MCP-Server
