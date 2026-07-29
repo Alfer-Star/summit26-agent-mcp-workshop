@@ -1,6 +1,6 @@
 import { FastMCP } from "fastmcp";
 import { z } from "zod";
-import { getProductList, getProductGroups, postBasket } from "./request.js";
+import { getProductList, postBasket } from "./request.js";
 
 const mcp = new FastMCP({
   name: "S&N Webshop",
@@ -10,7 +10,7 @@ const mcp = new FastMCP({
 });
 
 mcp.addTool({
-  name: "request_product_list",
+  name: "requestProductList",
   description: "Return product list from S&N Shop.",
   parameters: z.object({}),
   execute: async () => {
@@ -20,17 +20,7 @@ mcp.addTool({
 });
 
 mcp.addTool({
-  name: "request_product_groups",
-  description: "Return all product groups from S&N Shop.",
-  parameters: z.object({}),
-  execute: async () => {
-    const result = await getProductGroups();
-    return `product groups: ${JSON.stringify(result)}`;
-  },
-});
-
-mcp.addTool({
-  name: "add_to_basket",
+  name: "addToBasket",
   description: "Add a product to the shopping basket.",
   parameters: z.object({
     productId: z.string().describe('Product ID, e.g. "GAD-001"'),
