@@ -1,4 +1,4 @@
-# TypeScript AI Agent – Session 1
+# Python AI Agent – Session 1
 
 ## Ziel dieser Session
 
@@ -54,9 +54,8 @@ from langchain.agents import create_agent
 
 ```python
 SYSTEM_PROMPT = """
-You are a helpful shopping assistant for the S&N Shop.
-S&N develops Software for the finance industry, but also has a webshop where Coworker can buy merchandise like t-shirts, hoodies, mugs and more.
-You have access to the following tools to help you user interacting with the Workshop:
+Du bist ein hilfreicher Assistent für den S&N Shop.
+S&N entwickelt Software für die Finanzbranche und betreibt einen Webshop für Merchandise wie T-Shirts, Hoodies, Tassen und mehr.
 """
 ```
 
@@ -86,13 +85,13 @@ async def main():
         if not user_input.strip():
             continue
 
-        # create Message Object
+        # create langchain Message format and appends it to history
         messages.append({"role": "user", "content": user_input})
 
-        # invoke Agent with message
+        # invoke Agent with last message and historic messages
         result = await agent.ainvoke({"messages": messages})
 
-        # set Message History
+        # set Message history including Repsonse
         messages = result["messages"]
 
         last_message = result["messages"][-1]
@@ -108,7 +107,7 @@ Starte den Agenten und stelle sicher, dass er auf Fragen antwortet und sich den 
 ### Schritt 3: Tool als Funktion definieren
 
 Tools sind Funktionen, die der Agent eigenständig aufrufen kann. Langchain bitte eine einfache Syntax, um Tools aus Python functions zu definieren.  
-Definiere ein einfaches Test-Tool direkt in `agent.ts`.
+Definiere ein einfaches Test-Tool direkt in `agent.py`.
 
 **Imports ergänzen:**
 
@@ -173,3 +172,11 @@ Der Agent entscheidet selbst, wann er das Tool aufruft, und gibt das Ergebnis in
 ## Weiter zu Session 2
 
 In Session 2 verbindest du den Agenten per MCP mit dem Webshop, sodass er echte Produktdaten abrufen kann.
+
+**Branch für Session 2:**
+
+```bash
+git checkout -f session_2_mcp
+```
+
+> **Hinweis:** `-f` verwirft deine lokalen Änderungen (deine bisherige Lösung). Das ist hier gewollt – der Zielbranch enthält den passenden Stand bereits.
