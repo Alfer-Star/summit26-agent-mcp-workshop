@@ -29,7 +29,7 @@ With uv (installs required Python and dependencies):
 uv sync
 ```
 
-With Pip if uv does not work (needs installed Python >=3.14):
+(Not recommended) With normal python Pip (install Python >=3.14):
 
 ```bash
 cd python-ai-agent
@@ -92,3 +92,15 @@ Mit `Ctrl+C` beendest du den Shop wieder.
 - [ ] `pip install .` in `python-ai-agent/` erfolgreich
 - [ ] `.env` mit gültigem `ANTHROPIC_API_KEY` angelegt
 - [ ] Shop läuft: <http://localhost:4200> zeigt den Webshop
+
+## Weiter zu Session 1
+
+Beim Workshop-Start wechselst du im selben Repository auf den Branch der ersten Session:
+
+```bash
+git checkout -f session_1_agent
+```
+
+> **Hinweis:** `-f` verwirft deine lokalen Änderungen (deine bisherige Lösung). Das ist hier gewollt – der Zielbranch enthält den passenden Stand bereits.
+
+Dort baust du aus dem leeren Grundgerüst deinen ersten KI-Agenten. Die Anleitung dazu findest du in `typescript-ai-agent/README.md` auf diesem Branch.
