@@ -77,7 +77,9 @@ Mit `Ctrl+C` beendest du den Shop wieder.
 Beim Workshop-Start wechselst du im selben Repository auf den Branch der ersten Session:
 
 ```bash
-git checkout session_1_agent
+git checkout -f session_1_agent
 ```
+
+> **Hinweis:** `-f` verwirft deine lokalen Änderungen (deine bisherige Lösung). Das ist hier gewollt – der Zielbranch enthält den passenden Stand bereits.
 
 Dort baust du aus dem leeren Grundgerüst deinen ersten KI-Agenten. Die Anleitung dazu findest du in `typescript-ai-agent/README.md` auf diesem Branch.
