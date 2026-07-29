@@ -1,10 +1,10 @@
-# TypeScript AI Agent – Session 2
+# Python AI Agent – Session 2
 
 ## Ziel dieser Session
 
-Der Agent aus Session 1 spricht mit Claude, kennt aber noch keine Tools. In dieser Session passieren zwei Dinge: Du erweiterst `agent.py` um die MCP-Anbindung und baust gleichzeitig den **MCP-Server** (`mcp-server-shop.py`), der dem Agenten echte Werkzeuge für den S&N-Webshop bereitstellt.
+Der Agent aus Session 1 spricht mit Claude und kennt bereits ein einfaches, lokal definiertes Tool (`getTestData`) – aber noch keine MCP-Anbindung und keine echten Shop-Tools. In dieser Session passieren zwei Dinge: Du erweiterst `agent.py` um die MCP-Anbindung und baust gleichzeitig den **MCP-Server** (`mcp-server-shop.py`), der dem Agenten echte Werkzeuge für den S&N-Webshop bereitstellt.
 
-**Startpunkt:** Einfacher Chat-Agent ohne Tools aus Session 1.  
+**Startpunkt:** Einfacher Chat-Agent mit einem lokalen Test-Tool (`getTestData`) aus Session 1.  
 **Ziel:** Agent ist per MCP mit dem Shop verbunden und kann Produkte und Produktgruppen abrufen.
 
 ---
@@ -14,7 +14,7 @@ Der Agent aus Session 1 spricht mit Claude, kennt aber noch keine Tools. In dies
 ### 1. Repository laden (Branch: `session_1_agent`)
 
 ```bash
-git clone -b session_1_agent https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+git checkout -f session_2_mcp
 cd summit-26-agent-workshop/python-ai-agent
 ```
 
@@ -39,7 +39,7 @@ uv sync
 
 ### 4. Webshop-Backend starten
 
-Der MCP-Server ruft das REST-Backend des Webshops auf. Starte es in einem separaten Terminal:
+Der MCP-Server ruft das REST-Backend des Webshops auf. Starte es in einem separaten Terminal im Projekt root Verzeichnis:
 
 ```bash
 cd ../sn-webshop-server
@@ -103,7 +103,7 @@ async function main() {
         system_prompt=SYSTEM_PROMPT,
     )
 
-  // ... Rest der Funktion unverändert ...
+  # ... Rest der Funktion unverändert ...
 }
 ```
 
@@ -118,11 +118,11 @@ Du hast Zugang zu Tools, mit denen du Produkte und Produktgruppen aus dem Shop a
 """;
 ```
 
-**Hinweis:** Der Agent kann erst starten, wenn der MCP-Server auf Port 3010 läuft (Schritt 3). Starte den Agenten nach dem MCP-Server.
+**Hinweis:** Der Agent kann erst starten, wenn der MCP-Server auf Port 3010 läuft (Schritt 2). Starte den Agenten nach dem MCP-Server.
 
 ---
 
-### Schritt 3: MCP-Server mit erstem Tool erstellen
+### Schritt 2: MCP-Server mit erstem Tool erstellen
 
 Öffne `mcp-server-shop.ts`. Erstelle einen FastMCP-Server und füge das erste Tool hinzu:
 
@@ -148,13 +148,11 @@ def main():
     
 if __name__ == "__main__":
     main()
-
-
 ```
 
 ---
 
-### Schritt 4: MCP-Server starten und testen
+### Schritt 3: MCP-Server starten und testen
 
 Starte den MCP-Server in einem separaten Terminal:
 
@@ -176,7 +174,7 @@ npx @modelcontextprotocol/inspector
 
 ---
 
-### Schritt 5: Agenten starten und testen
+### Schritt 4: Agenten starten und testen
 
 Starte jetzt in einem dritten Terminal den Agenten:
 
@@ -193,7 +191,7 @@ Siehst du im Terminal des MCP-Servers, dass das Tool aufgerufen wurde?
 
 ---
 
-### Schritt 6: (Optional) Tool-Debug-Logging im Agent aktivieren
+### Schritt 5: (Optional) Tool-Debug-Logging im Agent aktivieren
 
 Damit du siehst, welche Tools der Agent in welcher Reihenfolge aufruft, kannst du einen Debug-Handler in `agent.ts` ergänzen.
 
@@ -201,7 +199,9 @@ Damit du siehst, welche Tools der Agent in welcher Reihenfolge aufruft, kannst d
 
 ```python
 import json
-import logging
+
+from typing import Any
+from uuid import UUID
 
 from langchain_core.callbacks import BaseCallbackHandler
 ```
@@ -209,48 +209,19 @@ from langchain_core.callbacks import BaseCallbackHandler
 **Klasse vor `main()` einfügen:**
 
 ```python
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
 class ToolDebugHandler(BaseCallbackHandler):
-    name = "ToolDebugHandler"
+    def __init__(self):
+        super().__init__()
+        self._tool_names: dict[UUID, str] = {}
 
-    def __init__(self) -> None:
-        self.tool_names: dict[str, str] = {}
+    def on_tool_start(self, serialized: dict[str, Any], input_str: str, *, run_id: UUID, **kwargs: Any) -> None:
+        tool_name = serialized.get("name", "unknown")
+        self._tool_names[run_id] = tool_name
+        print(f"[Tool Call] {tool_name} {input_str}")
 
-    def on_tool_start(
-        self,
-        serialized: dict[str, Any],
-        input_str: str,
-        *,
-        run_id: UUID,
-        **kwargs: Any,
-    ) -> None:
-        tool_id = serialized.get("id", [])
-        tool_name = tool_id[-1] if isinstance(tool_id, list) and tool_id else "unknown"
-
-        run_id_str = str(run_id)
-        self.tool_names[run_id_str] = tool_name
-
-        try:
-            tool_input = json.loads(input_str)
-        except (json.JSONDecodeError, TypeError):
-            tool_input = input_str
-
-        logger.debug("[Tool Call] %s %s", tool_name, tool_input)
-
-    def on_tool_end(
-        self,
-        output: Any,
-        *,
-        run_id: UUID,
-        **kwargs: Any,
-    ) -> None:
-        run_id_str = str(run_id)
-        tool_name = self.tool_names.pop(run_id_str, "unknown")
-
-        logger.debug("[Tool Result] %s %s", tool_name, output)
+    def on_tool_end(self, output: Any, *, run_id: UUID, **kwargs: Any) -> None:
+        tool_name = self._tool_names.pop(run_id, "unknown")
+        print(f"[Tool Result] {tool_name} {output}")
 ```
 
 **`agent.invoke(...)` anpassen:**
@@ -258,10 +229,7 @@ class ToolDebugHandler(BaseCallbackHandler):
 ```python
 result = agent.invoke(
     {
-        "messages": [
-            *messages,
-            {"role": "user", "content": user_input},
-        ]
+        "messages": messages
     },
     config={
         "callbacks": [ToolDebugHandler()],
@@ -278,21 +246,23 @@ Du siehst dann im Agenten-Terminal z.B.:
 
 ---
 
-## Checkliste vor Session 2
+## Checkliste vor Session 3
 
 - [ ] Webshop-Backend läuft auf Port 3000
 - [ ] MCP-Server startet ohne Fehler auf Port 3010
-- [ ] Agent ruft Produktliste via `request_product_list` ab
+- [ ] Agent ruft Produktliste via `requestProductList` ab
 - [ ] Tool-Aufruf ist im Terminal des MCP-Servers sichtbar
 
 ---
 
-## Weiter zu Session 2
+## Weiter zu Session 3
 
-In Session 2 verbesserst du den System-Prompt und optimierst das bestehende Tool mit Filterparametern (Sprache, Suchbegriff).
+In Session 3 verbesserst du den System-Prompt und ergänzt das fehlende Warenkorb-Tool (`addToBasket`), sodass der komplette Einkaufs-Workflow bis zum Checkout im Webshop funktioniert.
 
-**Branch für Session 2:**
+**Branch für Session 3:**
 
 ```bash
-git clone -b session_2_mcp https://<user>:<token>@git.s-und-n.de/aalfermann/summit-26-agent-workshop
+git checkout -f session_3_agent_mcp_connect
 ```
+
+> **Hinweis:** `-f` verwirft deine lokalen Änderungen (deine bisherige Lösung). Das ist hier gewollt – der Zielbranch enthält den passenden Stand bereits.
