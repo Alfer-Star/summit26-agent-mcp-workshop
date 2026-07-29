@@ -13,17 +13,15 @@ git clone https://github.com/Alfer-Star/summit26-agent-mcp-workshop
 cd summit26-agent-mcp-workshop
 ```
 
-### 2. Auf Branch `session_0` wechseln
+### 2. Anthropic API-Key holen
 
-```bash
-git checkout session_0
-```
-
-Jeder Session-Branch enthält den Startpunkt für die jeweilige Session sowie eine README mit den konkreten Aufgaben.
+Öffne https://api.sn-invent.de/summit/ und melde dich mit den im Workshop bereitgestellten Credentials an. Trage anschließend einen der dort angezeigten Keys als `ANTHROPIC_API_KEY` in die Umgebungsvariablen-Config des jeweiligen Agenten ein (z.B. `.env` beim Python-Agenten).
 
 ---
 
 ## Sessions im Überblick
+
+Jeder Session-Branch enthält den Startpunkt für die jeweilige Session sowie eine README mit den konkreten Aufgaben.
 
 | Branch      | Inhalt                                                                |
 | ----------- | --------------------------------------------------------------------- |
