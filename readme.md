@@ -54,6 +54,20 @@ Der Webshop (Backend + Frontend) läuft lokal und wird vom Agenten als Datenquel
 ./start-shop.sh
 ```
 
+Sollte es mit den Start-Skripten Probleme geben, können die Schritte wie folgt manuell ausgeführt werden:
+
+```bash
+cd sn-webshop-client
+npm install
+npm run client:start
+
+in einer weiteren CMD oder per cmd /c:
+
+cd sn-webshop-server
+npm install
+npm run server:start
+```
+
 - Frontend: http://localhost:4200
 - Backend API: http://localhost:3000
 
