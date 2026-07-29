@@ -12,7 +12,7 @@ S&N entwickelt Software für die Finanzbranche und betreibt einen Webshop für M
 const getTestData = tool(
   async () => JSON.stringify({ name: 'Test' }),
   {
-    name: 'get_test_data',
+    name: 'getTestData',
     description: 'Gibt Testdaten zurück.',
     schema: z.object({}),
   }
