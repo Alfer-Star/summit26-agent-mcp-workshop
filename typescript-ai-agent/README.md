@@ -123,7 +123,7 @@ Teste jetzt den kompletten Einkaufs-Workflow:
 
 ### Schritt 4: Warenkorb im Frontend prüfen
 
-Öffne den Webshop im Browser unter **http://localhost:4200**, melde dich an und sieh im Warenkorb nach, ob die vom Agenten hinzugefügten Artikel dort auftauchen. Führe den Bestellvorgang bis zum Checkout durch.
+Öffne den Webshop im Browser unter **http://localhost:4200** und melde dich mit dem Testaccount an (E-Mail **test@test.de**, Passwort **password1**). Sieh im Warenkorb nach, ob die vom Agenten hinzugefügten Artikel dort auftauchen, und führe den Bestellvorgang bis zum Checkout durch.
 
 ---
 
