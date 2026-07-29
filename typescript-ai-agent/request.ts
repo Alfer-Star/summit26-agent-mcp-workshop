@@ -44,10 +44,6 @@ export async function getProductList(
   return _get("products/get", { lang, productGroupId, searchQuery });
 }
 
-export async function getProductGroups(lang = "de") {
-  return _get("product-groups/get", { lang });
-}
-
 export async function postBasket(productId: string, quantity: number) {
   await _auth.ensureAuthenticated();
   return _post("basket/items", {

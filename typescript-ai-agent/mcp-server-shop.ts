@@ -10,7 +10,7 @@ const mcp = new FastMCP({
 });
 
 mcp.addTool({
-  name: "request_product_list",
+  name: "requestProductList",
   description: "Return product list from S&N Shop.",
   parameters: z.object({}),
   execute: async () => {

@@ -2,28 +2,29 @@
 
 ## Ziel dieser Session
 
-Der Agent kann am Ende von Session 2 Produkte abrufen – aber noch keine Produktgruppen abfragen und nichts in den Warenkorb legen. In dieser Session fügst du die zwei fehlenden Tools hinzu.
+Der Agent kann Produkte aus dem Webshop abrufen – mit einem einzigen Tool (`requestProductList`). In dieser letzten Session verbesserst du den **System-Prompt** und ergänzt das fehlende **Warenkorb-Tool** (`addToBasket`), sodass der komplette Einkaufs-Workflow bis zum Checkout im Webshop-Frontend funktioniert.
 
-**Startpunkt:** Agent + MCP-Server mit einem Tool (`request_product_list`) aus Session 2.  
-**Ziel:** `request_product_groups` und `add_to_basket` im MCP-Server registrieren.
+**Startpunkt:** Agent + MCP-Server mit einem Tool (`requestProductList`) aus Session 2.  
+**Ziel:** Verbesserter System-Prompt und ein zusätzliches Tool `addToBasket` – damit entspricht dein Stand funktional der Referenzlösung im Branch `main`.
 
 ---
 
 ## Vorbereitung
 
-### 1. Repository laden (Branch: `session_3_agent_mcp_connect`)
+### 1. Auf den Branch dieser Session wechseln (`session_3_agent_mcp_connect`)
 
 ```bash
-git checkout session_3_agent_mcp_connect
-cd summit-26-agent-workshop/typescript-ai-agent
+git checkout -f session_3_agent_mcp_connect
+cd typescript-ai-agent
 ```
 
 ### 2. Relevante Dateien
 
 ```
 typescript-ai-agent/
-├── mcp-server-shop.ts    ← Hier werden die neuen Tools ergänzt
-├── request.ts            ← Hilfsfunktionen bereits vorhanden (kein Änderungsbedarf)
+├── agent.ts              ← System-Prompt wird hier verbessert
+├── mcp-server-shop.ts    ← hier kommt das addToBasket-Tool dazu
+├── request.ts            ← postBasket() ist bereits vorhanden
 └── package.json
 ```
 
@@ -45,10 +46,20 @@ npm run client:start    # Port 4200
 
 ### Schritt 1: Produktgruppen-Tool hinzufügen
 
-In `request.ts` ist `getProductGroups()` bereits vorhanden. Registriere das Tool in `mcp-server-shop.ts`:
+Der aktuelle System-Prompt ist sehr allgemein. Öffne `agent.ts` und passe `SYSTEM_PROMPT` so an, dass der Agent klarer weiß, was er tun kann:
 
 ```typescript
-import { getProductList, getProductGroups } from "./request.js";
+const SYSTEM_PROMPT = `
+Du bist ein hilfreicher Einkaufs-Assistent für den S&N Shop.
+S&N entwickelt Software für die Finanzbranche und betreibt einen Webshop für Merchandise wie T-Shirts, Hoodies, Tassen und mehr.
+
+Du kannst Produkte aus dem Shop anzeigen und Produkte in den Warenkorb legen.
+
+Wichtige Regeln:
+- Frage nach, wenn der Benutzer nicht klar sagt, was er sucht (z.B. Kategorie, Stichwort).
+- Antworte immer auf Deutsch, außer der Benutzer wechselt die Sprache.
+- Lege erst dann etwas in den Warenkorb, wenn Produkt und Menge klar sind.
+`;
 ```
 
 ```typescript
@@ -65,21 +76,23 @@ mcp.addTool({
 
 ---
 
-### Schritt 2: Warenkorb-Tool hinzufügen
+### Schritt 2: Warenkorb-Tool `addToBasket` ergänzen
 
-`postBasket()` in `request.ts` ist ebenfalls schon vorhanden. Ergänze den Import und füge das Tool hinzu:
+Bisher kann der Agent nur Produkte anzeigen. Damit er auch etwas in den Warenkorb legen kann, ergänzt du ein zweites Tool im MCP-Server.
 
-```typescript
-import { getProductList, getProductGroups, postBasket } from "./request.js";
-```
+Die Funktion `postBasket(productId, quantity)` in `request.ts` ist bereits vorhanden und authentifiziert sich automatisch. Füge in `mcp-server-shop.ts` das neue Tool hinzu (das bestehende `requestProductList`-Tool bleibt unverändert):
 
 ```typescript
+import { getProductList, postBasket } from "./request.js";
+
+// ... bestehendes requestProductList-Tool bleibt unverändert ...
+
 mcp.addTool({
-  name: "add_to_basket",
-  description: "Add a product to the shopping basket.",
+  name: "addToBasket",
+  description: "Legt ein Produkt in den Warenkorb des S&N Shops.",
   parameters: z.object({
-    productId: z.string().describe('Product ID, e.g. "GAD-001"'),
-    quantity: z.number().int().positive().describe("Number of items to add"),
+    productId: z.string().describe('Produkt-ID, z.B. "GAD-001"'),
+    quantity: z.number().int().positive().describe("Anzahl der Artikel"),
   }),
   execute: async ({ productId, quantity }) => {
     const result = await postBasket(productId, quantity);
@@ -104,32 +117,47 @@ cd typescript-ai-agent && npm run mcp:start
 cd typescript-ai-agent && npm run agent:start
 ```
 
-Teste den vollständigen Einkaufs-Workflow:
-1. "In welchen Kategorien gibt es Produkte?"
-2. "Welche Hoodies habt ihr?"
-3. "Lege einen Hoodie in meinen Warenkorb."
-4. Öffne den Webshop unter `http://localhost:4200` und prüfe, ob der Artikel im Warenkorb erscheint.
+Teste jetzt den kompletten Einkaufs-Workflow:
+- "Zeig mir eure Hoodies."
+- "Leg mir bitte eine Tasse in den Warenkorb."
+- "Ich hätte gerne zwei T-Shirts."
+
+---
+
+### Schritt 4: Warenkorb im Frontend prüfen
+
+Öffne den Webshop im Browser unter **http://localhost:4200** und melde dich mit dem Testaccount an (E-Mail **test@test.de**, Passwort **password1**). Sieh im Warenkorb nach, ob die vom Agenten hinzugefügten Artikel dort auftauchen, und führe den Bestellvorgang bis zum Checkout durch.
 
 ---
 
 ### Schritt 4: (Optional) MCP-Kommunikation verfolgen
 
-Der `ToolDebugHandler` in `agent.ts` zeigt im Terminal, welche Tools der Agent aufruft:
+Wenn du den `ToolDebugHandler` in `agent.ts` aktiviert hast, siehst du im Agenten-Terminal, welche Tools der Agent mit welchen Parametern aufruft:
 
 ```
-[Tool Call] request_product_groups {}
-[Tool Result] request_product_groups [{"id": "GRP-001", "name": "Hoodies", ...}]
-[Tool Call] request_product_list {}
-[Tool Result] request_product_list [{"id": "APP-003", "name": "Hoodie", ...}]
-[Tool Call] add_to_basket {"productId": "APP-003", "quantity": 1}
-[Tool Result] add_to_basket {"success": true}
+[Tool Call] requestProductList {}
+[Tool Result] requestProductList [{"id": "APP-003", "name": "Hoodie", ...}]
+[Tool Call] addToBasket {"productId": "APP-003", "quantity": 1}
+[Tool Result] addToBasket {"success": true, ...}
 ```
 
 ---
 
-## Checkliste
+## Abschluss-Checkliste
 
-- [ ] `request_product_groups` ist im MCP-Server registriert
-- [ ] `add_to_basket` ist im MCP-Server registriert
-- [ ] Agent kann einen vollständigen Einkauf durchführen (Kategorien → Produkte → Warenkorb)
-- [ ] Artikel erscheint nach dem Chat im Webshop-Frontend unter `http://localhost:4200`
+- [ ] System-Prompt ist klarer und beschreibt, was der Agent kann
+- [ ] `addToBasket`-Tool ist im MCP-Server ergänzt
+- [ ] Agent kann Produkte anzeigen UND in den Warenkorb legen
+- [ ] Artikel tauchen im Webshop-Frontend (http://localhost:4200) im Warenkorb auf
+
+---
+
+## Weiter zur Lösung (`main`)
+
+Der Branch `main` enthält die vollständige Referenzlösung (Agent + MCP-Server mit `requestProductList` und `addToBasket`). Vergleiche deinen Stand damit:
+
+```bash
+git checkout -f main
+```
+
+> **Hinweis:** `-f` verwirft deine lokalen Änderungen (deine bisherige Lösung). Das ist hier gewollt – der Zielbranch enthält den passenden Stand bereits.
