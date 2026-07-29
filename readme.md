@@ -40,16 +40,19 @@ Die README im jeweiligen Branch `(typescript-ai-agent|spring-ai-agent|python-ai-
 Der Webshop (Backend + Frontend) läuft lokal und wird vom Agenten als Datenquelle genutzt. Starte ihn vom Root-Verzeichnis aus:
 
 **Windows (PowerShell):**
+
 ```powershell
 .\start-shop.ps1
 ```
 
 **macOS:**
+
 ```bash
 ./start-shop-mac.sh
 ```
 
 **Linux:**
+
 ```bash
 ./start-shop.sh
 ```
@@ -73,9 +76,9 @@ npm run server:start
 
 ### Testaccounts
 
-| Rolle | E-Mail | Passwort |
-|---|---|---|
-| User | test@test.de | password1 |
+| Rolle | E-Mail        | Passwort  |
+| ----- | ------------- | --------- |
+| User  | test@test.de  | password1 |
 | Admin | admin@test.de | password1 |
 
 ---

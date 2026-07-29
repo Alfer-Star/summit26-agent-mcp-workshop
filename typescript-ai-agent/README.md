@@ -28,27 +28,23 @@ typescript-ai-agent/
 └── package.json
 ```
 
-### 3. Setup
-
-```bash
-cp .env-example .env
-# ANTHROPIC_API_KEY in .env eintragen
-npm install
-```
-
-### 4. Webshop-Backend starten
+### 3. Webshop-Backend starten
 
 ```bash
 cd ../sn-webshop-server
-npm install
 npm run server:start    # Port 3000
+```
+
+```bash
+cd ../sn-webshop-client
+npm run client:start    # Port 4200
 ```
 
 ---
 
 ## Aufgaben
 
-### Schritt 1: System-Prompt verbessern
+### Schritt 1: Produktgruppen-Tool hinzufügen
 
 Der aktuelle System-Prompt ist sehr allgemein. Öffne `agent.ts` und passe `SYSTEM_PROMPT` so an, dass der Agent klarer weiß, was er tun kann:
 
@@ -66,10 +62,17 @@ Wichtige Regeln:
 `;
 ```
 
-Starte den Agenten und teste, ob sich das Verhalten verbessert hat:
-- "Was kann ich hier kaufen?"
-- "Zeig mir etwas Warmes."
-- "Gibt es Tassen?"
+```typescript
+mcp.addTool({
+  name: "request_product_groups",
+  description: "Return all product groups from S&N Shop.",
+  parameters: z.object({}),
+  execute: async () => {
+    const result = await getProductGroups();
+    return `product groups: ${JSON.stringify(result)}`;
+  },
+});
+```
 
 ---
 
@@ -127,7 +130,7 @@ Teste jetzt den kompletten Einkaufs-Workflow:
 
 ---
 
-### Schritt 5: (Optional) MCP-Kommunikation verfolgen
+### Schritt 4: (Optional) MCP-Kommunikation verfolgen
 
 Wenn du den `ToolDebugHandler` in `agent.ts` aktiviert hast, siehst du im Agenten-Terminal, welche Tools der Agent mit welchen Parametern aufruft:
 

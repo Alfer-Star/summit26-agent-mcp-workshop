@@ -10,7 +10,7 @@ mcp = FastMCP(
     instructions="Provides tools for interacting with Webshop, like shwoing products, adding items to the cart and more.",
 )
 
-@mcp.tool()
+@mcp.tool
 async def request_product_list() -> str:
     """Return product list from S&N Shop."""
     result = await get_product_list()

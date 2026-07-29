@@ -54,6 +54,19 @@ async def get_product_list(lang="de", **kwargs) -> dict | None:
         "searchQuery": kwargs.get("searchQuery"),
     })
 
+async def getProductGroups(lang = "de"):
+    """Make a request to the S&N Shop API /product-groups/get.
+    Get all Products groups.
+
+    Args:
+        lang (str): de or en, default is de.
+
+    Returns:
+        dict | None: The JSON response from the API or None if an error occurs.
+    """
+    return await _get_request("product-groups/get", { "lang": lang });
+
+
 
 async def get_product(productId: str, lang="de") -> dict | None:
     """Make a request to the S&N Shop API /products/get-product.
@@ -182,5 +195,4 @@ print("=====================Clear Basket=====================")
 print(asyncio.run(clear_basket()))
 print("=====================Add Item to Basket=====================")
 print(asyncio.run(post_basket("GAD-001", 2)))
-print("=====================Checkout=====================")
-print(asyncio.run(post_checkout())) """
+"""
