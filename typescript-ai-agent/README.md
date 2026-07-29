@@ -106,7 +106,7 @@ import { z } from 'zod';
 const getTestData = tool(
   async () => JSON.stringify({ name: 'Test' }),
   {
-    name: 'get_test_data',
+    name: 'getTestData',
     description: 'Gibt Testdaten zurück.',
     schema: z.object({}),
   }
@@ -140,7 +140,7 @@ npm run agent:start
 Beispielfragen:
 
 - „Ruf mal die Testdaten ab."
-- „Was liefert das get_test_data-Tool?"
+- „Was liefert das getTestData-Tool?"
 
 Der Agent entscheidet selbst, wann er das Tool aufruft, und gibt das Ergebnis in natürlicher Sprache zurück.
 
@@ -150,10 +150,16 @@ Der Agent entscheidet selbst, wann er das Tool aufruft, und gibt das Ergebnis in
 
 - [ ] Agent antwortet auf Fragen via Claude
 - [ ] Gesprächsgedächtnis funktioniert (Agent erinnert sich an Namen)
-- [ ] `get_test_data`-Tool wird vom Agenten aufgerufen und das Ergebnis ausgegeben
+- [ ] `getTestData`-Tool wird vom Agenten aufgerufen und das Ergebnis ausgegeben
 
 ---
 
 ## Weiter zu Session 2
 
 In Session 2 verbindest du den Agenten per MCP mit dem Webshop, sodass er echte Produktdaten abrufen kann.
+
+**Branch für Session 2:**
+
+```bash
+git checkout session_2_mcp
+```
