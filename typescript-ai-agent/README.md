@@ -14,7 +14,7 @@ Der Agent aus Session 1 spricht mit Claude und kennt bereits ein einfaches, loka
 ### 1. Auf den Branch dieser Session wechseln (`session_2_mcp`)
 
 ```bash
-git checkout session_2_mcp
+git checkout -f session_2_mcp
 cd typescript-ai-agent
 ```
 
@@ -267,5 +267,7 @@ In Session 3 verbesserst du den System-Prompt und ergänzt das fehlende Warenkor
 **Branch für Session 3:**
 
 ```bash
-git checkout session_3_agent_mcp_connect
+git checkout -f session_3_agent_mcp_connect
 ```
+
+> **Hinweis:** `-f` verwirft deine lokalen Änderungen (deine bisherige Lösung). Das ist hier gewollt – der Zielbranch enthält den passenden Stand bereits.
