@@ -7,8 +7,8 @@ Diese Anleitung richtet deine Umgebung ein, bevor der Workshop startet.
 ## 1. Repository auschecken
 
 ```bash
-git clone -b session_0 https://github.com/Alfer-Star/summit26-agent-mcp-workshop
-cd summit-26-agent-workshop
+git clone -b session_0 https://github.com/alfer-star/summit26-agent-mcp-workshop
+cd summit26-agent-mcp-workshop
 ```
 
 ## 2. Abhängigkeiten installieren
@@ -69,3 +69,15 @@ Mit `Ctrl+C` beendest du den Shop wieder.
 - [ ] `npm install` in `typescript-ai-agent/` erfolgreich
 - [ ] `.env` mit gültigem `ANTHROPIC_API_KEY` angelegt
 - [ ] Shop läuft: http://localhost:4200 zeigt den Webshop
+
+---
+
+## Weiter zu Session 1
+
+Beim Workshop-Start wechselst du im selben Repository auf den Branch der ersten Session:
+
+```bash
+git checkout session_1_agent
+```
+
+Dort baust du aus dem leeren Grundgerüst deinen ersten KI-Agenten. Die Anleitung dazu findest du in `typescript-ai-agent/README.md` auf diesem Branch.
