@@ -38,7 +38,7 @@ uv run agent.py
 Wenn der Windows Defnder eingreift:
 
 ```bash
-powershell -ExecutionPolicy ByPass -c "run agent.py"
+powershell -ExecutionPolicy ByPass -c "uv run agent.py"
 ```
 
 Tippe etwas ein – was passiert? (Noch keine echte Antwort, nur `...`)  
@@ -161,7 +161,7 @@ uv run agent.py
 oder
 
 ```bash
-powershell -ExecutionPolicy ByPass -c "run agent.py"
+powershell -ExecutionPolicy ByPass -c "uv run agent.py"
 ```
 
 Beispielfragen:
