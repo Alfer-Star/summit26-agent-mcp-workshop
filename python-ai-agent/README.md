@@ -46,7 +46,7 @@ npm run client:start    # Port 4200
 
 ### Schritt 1: Produktgruppen-Tool hinzufügen
 
-Der aktuelle System-Prompt ist sehr allgemein. Öffne `agent.ts` und passe `SYSTEM_PROMPT` so an, dass der Agent klarer weiß, was er tun kann:
+Der aktuelle System-Prompt ist sehr allgemein. Öffne `agent.py` und passe `SYSTEM_PROMPT` so an, dass der Agent klarer weiß, was er tun kann:
 
 ```python
 SYSTEM_PROMPT = """
@@ -115,10 +115,22 @@ async def add_to_basket(productId: str, quantity: int) -> str:
 cd python-ai-agent && uv run mcp-server-shop.py
 ```
 
+oder
+
+```bash
+powershell -ExecutionPolicy ByPass -c "uv run mcp-server-shop.py"
+```
+
 **Terminal 2 – Agent:**
 
 ```bash
 cd python-ai-agent && uv run agent.py
+```
+
+oder
+
+```bash
+powershell -ExecutionPolicy ByPass -c "uv run agent.py"
 ```
 
 Teste den vollständigen Einkaufs-Workflow:
