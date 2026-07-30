@@ -34,7 +34,8 @@ python-ai-agent/
 ```bash
 cp .env-example .env
 # ANTHROPIC_API_KEY in .env eintragen
-uv sync
+powershell -ExecutionPolicy ByPass -c "uv sync"
+
 ```
 
 ### 4. Webshop-Backend starten
@@ -160,6 +161,12 @@ Starte den MCP-Server in einem separaten Terminal:
 uv run mcp-server-shop.py
 ```
 
+oder
+
+```bash
+powershell -ExecutionPolicy ByPass -c "uv run mcp-server-shop.py"
+```
+
 Du solltest sehen, dass der Server auf Port 3010 läuft.
 
 **Optional: MCP Inspector nutzen** – Damit kannst du Tools direkt im Browser testen:
@@ -182,6 +189,10 @@ Starte jetzt in einem dritten Terminal den Agenten:
 uv run agent.py
 ```
 
+```bash
+powershell -ExecutionPolicy ByPass -c "uv run magent.py"
+```
+
 Frage den Agenten:
 
 - "Welche Produkte habt ihr im Angebot?"
@@ -193,7 +204,7 @@ Siehst du im Terminal des MCP-Servers, dass das Tool aufgerufen wurde?
 
 ### Schritt 5: (Optional) Tool-Debug-Logging im Agent aktivieren
 
-Damit du siehst, welche Tools der Agent in welcher Reihenfolge aufruft, kannst du einen Debug-Handler in `agent.ts` ergänzen.
+Damit du siehst, welche Tools der Agent in welcher Reihenfolge aufruft, kannst du einen Debug-Handler in `agent.py` ergänzen.
 
 **Imports ergänzen:**
 
