@@ -2,6 +2,7 @@ import asyncio
 
 from langchain.agents import create_agent
 from dotenv import load_dotenv
+from langchain.tools import tool
 
 # Läd die Umgebungsvariablen aus der .env-Datei, bzw. den Api Key für das Ki Modell
 load_dotenv()
@@ -12,9 +13,19 @@ S&N develops Software for the finance industry, but also has a webshop where Cow
 You have access to the following tools to help you user interacting with the Workshop:
 """
 
+@tool
+def get_test_data(name = "World") -> str:
+    """Gibt Testdaten zurück. 
+
+    Args: 
+      name: Wird mit "Hello {name}" als Testdaten zurückgegeben
+    """
+    return f"Hello {name}"
+
 async def main():
     agent = create_agent(
         model="claude-sonnet-4-6",
+        tools=[get_test_data],
         system_prompt=SYSTEM_PROMPT,
     )
 
