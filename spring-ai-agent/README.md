@@ -7,7 +7,7 @@ Der Agent soll auf der Konsole ansprechbar sein und mit dem Benutzer interagiere
 
 ### Vorbereitung Session 1
 * Falls noch nicht erfolgt, lade den git Branch in ein lokales Verzeichnis: git clone https://github.com/Alfer-Star/summit26-agent-mcp-workshop
-* Wechsle in den Branch für Beginn Session 1: "git checkout session_1_agent"
+* Wechsle in den Branch für Beginn Session 1: "git checkout -f session_1_agent"
 * Für die Session sind folgende Ordner relevant
 ```ASCII
 workshop
@@ -225,7 +225,7 @@ npm run server:start      # Starts Express on port 3000
 * Teste den Workflow zum Abruf von Produkten.
 
 ### (Optional) Test des MCP Servers mit MCP Inspector (Anthropic)
-* Installiere den MCP Inspector (Node.js vorausgesetzt) ```npx @modelcontextprotocol/inspector```
+* Öffne ein weiteres Terminal und installiere den MCP Inspector (Node.js vorausgesetzt) ```npx @modelcontextprotocol/inspector```
 * (Nach Start des Browsers) Wähle Transport Type "Streamable HTTP"
 * (Falls nicht eingestellt) Setze URL ```http://localhost:8080/mcp```
 * Verbinde Dich mit dem Server
@@ -262,10 +262,12 @@ Im Webshop kann danach der Warenkorb angesehen und der Verkauf gestartet werden.
 * Öffne die Klasse Tools im Maven Modul MCP-Server
 * Füge eine MCPTool Methode "getProductDetails" hinzu.
 * * Leite hier zur Abfrage von Details eines Produkts den REST Aufruf in der vorhandene Methode "fetchProductDetails" weiter.
+* * Leite die Eingabeparameter ProduktId und Sprachschlüssel weiter
 * * Verwende die Datenstruktur "SingleProductResponse" als Rückgabe
 * * Beschreibe im "description" Attribut der Methode und der Eingabeparameter verständlich die Bedeutung der Attribute der Ein- und Ausgabestruktur
 
 * Füge eine weitere MCPTool Methode "addToBasket" hinzu.
+
 * * Leite hier für das Einstellen eines Produktes in den Warenkorbs den REST Aufruf in der vorhandenen Methode "addItemToBasket" weiter.
 * * Verwende die Datenstruktur BasketItemRequest als Eingabe und die Datenstruktur BasketItemResponse als Rückgabe.
 * * Beschreibe im "description" Attribut der Methode und der Eingabeparameter verständlich die Bedeutung der Attribute der Ein- und Ausgabestruktur
