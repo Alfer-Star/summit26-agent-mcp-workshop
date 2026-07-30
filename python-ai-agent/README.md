@@ -190,7 +190,7 @@ uv run agent.py
 ```
 
 ```bash
-powershell -ExecutionPolicy ByPass -c "uv run magent.py"
+powershell -ExecutionPolicy ByPass -c "uv run agent.py"
 ```
 
 Frage den Agenten:
