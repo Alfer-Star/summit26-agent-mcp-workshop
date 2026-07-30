@@ -3,7 +3,7 @@
 
 from fastmcp import FastMCP
 
-from request import get_product_list, get_product_groups, get_product, get_basket, post_basket
+from request import get_product_list, get_product_groups, post_basket
 
 mcp = FastMCP(
     "S&N Webshop",
