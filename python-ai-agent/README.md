@@ -26,8 +26,10 @@ cd summit-26-agent-workshop
 With uv (installs required Python and dependencies):
 
 ```bash
-uv sync
+powershell -ExecutionPolicy ByPass -c "uv sync"
 ```
+
+Falls du vergessen hast uv in den als env hinzu: nutze einfach den Pfad zur uv.exe im Installationpfad.
 
 (Not recommended) With normal python Pip (install Python >=3.14):
 
@@ -89,7 +91,7 @@ Mit `Ctrl+C` beendest du den Shop wieder.
 
 ## Checkliste
 
-- [ ] `pip install .` in `python-ai-agent/` erfolgreich
+- [ ] `uv sync` oder `pip install .` in `python-ai-agent/` erfolgreich
 - [ ] `.env` mit gültigem `ANTHROPIC_API_KEY` angelegt
 - [ ] Shop läuft: <http://localhost:4200> zeigt den Webshop
 
