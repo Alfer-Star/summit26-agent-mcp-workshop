@@ -35,6 +35,12 @@ cp .env-example .env
 uv run agent.py
 ```
 
+Wenn der Windows Defnder eingreift:
+
+```bash
+powershell -ExecutionPolicy ByPass -c "run agent.py"
+```
+
 Tippe etwas ein – was passiert? (Noch keine echte Antwort, nur `...`)  
 Beende mit `exit`.
 
@@ -150,6 +156,12 @@ Starte den Agenten und frage ihn gezielt nach Testdaten:
 
 ```bash
 uv run agent.py
+```
+
+oder
+
+```bash
+powershell -ExecutionPolicy ByPass -c "run agent.py"
 ```
 
 Beispielfragen:
